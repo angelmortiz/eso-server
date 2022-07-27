@@ -1,14 +1,16 @@
-const http = require('http');
 const express = require ('express');
-const app = express();
+const exp = express();
 const bodyParser = require('body-parser');
+const nutritionRoutes = require('./routes/nutrition');
+const activitiesRoutes = require('./routes/activities');
 
-app.use(bodyParser.urlencoded({extended: false})); //parses the body that comes from the client
+exp.use(bodyParser.urlencoded({extended: false})); //parses the body that comes from the client
 
-app.use((request, response, next) => {
-    console.log('In the middleware!');
+exp.use(nutritionRoutes);
+exp.use(activitiesRoutes);
 
+exp.use('/', (request, response, next) => {
+    console.log('Running default middleware!');
 });
 
-const server = http.createServer(app);
-server.listen(3000);
+exp.listen(3000);
