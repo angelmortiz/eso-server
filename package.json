@@ -1,0 +1,15 @@
+{
+  "name": "eso-server",
+  "version": "1.0.0",
+  "description": "Node.js server for En Salud Optima",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "eso-server"
+  },
+  "author": "Angel Ortiz",
+  "license": "ISC"
+}
