@@ -6,8 +6,13 @@ router.get('/food', (request, response, next) => {
     response.sendFile(path.join(__dirname, '../', 'views', 'nutrition', 'get-food.html'));
 });
 
-router.post('/food', (request, response, next) => {
+router.get('/add-food', (request, response, next) => {
     response.sendFile(path.join(__dirname, '../', 'views', 'nutrition', 'add-food.html'));
+});
+
+router.post('/food', (request, response, next) => {
+    //add food info to db
+    response.redirect('/nutrition/food')
 });
 
 module.exports = router;
