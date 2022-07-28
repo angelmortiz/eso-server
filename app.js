@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require ('express');
 const exp = express();
 const bodyParser = require('body-parser');
@@ -10,8 +11,7 @@ exp.use('/nutrition', nutritionRoutes);
 exp.use('/activities', activitiesRoutes);
 
 exp.use('/', (request, response, next) => {
-    response.status(404).send('<h1>This page could not be found.</h1>');
-    console.log('Page not found.');
+    response.status(404).sendFile(path.join(__dirname, 'views', 'general', '404.html'))
 });
 
 exp.listen(3000);
