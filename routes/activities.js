@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/exercise', (request, response, next) => {
-    response.sendFile(path.join(rootDir, 'views', 'activities', 'get-exercise.html'));
+    response.sendFile(path.join(rootDir, 'views', 'activities', 'view-exercise.html'));
 });
 
 router.get('/add-exercise', (request, response, next) => {
