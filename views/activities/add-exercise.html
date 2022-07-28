@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Exercise to Database</title>
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/activities/add-exercise.css">
 </head>
 <body>
     <header class="main-header">
@@ -20,9 +21,17 @@
         </nav>
     </header>
 <main>
-    <form action="exercise" method="POST">
-        <input type="text" name="name">
-        <button type="submit">Add</button>
+    <div class="page-title__div">
+        <h2 class="page-title">Add New Exercise</h2>
+    </div>
+    <form class="add-exercise-form" action="/activities/exercise" method="POST">
+        <div class="add-exercise-form__control">
+            <label for="exercise-name" class="add-exercise-form__title">Exercise name:</label> 
+            <input type="text" name="name" id="exercise-name">
+        </div>
+        <div class="add-exercise-form__btn-control">
+            <button class="add-exercise-form__btn" type="submit">Add</button>
+        </div>
     </form> 
 </main>
 </body>

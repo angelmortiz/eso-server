@@ -1,5 +1,5 @@
-/* add food  */
-.add-food-form {
+/* add exercise  */
+.add-exercise-form {
     width: 25rem;
     max-width: 90%;
     min-height: 5rem;
@@ -9,24 +9,23 @@
     border-radius: 20px;
 }
 
-.add-food-form__control{
+.add-exercise-form__control{
     padding: 0.5rem 0 0.5rem 0;
     display: flex;
 }
 
-.add-food-form__control label{
+.add-exercise-form__control label{
     padding: 0 5px 0 0;
 }
 
-.add-food-form__control input {
+.add-exercise-form__control input {
     flex-grow: 1;
     border: 1px solid #007E86;
     font: inherit;
     border-radius: 5px;
     padding: 0.1rem 0.3rem;
 }
-
-.add-food-form__btn-control{
+.add-exercise-form__btn-control{
     padding: 0.5rem 0;
     display: flex;
     justify-content: center;
