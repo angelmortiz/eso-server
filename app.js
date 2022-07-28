@@ -6,11 +6,12 @@ const activitiesRoutes = require('./routes/activities');
 
 exp.use(bodyParser.urlencoded({extended: false})); //parses the body that comes from the client
 
-exp.use(nutritionRoutes);
-exp.use(activitiesRoutes);
+exp.use('/nutrition', nutritionRoutes);
+exp.use('/activities', activitiesRoutes);
 
 exp.use('/', (request, response, next) => {
-    console.log('Running default middleware!');
+    response.status(404).send('<h1>This page could not be found.</h1>');
+    console.log('Page not found.');
 });
 
 exp.listen(3000);
