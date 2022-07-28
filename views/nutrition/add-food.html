@@ -16,7 +16,7 @@
             padding: 1rem;
         }
 
-        .main-header {
+        .main-header {        
             width: 100%;
             height: 2.5rem;
             border-bottom: 1px solid #007E86;
@@ -26,14 +26,19 @@
         }
 
         .main-header__nav {
+           /* Centering the items in the header */
+            width: 50rem;
+            max-width: 90%;
+            margin: auto;
             height: 100%;
             display: flex;
             align-items: center;
         }
 
         .main-header__item-list {
+            max-width: 100%;
+            margin: auto;
             list-style: none;
-            margin: 0;
             padding: 0;
             display: flex;
         }
@@ -59,31 +64,47 @@
         /* Unique styles */
         .add-food-form {
             /* Centering the items in the form */
-            width: 20rem;
+            width: 25rem;
             max-width: 90%;
             margin: auto;
+
+            min-height: 5rem;
+            padding: 0.5rem;
+            color: #01484d;
+            border: 1.5px solid #01484d;
+            border-radius: 20px;
         }
 
         .add-food-form__control{
-            margin: 0.5rem 0 1rem 0;
+            padding: 0.5rem 0 0.5rem 0;
+            display: flex;
         }
 
-        .add-food-form__control label,
-        .add-food-form__control input {
-            width: 100%;
-            margin: 2px 0;
+        .add-food-form__control label{
+            padding: 0 5px 0 0;
         }
 
         .add-food-form__control input {
-            border: 1px solid black;
+            flex-grow: 1;
+            border: 1px solid #007E86;
             font: inherit;
             border-radius: 5px;
-            padding: 0.1rem 0;
+            padding: 0.1rem 0.3rem;
+        }
+
+        .add-food-form__btn-control{
+            padding: 0.5rem 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .add-food-form__btn-control button{
+            
         }
 
         button {
             padding: 5px 20px;
-            border: 2px solid #6EAB36;
+            border: 1.5px solid #007E86;
             border-radius: 5px;
             background-color: white;
             font-weight: bold;
@@ -120,7 +141,9 @@
             <label for="food-name" class="add-food-form__title">Food name:</label> 
             <input type="text" name="name" id="food-name">
         </div>
-        <button class="add-food-form__btn" type="submit">Add</button>
+        <div class="add-food-form__btn-control">
+            <button class="add-food-form__btn" type="submit">Add</button>
+        </div>
     </form> 
 </main>
 </body>
