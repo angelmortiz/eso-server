@@ -3,6 +3,8 @@ const rootDir = require('../util/path');
 const express = require('express');
 const router = express.Router();
 
+const exercises = [];
+
 router.get('/exercise', (request, response, next) => {
     response.sendFile(path.join(rootDir, 'views', 'activities', 'view-exercise.html'));
 });
@@ -13,7 +15,12 @@ router.get('/add-exercise', (request, response, next) => {
 
 router.post('/exercise', (request, response, next) => {
     //add exercise info to db
-    response.redirect('/activities/exercise')
+
+    exercises.push({name: request.body.name});
+    console.log(exercises);
+
+    // response.redirect('/activities/exercise');
 });
 
-module.exports = router;
+exports.routes = router;
+exports.exercises = exercises;
