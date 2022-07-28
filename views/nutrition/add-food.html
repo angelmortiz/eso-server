@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Food to Database</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul> 
+                <li><a href="/">Home</a></li>
+                <li><a href="/get-food">View Food</a></li>
+                <li><a href="/add-food">Get Food</a></li>
+                <li><a href="/get-exercise">View Exercise</a></li>
+                <li><a href="/add-exercise">Get Exercise</a></li>
+            </ul>
+        </nav>
+    </header>
+<main>
+    <form action="/nutrition/food" method="POST">
+        <input type="text" name="name">
+        <button type="submit">Add</button>
+    </form> 
+</main>
+</body>
+</html>
