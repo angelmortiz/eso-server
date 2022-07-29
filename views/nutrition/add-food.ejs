@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Food to Database</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/nutrition/add-food.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-header__nav">
+            <ul class="main-header__item-list"> 
+                <li class="main-header__item"><a href="/">Home</a></li>
+                <li class="main-header__item"><a href="/nutrition/food">View Food</a></li>
+                <li class="main-header__item"><a class="active" href="/nutrition/add-food">Add Food</a></li>
+                <li class="main-header__item"><a href="/activities/exercise">View Exercise</a></li>
+                <li class="main-header__item"><a href="/activities/add-exercise">Add Exercise</a></li>
+            </ul>
+        </nav>
+    </header>
+<main>
+    <div class="page-title__div">
+        <h2 class="page-title">Add New Food</h2>
+    </div>
+    <form class="add-food-form" action="/nutrition/food" method="POST">
+        <div class="add-food-form__control">
+            <label for="food-name" class="add-food-form__title">Food name:</label> 
+            <input type="text" name="name" id="food-name">
+        </div>
+        <div class="add-food-form__btn-control">
+            <button class="add-food-form__btn" type="submit">Add</button>
+        </div>
+    </form> 
+</main>
+</body>
+</html>

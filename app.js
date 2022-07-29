@@ -5,7 +5,6 @@ const exp = express();
 const bodyParser = require('body-parser');
 const nutritionData = require('./routes/nutrition');
 const activitiesData = require('./routes/activities');
-const { appendFile } = require('fs');
 
 exp.use(bodyParser.urlencoded({extended: false})); //parses the body that comes from the client
 exp.use(express.static(path.join(rootDir, 'public')));
