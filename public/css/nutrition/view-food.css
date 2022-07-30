@@ -1,1 +1,26 @@
 /* View Food */
+.view-food-template {
+    border: 1px solid #01484d;
+    border-radius: 20px;
+    background-color: #d8efef;
+}
+
+.view-food-list {
+    list-style: none;
+    padding: 0 1rem;
+}
+
+.view-food-list__item {
+    margin: 1rem 0;
+    /* background-color: lightgray; */
+
+}
+
+.view-food-list__name {
+    font-weight: bold;
+    /* background-color: lightsalmon; */
+}
+
+.view-food-list__value {
+    /* background-color: lightgreen; */
+}

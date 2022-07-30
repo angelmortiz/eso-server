@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= pageTitle %></title>
+    <title>
+        <%= pageTitle %>
+    </title>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/nutrition/view-food.css">
 </head>
@@ -24,7 +26,84 @@
     </header>
     <main>
         <div class="page-title__div">
-            <h2 class="page-title"><%= pageTitle %>:</h2>
+            <h2 class="page-title">
+                <%= pageTitle %>:
+            </h2>
+        </div>
+        <div class="view-food-template">
+            <ul class="view-food-list">
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">ID:</span>
+                    <span class="view-food-list__value">62d9ad342aeacf742c28839e</span>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Name:</span>
+                    <span class="view-food-list__value">Pechuga de pollo</span>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Clasificación:</span>
+                    <span class="view-food-list__value">Carne</span>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Descripción:</span>
+                    <span class="view-food-list__value">Esto es una descripción corta a manera de ejemplo</span>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Macronutriente principal:</span>
+                    <span class="view-food-list__value">Proteína</span>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Macronutriente secundario:</span>
+                    <span class="view-food-list__value">Grasa</span>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Densidad de micronutrientes:</span>
+                    <span class="view-food-list__value">Medio</span>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Información nutricional:</span>
+                    <span class="view-food-list__value">{Objeto}</span>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Tipo de comida:</span>
+                    <ul>
+                        <li>Almuerzo</li>
+                        <li>Cena</li>
+                    </ul>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Seguro para condiciones:</span>
+                    <ul>
+                        <li>Diabetes tipo 1</li>
+                        <li>Diabetes tipo 2</li>
+                        <li>Enfermedades autoinmunes</li>
+                        <li>Sobrepeso/Obesidad</li>
+                    </ul>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">No recomendado para condiciones:</span>
+                    <ul>
+                    </ul>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Compatible con dietas:</span>
+                    <ul>
+                        <li>Keto</li>
+                        <li>Paleo</li>
+                    </ul>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Recomendado para fases menstruales:</span>
+                    <ul>
+                        <li>Lútea</li>
+                        <li>Sangrado</li>
+                    </ul>
+                </li>
+                <li class="view-food-list__item">
+                    <span class="view-food-list__name">Imagen:</span>
+                    <span class="view-food-list__value">{Añadir imagen}</span>
+                </li>
+            </ul>
         </div>
     </main>
 </body>

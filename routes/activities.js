@@ -1,16 +1,20 @@
-const path = require('path');
-const rootDir = require('../util/path');
 const express = require('express');
 const router = express.Router();
 
 const exercises = [];
 
 router.get('/exercise', (request, response, next) => {
-    response.sendFile(path.join(rootDir, 'views', 'activities', 'view-exercise.html'));
+    response.render('./activities/view-exercise', {
+        exercises: exercises,
+        pageTitle: 'Exercise Information'
+      });
 });
 
 router.get('/add-exercise', (request, response, next) => {
-    response.sendFile(path.join(rootDir, 'views', 'activities', 'add-exercise.html'));
+    response.render('./activities/add-exercise', {
+        exercises: exercises,
+        pageTitle: 'Exercise Information'
+      });
 });
 
 router.post('/exercise', (request, response, next) => {

@@ -14,11 +14,15 @@ exp.use('/activities', activitiesData.routes); //executes routes for activities
 
 //Implement 404 logic
 // exp.use('/*', (request, response, next) => {
-//     response.status(404).sendFile(path.join(__dirname, 'views', 'general', '404.html'));
+//     response.render('./general/404', {
+//         pageTitle: 'Page not found'
+//       });
 // });
 
 exp.use('/', (request, response, next) => {
-    response.sendFile(path.join(rootDir, 'views', 'general', 'home.html'));
+    response.render('./general/home', {
+        pageTitle: 'Welcome to En Salud Optima application!'
+      });
 });
 
 exp.listen(3000);
