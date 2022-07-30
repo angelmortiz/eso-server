@@ -11,15 +11,26 @@
 
 .add-food-form__control{
     padding: 0.5rem 0 0.5rem 0;
-    display: flex;
 }
 
-.add-food-form__control label{
+.add-food-form__item {
+    display: flex;
+    margin: 0 0 1rem 0;
+}
+
+.add-food-form__item label{
     padding: 0 5px 0 0;
 }
 
-.add-food-form__control input {
+.add-food-form__item input {
     flex-grow: 1;
+    border: 1px solid #007E86;
+    font: inherit;
+    border-radius: 5px;
+    padding: 0.1rem 0.3rem;
+}
+
+.add-food-form__item select {
     border: 1px solid #007E86;
     font: inherit;
     border-radius: 5px;
