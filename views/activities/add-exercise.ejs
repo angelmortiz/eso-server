@@ -26,13 +26,89 @@
     </div>
     <form class="add-exercise-form" action="/activities/exercise" method="POST">
         <div class="add-exercise-form__control">
-            <label for="exercise-name" class="add-exercise-form__title">Exercise name:</label> 
-            <input type="text" name="name" id="exercise-name">
+            <div class="add-exercise-form__item">
+                <label for="name" class="add-exercise-form__title">Nombre de ejercicio:</label>
+                <input type="text" name="name" id="exercise-name">
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="alternativeName" class="add-exercise-form__title">Nombre alternativo:</label>
+                <input type="text" name="alternativeName" id="alternativeName">
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="difficulty" class="add-exercise-form__title">Dificultad:</label>
+                <select name="difficulty" id="difficulty-selection">
+                    <option value="baja">Baja</option>
+                    <option value="media">Media</option>
+                    <option value="alta">Alta</option>
+                </select>
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="type" class="add-exercise-form__title">Tipo de ejercicio:</label>
+                <select name="type" id="type-selection">
+                    <option value="fuerza">Fuerza</option>
+                    <option value="hiit">HIIT</option>
+                    <option value="cardio">Cardio</option>
+                    <option value="estiramiento">Estiramiento</option>
+                </select>
+            </div>
+            <div class="add-exercise-form__item">
+                <label class="add-exercise-form__title">Ejercicio compuesto:</label>
+                <input type="radio" name="compundMovement" id="compundMovement-yes-selection">
+                <label for="compundMovement" class="add-exercise-form__title">Sí</label>
+                <input type="radio" name="compundMovement" id="compundMovement-no-selection">
+                <label for="compundMovement" class="add-exercise-form__title">No</label>
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="mainMuscle" class="add-exercise-form__title">Músculo principal:</label>
+                <select name="mainMuscle" id="mainMuscle-selection">
+                    <option value="pantorrilla">Pantorrilla</option>
+                </select>
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="secondaryMuscles" class="add-exercise-form__title">Músculos secundarios:</label>
+                <select name="secondaryMuscles" id="secondaryMuscles-selection">
+                    <option value="pantorrilla">Pantorrilla</option>
+                </select>
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="equipments" class="add-exercise-form__title">Equipos:</label>
+                <select name="equipments" id="equipments-selection">
+                    <option value="barra">Barra</option>
+                </select>
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="safeForConditions" class="add-exercise-form__title">Seguro para condiciones:</label>
+                <select name="safeForConditions" id="safeForConditions-selection">
+                    <option value="diabetestipo1">Diabetes tipo 1</option>
+                    <option value="diabetestipo2">Diabetes tipo 2</option>
+                    <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
+                </select>
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="notRecommendedForConditions" class="add-exercise-form__title">No recomendado para condiciones:</label>
+                <select name="notRecommendedForConditions" id="notRecommendedForConditions-selection">
+                    <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
+                </select>
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="recommendedForCyclePhases" class="add-exercise-form__title">Recomendado para fases:</label>
+                <select name="recommendedForCyclePhases" id="recommendedForCyclePhases-selection">
+                    <option value="periodo">Periodo</option>
+                    <option value="folicular">Folicular</option>
+                    <option value="ovulacion">Ovulación</option>
+                    <option value="secretora">Secretora</option>
+                </select>
+            </div>
+            <div class="add-exercise-form__item">
+                <label for="linkToVideo" class="add-exercise-form__title">Enlace para video:</label>
+                <input type="text" name="linkToVideo" id="linkToVideo">
+            </div>
         </div>
+
         <div class="add-exercise-form__btn-control">
             <button class="add-exercise-form__btn" type="submit">Add</button>
         </div>
-    </form> 
+    </form>
 </main>
 </body>
 </html>
