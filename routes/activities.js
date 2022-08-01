@@ -3,6 +3,7 @@ const router = express.Router();
 
 const exercises = [];
 const muscles = [];
+const equipments = [];
 
 /* EXERCISE */
 router.get('/exercise', (request, response, next) => {
@@ -40,6 +41,21 @@ router.get('/add-muscle', (request, response, next) => {
     response.render('./activities/add-muscle', {
         muscles: muscles,
         pageTitle: 'Añadir músculo'
+      });
+});
+
+/* EQUIPMENT */
+router.get('/equipment', (request, response, next) => {
+    response.render('./activities/view-equipment', {
+        equipments: equipments,
+        pageTitle: 'Información de equipo'
+      });
+});
+
+router.get('/add-equipment', (request, response, next) => {
+    response.render('./activities/add-equipment', {
+        equipments: equipments,
+        pageTitle: 'Añadir equipo'
       });
 });
 
