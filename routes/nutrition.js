@@ -1,86 +1,26 @@
 const express = require('express');
 const router = express.Router();
-
-const foods = [];
-const recipes = [];
-const diets = [];
-const chronicCondition = [];
+const foodController = require('../controllers/nutrition/foods');
+const recipeController = require('../controllers/nutrition/recipes');
+const dietController = require('../controllers/nutrition/diets');
+const chronicConditionController = require('../controllers/nutrition/chronicConditions');
 
 /* FOOD */
-router.get('/food', (request, response, next) => {
-  response.render('./nutrition/view-food', {
-    caller: 'view-food',
-    foods: foods,
-    pageTitle: 'Información de comida'
-  });
-});
-
-router.get('/add-food', (request, response, next) => {
-  response.render('./nutrition/add-food', {
-    caller: 'add-food',
-    foods: foods,
-    pageTitle: 'Añadir comida'
-  });
-});
-
-router.post('/food', (request, response, next) => {
-  //add food info to db
-
-  foods.push({ name: request.body.name });
-  console.log(foods);
-  // response.redirect('/nutrition/food')
-});
+router.get('/food', foodController.getFood);
+router.get('/add-food', foodController.getAddFood);
+router.post('/food', foodController.addFood);
 
 /* RECIPE */
-router.get('/recipe', (request, response, next) => {
-  response.render('./nutrition/view-recipe', {
-    caller: 'view-recipe',
-    recipes: recipes,
-    pageTitle: 'Información de receta'
-  });
-});
-
-router.get('/add-recipe', (request, response, next) => {
-  response.render('./nutrition/add-recipe', {
-    caller: 'add-recipe',
-    recipes: recipes,
-    pageTitle: 'Añadir receta'
-  });
-});
+router.get('/recipe', recipeController.getRecipe);
+router.get('/add-recipe', recipeController.getAddRecipe);
 
 /* DIET */
-router.get('/diet', (request, response, next) => {
-  response.render('./nutrition/view-diet', {
-    caller: 'view-diet',
-    diets: diets,
-    pageTitle: 'Información de dieta'
-  });
-});
-
-router.get('/add-diet', (request, response, next) => {
-  response.render('./nutrition/add-diet', {
-    caller: 'add-diet',
-    diets: diets,
-    pageTitle: 'Añadir dieta'
-  });
-});
+router.get('/diet', dietController.getDiet);
+router.get('/add-diet', dietController.getAddDiet);
 
 /* CHRONIC CONDITION */
-router.get('/chronicCondition', (request, response, next) => {
-  response.render('./nutrition/view-chronicCondition', {
-    caller: 'view-chronicCondition',
-    chronicCondition: chronicCondition,
-    pageTitle: 'Información de condición crónica'
-  });
-});
+router.get('/chronicCondition', chronicConditionController.getChronicConditions);
+router.get('/add-chronicCondition', chronicConditionController.getAddChronicConditions);
 
-router.get('/add-chronicCondition', (request, response, next) => {
-  response.render('./nutrition/add-chronicCondition', {
-    caller: 'add-chronicCondition',
-    chronicCondition: chronicCondition,
-    pageTitle: 'Añadir condición crónica'
-  });
-});
-
+//exports
 exports.routes = router;
-exports.foods = foods;
