@@ -29,6 +29,22 @@ router.post('/food', (request, response, next) => {
   // response.redirect('/nutrition/food')
 });
 
+/* RECIPE */
+router.get('/recipe', (request, response, next) => {
+  response.render('./nutrition/view-recipe', {
+    diets: diets,
+    pageTitle: 'Información de receta'
+  });
+});
+
+router.get('/add-recipe', (request, response, next) => {
+  response.render('./nutrition/add-recipe', {
+    diets: diets,
+    pageTitle: 'Añadir receta'
+  });
+});
+
+
 /* DIET */
 router.get('/diet', (request, response, next) => {
   response.render('./nutrition/view-diet', {

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/nutrition/view-recipe.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <nav class="main-header__nav">
+            <ul class="main-header__item-list"> 
+                <!-- <li class="main-header__item"><a href="/">Inicio</a></li> -->
+                <li class="main-header__item"><a href="/nutrition/food">Ver Comida</a></li>
+                <li class="main-header__item"><a href="/nutrition/diet">Ver Dieta</a></li>
+                <li class="main-header__item"><a class="active" href="/nutrition/recipe">Ver Receta</a></li>
+                <li class="main-header__item"><a href="/nutrition/chronicCondition">Ver Condición Crónica</a></li>
+                <li class="main-header__item"><a href="/activities/exercise">Ver Ejercicio</a></li>
+                <li class="main-header__item"><a href="/activities/muscle">Ver Músculo</a></li>
+                <li class="main-header__item"><a href="/activities/equipment">Ver Equipo</a></li>
+                <li class="main-header__item"><a href="/activities/physicalCondition">Ver Condición Física</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-food">Añadir Comida</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-diet">Añadir Dieta</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-recipe">Añadir Receta</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-chronicCondition">Añadir Condición Crónica</a></li>
+                <li class="main-header__item"><a href="/activities/add-exercise">Añadir Ejercicio</a></li>
+                <li class="main-header__item"><a href="/activities/add-muscle">Añadir Músculo</a></li>
+                <li class="main-header__item"><a href="/activities/add-equipment">Añadir Músculo</a></li>
+                <li class="main-header__item"><a href="/activities/add-physicalCondition">Añadir Condición Física</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="page-title__div">
+            <h2 class="page-title">
+                <%= pageTitle %>:
+            </h2>
+        </div>
+        <div class="view-recipe-template">
+            <ul class="view-recipe-list">
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">ID:</span>
+                    <span class="view-recipe-list__value">62d9ad342aeacf742c28839e</span>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Nombre:</span>
+                    <span class="view-recipe-list__value">Pechuga de pollo</span>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Descripción:</span>
+                    <span class="view-recipe-list__value">Esto es una descripción corta a manera de ejemplo</span>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Fuente:</span>
+                    <span class="view-recipe-list__value">www.source.com</span>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Tiempo de preparación:</span>
+                    <span class="view-recipe-list__value">45 minutos</span>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Complejidad:</span>
+                    <span class="view-recipe-list__value">Fácil</span>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Tipo de comida:</span>
+                    <ul>
+                        <li>Almuerzo</li>
+                        <li>Cena</li>
+                    </ul>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Ingredientes:</span>
+                    <ul>
+                        <li>Pollo</li>
+                        <li>Sal</li>
+                        <li>Pimienta</li>
+                    </ul>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Instrucciones:</span>
+                    <ul>
+                        <li>Instrucción 1</li>
+                        <li>Instrucción 2</li>
+                        <li>Instrucción 3</li>
+                    </ul>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Herramientas:</span>
+                    <ul>
+                        <li>Herramienta 1</li>
+                        <li>Herramienta 2</li>
+                        <li>Herramienta 3</li>
+                    </ul>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Información nutricional:</span>
+                    <span class="view-recipe-list__value">{Objeto}</span>
+                </li>
+
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Seguro para condiciones:</span>
+                    <ul>
+                        <li>Diabetes tipo 1</li>
+                        <li>Diabetes tipo 2</li>
+                        <li>Enfermedades autoinmunes</li>
+                        <li>Sobrepeso/Obesidad</li>
+                    </ul>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">No recomendado para condiciones:</span>
+                    <ul>
+                    </ul>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Compatible con dietas:</span>
+                    <ul>
+                        <li>Keto</li>
+                        <li>Paleo</li>
+                    </ul>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Recomendado para fases menstruales:</span>
+                    <ul>
+                        <li>Lútea</li>
+                        <li>Sangrado</li>
+                    </ul>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Imagen:</span>
+                    <span class="view-recipe-list__value">{Añadir imagen}</span>
+                </li>
+                <li class="view-recipe-list__item">
+                    <span class="view-recipe-list__name">Video:</span>
+                    <span class="view-recipe-list__value">{Añadir video}</span>
+                </li>
+            </ul>
+        </div>
+    </main>
+</body>
+
+</html>
