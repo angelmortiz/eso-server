@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/nutrition/view-chronicCondition.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <nav class="main-header__nav">
+            <ul class="main-header__item-list"> 
+                <!-- <li class="main-header__item"><a href="/">Inicio</a></li> -->
+                <li class="main-header__item"><a href="/nutrition/food">Ver Comida</a></li>
+                <li class="main-header__item"><a href="/nutrition/diet">Ver Dieta</a></li>
+                <li class="main-header__item"><a href="/nutrition/recipe">Ver Receta</a></li>
+                <li class="main-header__item"><a class="active" href="/nutrition/chronicCondition">Ver Condición Crónica</a></li>
+                <li class="main-header__item"><a href="/activities/exercise">Ver Ejercicio</a></li>
+                <li class="main-header__item"><a href="/activities/muscle">Ver Músculo</a></li>
+                <li class="main-header__item"><a href="/activities/equipment">Ver Equipo</a></li>
+                <li class="main-header__item"><a href="/activities/physicalCondition">Ver Condición Física</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-food">Añadir Comida</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-diet">Añadir Dieta</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-recipe">Añadir Receta</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-chronicCondition">Añadir Condición Crónica</a></li>
+                <li class="main-header__item"><a href="/activities/add-exercise">Añadir Ejercicio</a></li>
+                <li class="main-header__item"><a href="/activities/add-muscle">Añadir Músculo</a></li>
+                <li class="main-header__item"><a href="/activities/add-equipment">Añadir Músculo</a></li>
+                <li class="main-header__item"><a href="/activities/add-physicalCondition">Añadir Condición Física</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="page-title__div">
+            <h2 class="page-title">
+                <%= pageTitle %>:
+            </h2>
+        </div>
+        <div class="view-chronicCondition-template">
+            <ul class="view-chronicCondition-list">
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">ID:</span>
+                    <span class="view-chronicCondition-list__value">62d9ad342aeacf742c28839e</span>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Nombre:</span>
+                    <span class="view-chronicCondition-list__value">Diabetes tipo 2</span>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Descripción:</span>
+                    <span class="view-chronicCondition-list__value">Esto es una descripción corta a manera de ejemplo</span>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Síntomas:</span>
+                    <ul>
+                        <li>Síntoma 1</li>
+                        <li>Síntoma 2</li>
+                    </ul>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Causas:</span>
+                    <ul>
+                        <li>Causa 1</li>
+                        <li>Causa 2</li>
+                    </ul>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Tratamientos:</span>
+                    <ul>
+                        <li>Tratamiento 1</li>
+                        <li>Tratamiento 2</li>
+                    </ul>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Pruebas:</span>
+                    <ul>
+                        <li>Prueba 1</li>
+                        <li>Prueba 2</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </main>
+</body>
+
+</html>

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const foods = [];
 const diets = [];
+const chronicCondition = [];
 
 
 /* FOOD */
@@ -40,6 +41,21 @@ router.get('/add-diet', (request, response, next) => {
   response.render('./nutrition/add-diet', {
     diets: diets,
     pageTitle: 'Añadir dieta'
+  });
+});
+
+/* CHRONIC CONDITION */
+router.get('/chronicCondition', (request, response, next) => {
+  response.render('./nutrition/view-chronicCondition', {
+    chronicCondition: chronicCondition,
+    pageTitle: 'Información de condición crónica'
+  });
+});
+
+router.get('/add-chronicCondition', (request, response, next) => {
+  response.render('./nutrition/add-chronicCondition', {
+    chronicCondition: chronicCondition,
+    pageTitle: 'Añadir condición crónica'
   });
 });
 

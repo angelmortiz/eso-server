@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/nutrition/add-diet.css">
+    <link rel="stylesheet" href="/css/nutrition/add-chronicCondition.css">
 </head>
 
 <body>
@@ -24,9 +24,9 @@
                 <li class="main-header__item"><a href="/activities/equipment">Ver Equipo</a></li>
                 <li class="main-header__item"><a href="/activities/physicalCondition">Ver Condición Física</a></li>
                 <li class="main-header__item"><a href="/nutrition/add-food">Añadir Comida</a></li>
-                <li class="main-header__item"><a class="active" href="/nutrition/add-diet">Añadir Dieta</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-diet">Añadir Dieta</a></li>
                 <li class="main-header__item"><a href="/nutrition/add-recipe">Añadir Receta</a></li>
-                <li class="main-header__item"><a href="/nutrition/add-chronicCondition">Añadir Condición Crónica</a></li>
+                <li class="main-header__item"><a class="active" href="/nutrition/add-chronicCondition">Añadir Condición Crónica</a></li>
                 <li class="main-header__item"><a href="/activities/add-exercise">Añadir Ejercicio</a></li>
                 <li class="main-header__item"><a href="/activities/add-muscle">Añadir Músculo</a></li>
                 <li class="main-header__item"><a href="/activities/add-equipment">Añadir Músculo</a></li>
@@ -38,22 +38,23 @@
         <div class="page-title__div">
             <h2 class="page-title"><%= pageTitle %>:</h2>
         </div>
-        <form class="add-diet-form" action="/nutrition/diet" method="POST">
-            <div class="add-diet-form__control">
-                <div class="add-diet-form__item">
-                    <label for="diet-name" class="add-diet-form__title">Nombre:</label>
-                    <input type="text" name="diet-name" id="diet-name">
+        <form class="add-chronicCondition-form" action="/nutrition/chronicCondition" method="POST">
+            <div class="add-chronicCondition-form__control">
+                <div class="add-chronicCondition-form__item">
+                    <label for="chronicCondition-name" class="add-chronicCondition-form__title">Nombre:</label>
+                    <input type="text" name="chronicCondition-name" id="chronicCondition-name">
                 </div>
-                <div class="add-diet-form__item">
-                    <label for="diet-officialName" class="add-diet-form__title">Nombre oficial:</label>
-                    <input type="text" name="diet-officialName" id="diet-officialName">
+                <div class="add-chronicCondition-form__item">
+                    <label for="official-name" class="add-chronicCondition-form__title">Nombre oficial:</label>
+                    <input type="text" name="official-name" id="official-name">
                 </div>
-                <div class="add-diet-form__item">
-                    <label for="description" class="add-diet-form__title">Descripción:</label>
+                <div class="add-chronicCondition-form__item">
+                    <label for="description" class="add-chronicCondition-form__title">Descripción:</label>
                     <input type="text" name="description" id="description">
                 </div>
-                <div class="add-diet-form__item">
-                    <label for="safeForConditions" class="add-diet-form__title">Seguro para condiciones:</label>
+                
+                <div class="add-chronicCondition-form__item">
+                    <label for="safeForConditions" class="add-chronicCondition-form__title">Seguro para condiciones:</label>
                     <select name="safeForConditions" id="safeForConditions-selection">
                         <option value="diabetestipo1">Diabetes tipo 1</option>
                         <option value="diabetestipo2">Diabetes tipo 2</option>
@@ -61,8 +62,9 @@
                     </select>
                 </div>
             </div>
-            <div class="add-diet-form__btn-control">
-                <button class="add-diet-form__btn" type="submit">Add</button>
+
+            <div class="add-chronicCondition-form__btn-control">
+                <button class="add-chronicCondition-form__btn" type="submit">Add</button>
             </div>
         </form>
     </main>
