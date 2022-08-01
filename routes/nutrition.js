@@ -6,10 +6,10 @@ const recipes = [];
 const diets = [];
 const chronicCondition = [];
 
-
 /* FOOD */
 router.get('/food', (request, response, next) => {
   response.render('./nutrition/view-food', {
+    caller: 'view-food',
     foods: foods,
     pageTitle: 'Información de comida'
   });
@@ -17,6 +17,7 @@ router.get('/food', (request, response, next) => {
 
 router.get('/add-food', (request, response, next) => {
   response.render('./nutrition/add-food', {
+    caller: 'add-food',
     foods: foods,
     pageTitle: 'Añadir comida'
   });
@@ -33,6 +34,7 @@ router.post('/food', (request, response, next) => {
 /* RECIPE */
 router.get('/recipe', (request, response, next) => {
   response.render('./nutrition/view-recipe', {
+    caller: 'view-recipe',
     recipes: recipes,
     pageTitle: 'Información de receta'
   });
@@ -40,6 +42,7 @@ router.get('/recipe', (request, response, next) => {
 
 router.get('/add-recipe', (request, response, next) => {
   response.render('./nutrition/add-recipe', {
+    caller: 'add-recipe',
     recipes: recipes,
     pageTitle: 'Añadir receta'
   });
@@ -48,6 +51,7 @@ router.get('/add-recipe', (request, response, next) => {
 /* DIET */
 router.get('/diet', (request, response, next) => {
   response.render('./nutrition/view-diet', {
+    caller: 'view-diet',
     diets: diets,
     pageTitle: 'Información de dieta'
   });
@@ -55,6 +59,7 @@ router.get('/diet', (request, response, next) => {
 
 router.get('/add-diet', (request, response, next) => {
   response.render('./nutrition/add-diet', {
+    caller: 'add-diet',
     diets: diets,
     pageTitle: 'Añadir dieta'
   });
@@ -63,6 +68,7 @@ router.get('/add-diet', (request, response, next) => {
 /* CHRONIC CONDITION */
 router.get('/chronicCondition', (request, response, next) => {
   response.render('./nutrition/view-chronicCondition', {
+    caller: 'view-chronicCondition',
     chronicCondition: chronicCondition,
     pageTitle: 'Información de condición crónica'
   });
@@ -70,6 +76,7 @@ router.get('/chronicCondition', (request, response, next) => {
 
 router.get('/add-chronicCondition', (request, response, next) => {
   response.render('./nutrition/add-chronicCondition', {
+    caller: 'add-chronicCondition',
     chronicCondition: chronicCondition,
     pageTitle: 'Añadir condición crónica'
   });
