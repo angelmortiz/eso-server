@@ -5,6 +5,7 @@ const bodyParser = require('body-parser'); //parser to read info from client-sid
 const nutritionRoutes = require('./routes/nutrition'); //routes for nutrition
 const activitiesRoutes = require('./routes/activities'); //routes for activities
 const homeController = require('./controllers/home'); //imports logic to load home page
+const errorController = require('./controllers/errors'); //imports logic to load home page
 const exp = express(); //initializing express framework
 
 exp.set('view engine', 'ejs'); //activates ejs templates to create dynamic htmls
@@ -15,12 +16,9 @@ exp.use(express.static(path.join(rootDir, 'public'))); //uploads public files (c
 exp.use('/nutrition', nutritionRoutes.routes); //executes routes for nutrition
 exp.use('/activities', activitiesRoutes.routes); //executes routes for activities
 
-//Implement 404 logic
-// exp.use('/*', (request, response, next) => {
-//     response.render('./404', {
-//         pageTitle: 'Page not found'
-//       });
-// });
+//errors
+//TODO: Implement 404 logic
+//exp.use('/*', errorController.get404);
 
 //redirects all not found pages to home page
 exp.use('/', homeController.getHome);
