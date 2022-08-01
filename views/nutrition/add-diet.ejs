@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/nutrition/view-diet.css">
+    <link rel="stylesheet" href="/css/nutrition/add-diet.css">
 </head>
 
 <body>
@@ -16,7 +16,7 @@
             <ul class="main-header__item-list"> 
                 <!-- <li class="main-header__item"><a href="/">Inicio</a></li> -->
                 <li class="main-header__item"><a href="/nutrition/food">Ver Comida</a></li>
-                <li class="main-header__item"><a class="active" href="/nutrition/diet">Ver Dieta</a></li>
+                <li class="main-header__item"><a href="/nutrition/diet">Ver Dieta</a></li>
                 <li class="main-header__item"><a href="/nutrition/recipe">Ver Receta</a></li>
                 <li class="main-header__item"><a href="/nutrition/chronicCondition">Ver Condición Crónica</a></li>
                 <li class="main-header__item"><a href="/activities/exercise">Ver Ejercicio</a></li>
@@ -24,7 +24,7 @@
                 <li class="main-header__item"><a href="/activities/equipment">Ver Equipo</a></li>
                 <li class="main-header__item"><a href="/activities/physicalCondition">Ver Condición Física</a></li>
                 <li class="main-header__item"><a href="/nutrition/add-food">Añadir Comida</a></li>
-                <li class="main-header__item"><a href="/nutrition/add-diet">Añadir Dieta</a></li>
+                <li class="main-header__item"><a class="active" href="/nutrition/add-diet">Añadir Dieta</a></li>
                 <li class="main-header__item"><a href="/nutrition/add-recipe">Añadir Receta</a></li>
                 <li class="main-header__item"><a href="/nutrition/add-chronicCondition">Añadir Condición Crónica</a></li>
                 <li class="main-header__item"><a href="/activities/add-exercise">Añadir Ejercicio</a></li>
@@ -36,39 +36,35 @@
     </header>
     <main>
         <div class="page-title__div">
-            <h2 class="page-title">
-                <%= pageTitle %>:
-            </h2>
+            <h2 class="page-title"><%= pageTitle %>:</h2>
         </div>
-        <div class="view-diet-template">
-            <ul class="view-diet-list">
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">ID:</span>
-                    <span class="view-diet-list__value">62d9ad342aeacf742c28839e</span>
-                </li>
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">Nombre:</span>
-                    <span class="view-diet-list__value">Keto</span>
-                </li>
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">Nombre oficial:</span>
-                    <span class="view-diet-list__value">Dieta Cetogénica</span>
-                </li>
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">Descripción:</span>
-                    <span class="view-diet-list__value">Esto es una descripción corta a manera de ejemplo</span>
-                </li>
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">Seguro para condiciones:</span>
-                    <ul>
-                        <li>Diabetes tipo 1</li>
-                        <li>Diabetes tipo 2</li>
-                        <li>Enfermedades autoinmunes</li>
-                        <li>Sobrepeso/Obesidad</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+        <form class="add-food-form" action="/nutrition/food" method="POST">
+            <div class="add-food-form__control">
+                <div class="add-food-form__item">
+                    <label for="food-name" class="add-food-form__title">Nombre:</label>
+                    <input type="text" name="food-name" id="food-name">
+                </div>
+                <div class="add-food-form__item">
+                    <label for="food-officialName" class="add-food-form__title">Nombre oficial:</label>
+                    <input type="text" name="food-officialName" id="food-officialName">
+                </div>
+                <div class="add-food-form__item">
+                    <label for="description" class="add-food-form__title">Descripción:</label>
+                    <input type="text" name="description" id="description">
+                </div>
+                <div class="add-food-form__item">
+                    <label for="safeForConditions" class="add-food-form__title">Seguro para condiciones:</label>
+                    <select name="safeForConditions" id="safeForConditions-selection">
+                        <option value="diabetestipo1">Diabetes tipo 1</option>
+                        <option value="diabetestipo2">Diabetes tipo 2</option>
+                        <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
+                    </select>
+                </div>
+
+            <div class="add-food-form__btn-control">
+                <button class="add-food-form__btn" type="submit">Add</button>
+            </div>
+        </form>
     </main>
 </body>
 

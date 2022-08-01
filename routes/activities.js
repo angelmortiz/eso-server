@@ -3,17 +3,18 @@ const router = express.Router();
 
 const exercises = [];
 
+/* EXERCISE */
 router.get('/exercise', (request, response, next) => {
     response.render('./activities/view-exercise', {
         exercises: exercises,
-        pageTitle: 'Exercise Information'
+        pageTitle: 'Información de ejercicio'
       });
 });
 
 router.get('/add-exercise', (request, response, next) => {
     response.render('./activities/add-exercise', {
         exercises: exercises,
-        pageTitle: 'Exercise Information'
+        pageTitle: 'Añadir ejercicio'
       });
 });
 

@@ -14,7 +14,10 @@ router.get('/food', (request, response, next) => {
 });
 
 router.get('/add-food', (request, response, next) => {
-  response.render('./nutrition/add-food');
+  response.render('./nutrition/add-food', {
+    foods: foods,
+    pageTitle: 'Añadir comida'
+  });
 });
 
 router.post('/food', (request, response, next) => {
@@ -30,6 +33,13 @@ router.get('/diet', (request, response, next) => {
   response.render('./nutrition/view-diet', {
     diets: diets,
     pageTitle: 'Información de dieta'
+  });
+});
+
+router.get('/add-diet', (request, response, next) => {
+  response.render('./nutrition/add-diet', {
+    diets: diets,
+    pageTitle: 'Añadir dieta'
   });
 });
 
