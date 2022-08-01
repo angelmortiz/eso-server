@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/activities/add-physicalCondition.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-header__nav">
+            <ul class="main-header__item-list"> 
+                <!-- <li class="main-header__item"><a href="/">Inicio</a></li> -->
+                <li class="main-header__item"><a href="/nutrition/food">Ver Comida</a></li>
+                <li class="main-header__item"><a href="/nutrition/recipe">Ver Receta</a></li>
+                <li class="main-header__item"><a href="/nutrition/diet">Ver Dieta</a></li>
+                <li class="main-header__item"><a href="/nutrition/chronicCondition">Ver Condición Crónica</a></li>
+                <li class="main-header__item"><a href="/activities/exercise">Ver Ejercicio</a></li>
+                <li class="main-header__item"><a href="/activities/muscle">Ver Músculo</a></li>
+                <li class="main-header__item"><a href="/activities/equipment">Ver Equipo</a></li>
+                <li class="main-header__item"><a href="/activities/physicalCondition">Ver Condición Física</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-food">Añadir Comida</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-recipe">Añadir Receta</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-diet">Añadir Dieta</a></li>
+                <li class="main-header__item"><a href="/nutrition/add-chronicCondition">Añadir Condición Crónica</a></li>
+                <li class="main-header__item"><a href="/activities/add-exercise">Añadir Ejercicio</a></li>
+                <li class="main-header__item"><a href="/activities/add-muscle">Añadir Músculo</a></li>
+                <li class="main-header__item"><a href="/activities/add-equipment">Añadir Equipo</a></li>
+                <li class="main-header__item"><a class="active" href="/activities/add-physicalCondition">Añadir Condición Física</a></li>
+            </ul>
+        </nav>
+    </header>
+<main>
+    <div class="page-title__div">
+        <h2 class="page-title"><%= pageTitle %>:</h2>
+    </div>
+    <form class="add-physicalCondition-form" action="/activities/physicalCondition" method="POST">
+        <div class="add-physicalCondition-form__control">
+            <div class="add-physicalCondition-form__item">
+                <label for="name" class="add-physicalCondition-form__title">Nombre:</label>
+                <input type="text" name="name" id="muscle-name">
+            </div>
+            <div class="add-physicalCondition-form__item">
+                <label for="description" class="add-physicalCondition-form__title">Descripción:</label>
+                <input type="text" name="description" id="description">
+            </div>
+            <div class="add-physicalCondition-form__item">
+                <label for="symptoms" class="add-physicalCondition-form__title">Síntomas:</label>
+                <select name="symptoms" id="symptoms-selection">
+                    <option value="sim1">Dolor de espalda</option>
+                    <option value="sim2">Dolor en las rodillas</option>
+                </select>
+            </div>
+            <div class="add-physicalCondition-form__item">
+                <label for="causes" class="add-physicalCondition-form__title">Causas:</label>
+                <select name="causes" id="causes-selection">
+                    <option value="sim1">Mala postura</option>
+                    <option value="sim2">Inflexibilidad</option>
+                </select>
+            </div>
+            <div class="add-physicalCondition-form__item">
+                <label for="symptoms" class="add-physicalCondition-form__title">Tratamientos:</label>
+                <select name="symptoms" id="symptoms-selection">
+                    <option value="sim1">Estiramientos</option>
+                    <option value="sim2">Ejercicios de movilidad</option>
+                </select>
+            </div>
+            <div class="add-physicalCondition-form__item">
+                <label for="tests" class="add-physicalCondition-form__title">Pruebas:</label>
+                <select name="tests" id="tests-selection">
+                    <option value="pub1">Prueba 1</option>
+                    <option value="pub2">Prueba 2</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="add-physicalCondition-form__btn-control">
+            <button class="add-physicalCondition-form__btn" type="submit">Añadir</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>
