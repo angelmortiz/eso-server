@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const foods = [];
+const recipes = [];
 const diets = [];
 const chronicCondition = [];
 
@@ -32,18 +33,17 @@ router.post('/food', (request, response, next) => {
 /* RECIPE */
 router.get('/recipe', (request, response, next) => {
   response.render('./nutrition/view-recipe', {
-    diets: diets,
+    recipes: recipes,
     pageTitle: 'Información de receta'
   });
 });
 
 router.get('/add-recipe', (request, response, next) => {
   response.render('./nutrition/add-recipe', {
-    diets: diets,
+    recipes: recipes,
     pageTitle: 'Añadir receta'
   });
 });
-
 
 /* DIET */
 router.get('/diet', (request, response, next) => {
