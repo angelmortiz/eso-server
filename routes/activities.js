@@ -4,6 +4,7 @@ const router = express.Router();
 const exercises = [];
 const muscles = [];
 const equipments = [];
+const physicalCondition = [];
 
 /* EXERCISE */
 router.get('/exercise', (request, response, next) => {
@@ -56,6 +57,21 @@ router.get('/add-equipment', (request, response, next) => {
     response.render('./activities/add-equipment', {
         equipments: equipments,
         pageTitle: 'Añadir equipo'
+      });
+});
+
+/* Physical Condition */
+router.get('/physicalCondition', (request, response, next) => {
+    response.render('./activities/view-physicalCondition', {
+        physicalCondition: physicalCondition,
+        pageTitle: 'Información de condición física'
+      });
+});
+
+router.get('/add-physicalCondition', (request, response, next) => {
+    response.render('./activities/add-physicalCondition', {
+        physicalCondition: physicalCondition,
+        pageTitle: 'Añadir condición física'
       });
 });
 
