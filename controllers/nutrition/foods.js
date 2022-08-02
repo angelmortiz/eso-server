@@ -16,7 +16,6 @@ exports.getAddFood = (request, response) => {
 
 exports.addFood = (request) => {
   const food = new Food(request.body);
-  // console.log(food);
   food.save();
   console.log(Food.fetchAll());
   // response.redirect('/nutrition/food')

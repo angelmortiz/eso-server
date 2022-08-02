@@ -16,7 +16,6 @@ exports.getAddRecipe = (request, response, next) => {
 
 exports.addRecipe = (request) => {
   const recipe = new Recipe(request.body);
-  // console.log(recipe);
   recipe.save();
   console.log(Recipe.fetchAll());
   // response.redirect('/nutrition/recipe')

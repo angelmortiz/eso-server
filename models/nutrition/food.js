@@ -16,11 +16,6 @@ module.exports = class Food {
     dietFriendly;
     linkToImage;
 
-    constructor(inputValues) {
-        if (!inputValues) return; //if no values were provided, ignore the rest of the logic
-        this.mapValues(inputValues);
-    }
-
     save() {
         foods.push(this);
     }
@@ -29,12 +24,12 @@ module.exports = class Food {
         Object.keys(inputValues).map(key => this[key] = inputValues[key]);
     }
 
-    static fetchByName(foodName) {
-        return foods.find(f => f.name === foodName);
+    static fetchByName(name) {
+        return foods.find(f => f.name === name);
     }
 
-    static fetchById(foodId) {
-        return foods.find(f => f.id === foodId);
+    static fetchById(id) {
+        return foods.find(f => f.id === id);
     }
 
     static fetchAll() {

@@ -20,6 +20,8 @@ router.post('/recipe', recipesController.addRecipe);
 /* DIET */
 router.get('/diet', dietsController.getDiet);
 router.get('/add-diet', dietsController.getAddDiet);
+router.post('/diet', dietsController.addDiet);
+
 
 /* CHRONIC CONDITION */
 router.get('/chronicCondition', chronicConditionsController.getChronicConditions);
