@@ -1,9 +1,8 @@
-const recipes = [];
+const Recipe = require('../../models/nutrition/recipe');
 
 exports.getRecipe = (request, response, next) => {
   response.render('./nutrition/view-recipe', {
     caller: 'view-recipe',
-    recipes: recipes,
     pageTitle: 'Información de receta',
   });
 };
@@ -11,7 +10,14 @@ exports.getRecipe = (request, response, next) => {
 exports.getAddRecipe = (request, response, next) => {
   response.render('./nutrition/add-recipe', {
     caller: 'add-recipe',
-    recipes: recipes,
     pageTitle: 'Añadir receta',
   });
+};
+
+exports.addRecipe = (request) => {
+  const recipe = new Recipe(request.body);
+  // console.log(recipe);
+  recipe.save();
+  console.log(Recipe.fetchAll());
+  // response.redirect('/nutrition/recipe')
 };

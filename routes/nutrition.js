@@ -15,6 +15,7 @@ router.post('/food', foodsController.addFood);
 /* RECIPE */
 router.get('/recipe', recipesController.getRecipe);
 router.get('/add-recipe', recipesController.getAddRecipe);
+router.post('/recipe', recipesController.addRecipe);
 
 /* DIET */
 router.get('/diet', dietsController.getDiet);
