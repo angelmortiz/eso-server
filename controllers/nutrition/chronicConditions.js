@@ -1,9 +1,8 @@
-const chronicConditions = [];
+const ChronicCondition = require('../../models/nutrition/chronicCondition');
 
 exports.getChronicConditions = (request, response, next) => {
   response.render('./nutrition/view-chronicCondition', {
     caller: 'view-chronicCondition',
-    chronicConditions: chronicConditions,
     pageTitle: 'Información de condición crónica',
   });
 };
@@ -11,7 +10,13 @@ exports.getChronicConditions = (request, response, next) => {
 exports.getAddChronicConditions = (request, response, next) => {
   response.render('./nutrition/add-chronicCondition', {
     caller: 'add-chronicCondition',
-    chronicConditions: chronicConditions,
     pageTitle: 'Añadir condición crónica',
   });
+};
+
+exports.addChronicCondition = (request) => {
+  const chronicCondition = new ChronicCondition(request.body);
+  chronicCondition.save();
+  console.log(ChronicCondition.fetchAll());
+  // response.redirect('/nutrition/chronicCondition')
 };

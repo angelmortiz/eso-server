@@ -26,6 +26,7 @@ router.post('/diet', dietsController.addDiet);
 /* CHRONIC CONDITION */
 router.get('/chronicCondition', chronicConditionsController.getChronicConditions);
 router.get('/add-chronicCondition', chronicConditionsController.getAddChronicConditions);
+router.post('/chronicCondition', chronicConditionsController.addChronicCondition);
 
 //exports
 exports.routes = router;
