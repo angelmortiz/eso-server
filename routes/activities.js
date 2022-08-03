@@ -16,14 +16,17 @@ router.post('/exercise', exercisesController.addExercise);
 /* MUSCLE */
 router.get('/muscle', musclesController.getMuscle);
 router.get('/add-muscle', musclesController.getAddMuscle);
+router.post('/muscle', musclesController.addMuscle);
 
 /* EQUIPMENT */
 router.get('/equipment', equipmentsController.getEquipment);
 router.get('/add-equipment', equipmentsController.getAddEquipment);
+// router.post('/equipment', equipmentsController);
 
 /* Physical Condition */
 router.get('/physicalCondition', physicalConditionsController.getPhysicalCondition);
 router.get('/add-physicalCondition', physicalConditionsController.getAddPhysicalCondition);
+// router.post('/physicalCondition', physicalConditionsController);
 
 //exports
 exports.routes = router;
