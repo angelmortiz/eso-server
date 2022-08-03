@@ -13,14 +13,9 @@ exp.use(bodyParser.urlencoded({extended: false})); //parses the body that comes 
 
 exp.use(express.static(path.join(rootDir, 'public'))); //uploads public files (css) to client
 
+exp.get('/', homeController.getHome); //navigates to home if no other address was provided
 exp.use('/nutrition', nutritionRoutes.routes); //executes routes for nutrition
 exp.use('/activities', activitiesRoutes.routes); //executes routes for activities
+exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
 
-//errors
-//TODO: Implement 404 logic
-//exp.use('/*', errorController.get404);
-
-//redirects all not found pages to home page
-exp.use('/', homeController.getHome);
-
-exp.listen(3000);
+exp.listen(3000); //specifying port #
