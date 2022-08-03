@@ -26,7 +26,7 @@ router.post('/equipment', equipmentsController.addEquipment);
 /* Physical Condition */
 router.get('/physicalCondition', physicalConditionsController.getPhysicalCondition);
 router.get('/add-physicalCondition', physicalConditionsController.getAddPhysicalCondition);
-// router.post('/physicalCondition', physicalConditionsController);
+router.post('/physicalCondition', physicalConditionsController.addPhysicalCondition);
 
 //exports
 exports.routes = router;

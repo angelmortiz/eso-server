@@ -1,19 +1,13 @@
-const exercises = [];
+const physicalConditions = [];
 
-module.exports = class Exercise {
+module.exports = class PhysicalConditions {
     id;
     name;
-    alternativeName;
-    difficulty;
-    types;
-    compundMovement;
-    mainMuscle;
-    secondaryMuscles;
-    equipments;
-    safeForConditions;
-    notRecommendedForConditions;
-    recommendedForCyclePhases;
-    linkToVideo;
+    description;
+    symptoms;
+    causes;
+    treatments;
+    tests;
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
@@ -21,7 +15,7 @@ module.exports = class Exercise {
     }
 
     save() {
-        exercises.push(this);
+        physicalConditions.push(this);
     }
 
     mapValues(inputValues){
@@ -29,19 +23,19 @@ module.exports = class Exercise {
     }
 
     static fetchByName(name) {
-        return exercises.find(f => f.name === name);
+        return physicalConditions.find(f => f.name === name);
     }
 
     static fetchById(id) {
-        return exercises.find(f => f.id === id);
+        return physicalConditions.find(f => f.id === id);
     }
 
     static fetchAll() {
-        return exercises;
+        return physicalConditions;
     }
 
     //extracts id and name properties and creates a new object with {id, name}
     static fetchAllNames()  {
-        return exercises.map(f => ({id: f.id, name: f.name}));
+        return physicalConditions.map(f => ({id: f.id, name: f.name}));
     }
 };
