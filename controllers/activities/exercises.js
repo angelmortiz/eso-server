@@ -1,26 +1,22 @@
-const exercises = [];
+const Exercise = require('../../models/activities/exercise');
 
-exports.getExercise = (request, response, next) => {
+exports.getExercise = (request, response) => {
     response.render('./activities/view-exercise', {
         caller: 'view-exercise',
-        exercises: exercises,
         pageTitle: 'Información de ejercicio'
       });
 };
 
-exports.getAddExercise = (request, response, next) => {
+exports.getAddExercise = (request, response) => {
     response.render('./activities/add-exercise', {
         caller: 'add-exercise',
-        exercises: exercises,
         pageTitle: 'Añadir ejercicio'
       });
 };
 
-exports.addExercise = (request, response, next) => {
-    //add exercise info to db
-
-    exercises.push({name: request.body.name});
-    console.log(exercises);
-
+exports.addExercise = (request) => {
+    const exercise = new Exercise(request.body);
+    exercise.save();
+    console.log(Exercise.fetchAll());
     // response.redirect('/activities/exercise');
 };

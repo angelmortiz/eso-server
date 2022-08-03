@@ -48,4 +48,4 @@ module.exports = class Recipe {
     static fetchAllNames()  {
         return recipes.map(f => ({id: f.id, name: f.name}));
     }
-}
+};

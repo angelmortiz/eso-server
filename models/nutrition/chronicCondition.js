@@ -38,4 +38,4 @@ module.exports = class ChronicCondition {
     static fetchAllNames()  {
         return chronicConditions.map(f => ({id: f.id, name: f.name}));
     }
-}
+};

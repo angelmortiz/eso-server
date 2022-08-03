@@ -36,4 +36,4 @@ module.exports = class Diet {
     static fetchAllNames()  {
         return diets.map(f => ({id: f.id, name: f.name}));
     }
-}
+};

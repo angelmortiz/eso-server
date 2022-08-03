@@ -1,0 +1,2 @@
+1. Create a new logic to accept multiple values for the same input (ex. safeForConditions)
+2. 

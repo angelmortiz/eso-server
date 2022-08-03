@@ -40,4 +40,4 @@ module.exports = class Food {
     static fetchAllNames()  {
         return foods.map(f => ({id: f.id, name: f.name}));
     }
-}
+};
