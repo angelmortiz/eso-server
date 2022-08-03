@@ -21,7 +21,7 @@ router.post('/muscle', musclesController.addMuscle);
 /* EQUIPMENT */
 router.get('/equipment', equipmentsController.getEquipment);
 router.get('/add-equipment', equipmentsController.getAddEquipment);
-// router.post('/equipment', equipmentsController);
+router.post('/equipment', equipmentsController.addEquipment);
 
 /* Physical Condition */
 router.get('/physicalCondition', physicalConditionsController.getPhysicalCondition);

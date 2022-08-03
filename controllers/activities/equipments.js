@@ -1,3 +1,5 @@
+const Equipment = require('../../models/activities/equipment');
+
 exports.getEquipment = (request, response, next) => {
     response.render('./activities/view-equipment', {
         caller: 'view-equipment',
@@ -10,4 +12,11 @@ exports.getAddEquipment = (request, response, next) => {
         caller: 'add-equipment',
         pageTitle: 'Añadir equipo'
       });
+};
+
+exports.addEquipment = (request) => {
+  const equipment = new Equipment(request.body);
+  equipment.save();
+  console.log(Equipment.fetchAll());
+  // response.redirect('/activities/equipment');
 };
