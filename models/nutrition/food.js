@@ -25,14 +25,13 @@ module.exports = class Food {
   save() {
     const db = getDb();
     delete this.id; //removes property before inserting to db to prevent double id to be created
-    return db.collection('foods')
+    return db
+      .collection('foods')
       .insertOne(this)
       .then((result) => {
-        //FIXME: Add log to a file
         console.log('New data inserted successfully.', result);
       })
       .catch((error) => {
-        //FIXME: Add log to a file
         console.log('There was an error trying to insert new data.', error);
       });
   }
@@ -42,19 +41,57 @@ module.exports = class Food {
   }
 
   static fetchByName(name) {
-    return foods.find((f) => f.name === name);
+    const db = getDb();
+    return db
+      .collection('foods')
+      .findOne({name: name})
+      .then((product) => {
+        return product;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   static fetchById(id) {
-    return foods.find((f) => f.id === id);
+    const db = getDb();
+    return db
+      .collection('foods')
+      .findOne({_id: id})
+      .then((product) => {
+        return product;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   static fetchAll() {
-    return foods;
+    const db = getDb();
+    return db
+      .collection('foods')
+      .find()
+      .toArray()
+      .then((products) => {
+        return products;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   //extracts id and name properties and creates a new object with {id, name}
   static fetchAllNames() {
-    return foods.map((f) => ({ id: f.id, name: f.name }));
+    const db = getDb();
+    return db
+      .collection('foods')
+      .find({}, {projection:{name: 1}})
+      .toArray()
+      .then((products) => {
+        return products;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 };
