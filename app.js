@@ -7,6 +7,7 @@ const activitiesRoutes = require('./routes/activities'); //routes for activities
 const homeController = require('./controllers/home'); //imports logic to load home page
 const errorController = require('./controllers/errors'); //imports logic to load home page
 const exp = express(); //initializing express framework
+const mongodbConnection = require('./util/database').mongodbConnection; //importing connection for mongodb
 
 exp.set('view engine', 'ejs'); //activates ejs templates to create dynamic htmls
 exp.use(bodyParser.urlencoded({extended: false})); //parses the body that comes from the client
@@ -18,4 +19,7 @@ exp.use('/nutrition', nutritionRoutes.routes); //executes routes for nutrition
 exp.use('/activities', activitiesRoutes.routes); //executes routes for activities
 exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
 
-exp.listen(3000); //specifying port #
+//connects to the database and starts the server after it's connected
+mongodbConnection(() => {
+    exp.listen(3000); //specifying port #
+});
