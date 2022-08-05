@@ -3,10 +3,10 @@ const express = require('express');
 const router = express.Router();
 
 //Controllers imports
-const foodsController = require('../controllers/nutrition/foods');
-const recipesController = require('../controllers/nutrition/recipes');
-const dietsController = require('../controllers/nutrition/diets');
-const chronicConditionsController = require('../controllers/nutrition/chronicConditions');
+const foodsController = require('../controllers/nutrition/foodsController');
+const recipesController = require('../controllers/nutrition/recipesController');
+const dietsController = require('../controllers/nutrition/dietsController');
+const chronicConditionsController = require('../controllers/nutrition/chronicConditionsController');
 
 /* FOOD */
 router.get('/food', foodsController.getFood);

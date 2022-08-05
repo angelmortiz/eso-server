@@ -4,8 +4,8 @@ const rootDir = require('./util/path');// importing utility to create paths
 const bodyParser = require('body-parser'); //parser to read info from client-side
 const nutritionRoutes = require('./routes/nutrition'); //routes for nutrition
 const activitiesRoutes = require('./routes/activities'); //routes for activities
-const homeController = require('./controllers/home'); //imports logic to load home page
-const errorController = require('./controllers/errors'); //imports logic to load home page
+const homeController = require('./controllers/homeController'); //imports logic to load home page
+const errorController = require('./controllers/errorsController'); //imports logic to load home page
 const exp = express(); //initializing express framework
 const mongodbConnection = require('./util/database').mongodbConnection; //importing connection for mongodb
 
