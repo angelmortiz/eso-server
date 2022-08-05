@@ -1,4 +1,4 @@
-const ChronicCondition = require('../../models/nutrition/chronicCondition');
+const ChronicCondition = require('../../models/nutritionModels/chronicConditionModel');
 
 exports.getChronicConditions = (request, response, next) => {
   response.render('./nutrition/view-chronicCondition', {

@@ -1,4 +1,4 @@
-const Exercise = require('../../models/activities/exercise');
+const Exercise = require('../../models/activitiesModels/exerciseModel');
 
 exports.getExercise = (request, response) => {
     response.render('./activities/view-exercise', {

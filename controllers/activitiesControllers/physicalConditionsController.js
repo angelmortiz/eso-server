@@ -1,4 +1,4 @@
-const PhysicalCondition = require('../../models/activities/physicalCondition');
+const PhysicalCondition = require('../../models/activitiesModels/physicalConditionModel');
 
 exports.getPhysicalCondition = (request, response, next) => {
   response.render('./activities/view-physicalCondition', {

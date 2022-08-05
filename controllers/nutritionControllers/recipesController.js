@@ -1,4 +1,4 @@
-const Recipe = require('../../models/nutrition/recipe');
+const Recipe = require('../../models/nutritionModels/recipeModel');
 
 exports.getRecipe = (request, response, next) => {
   response.render('./nutrition/view-recipe', {

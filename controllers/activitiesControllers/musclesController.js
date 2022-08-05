@@ -1,4 +1,4 @@
-const Muscle = require('../../models/activities/muscle');
+const Muscle = require('../../models/activitiesModels/muscleModel');
 
 exports.getMuscle = (request, response) => {
   response.render('./activities/view-muscle', {

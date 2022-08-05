@@ -1,4 +1,4 @@
-const Diet = require('../../models/nutrition/diet');
+const Diet = require('../../models/nutritionModels/dietModel');
 
 exports.getDiet = (request, response, next) => {
   response.render('./nutrition/view-diet', {
