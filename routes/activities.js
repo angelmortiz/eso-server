@@ -3,10 +3,10 @@ const express = require('express');
 const router = express.Router();
 
 //Controllers imports
-const exercisesController = require('../controllers/activities/exercisesController');
-const musclesController = require('../controllers/activities/musclesController');
-const equipmentsController = require('../controllers/activities/equipmentsController');
-const physicalConditionsController = require('../controllers/activities/physicalConditionsController');
+const exercisesController = require('../controllers/activitiesControllers/exercisesController');
+const musclesController = require('../controllers/activitiesControllers/musclesController');
+const equipmentsController = require('../controllers/activitiesControllers/equipmentsController');
+const physicalConditionsController = require('../controllers/activitiesControllers/physicalConditionsController');
 
 /* EXERCISE */
 router.get('/exercise', exercisesController.getExercise);
