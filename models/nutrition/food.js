@@ -1,5 +1,5 @@
+const { ObjectId } = require('mongodb');
 const getDb = require('../../util/database').getNutritionDb;
-const foods = [];
 
 module.exports = class Food {
   id;
@@ -57,7 +57,7 @@ module.exports = class Food {
     const db = getDb();
     return db
       .collection('foods')
-      .findOne({_id: id})
+      .findOne({_id:  new ObjectId(id)})
       .then((product) => {
         return product;
       })
