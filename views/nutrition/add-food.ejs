@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <%- include('../includes/head.ejs') %> 
-    <link rel="stylesheet" href="/css/nutrition/add-food.css">
+    <%- include('../includes/head.ejs') %>
+        <link rel="stylesheet" href="/css/nutrition/add-food.css">
 </head>
 
 <body>
@@ -12,8 +12,21 @@
     </header>
     <main>
         <div class="page-title__div">
-            <h2 class="page-title"><%= pageTitle %>:</h2>
+            <h2 class="page-title">
+                <%= pageTitle %>:
+            </h2>
         </div>
+        <section class="food-selection-creation">
+            <div class="select-food-dropdown">
+                <label for="select-food" class="select-food-dropdown__title">Comida:</label>
+                <select name="select-food" id="select-food-selection">
+                    <option value="com1">Comida 1</option>
+                    <option value="com2">Comida 2</option>
+                    <option value="com3">Comida 3</option>
+                </select>
+            </div>
+            <button class="new-food__btn" type="submit">Nueva</button>
+        </section>
         <form class="add-food-form" action="/nutrition/food" method="POST">
             <div class="add-food-form__control">
                 <div class="add-food-form__item">
@@ -76,7 +89,8 @@
                     </select>
                 </div>
                 <div class="add-food-form__item">
-                    <label for="notRecommendedForConditions" class="add-food-form__title">No recomendado para condiciones:</label>
+                    <label for="notRecommendedForConditions" class="add-food-form__title">No recomendado para
+                        condiciones:</label>
                     <select name="notRecommendedForConditions" id="notRecommendedForConditions-selection">
                         <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
                     </select>
@@ -105,7 +119,7 @@
             </div>
 
             <div class="add-food-form__btn-control">
-                <button class="add-food-form__btn" type="submit">Add</button>
+                <button class="add-food-form__btn" type="submit">Añadir</button>
             </div>
         </form>
     </main>

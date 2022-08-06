@@ -1,13 +1,53 @@
 /* Add Food */
+select {
+    background-color: white;
+}
+ 
+.food-selection-creation {
+    width: 25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.select-food-dropdown {
+    margin: 0 0 0 0.5rem;
+    display: flex;
+    justify-content: left;
+    font: inherit;
+}
+
+.select-food-dropdown__title {
+    margin: 0 0.5rem 0 0;
+}
+
+.select-food-dropdown select {
+    border: 1px solid #007E86;
+    font: inherit;
+    border-radius: 5px;
+}
+
+.new-food__btn {
+    margin: 0 1rem 0 0;
+}
+
+.select-food-dropdown,
 .add-food-form {
     width: 25rem;
     max-width: 90%;
-    min-height: 5rem;
     padding: 0.5rem;
     color: #01484d;
+}
+
+.add-food-form {
+    min-height: 5rem;
     border: 1.5px solid #01484d;
     border-radius: 20px;
     background-color: #d8efef;
+}
+
+.add-food-form__btn{
+    margin: 0 0.5rem 0 0;
 }
 
 .add-food-form__control{
