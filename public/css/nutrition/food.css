@@ -1,19 +1,15 @@
 /* Add Food */
-select {
-    background-color: white;
-}
- 
 .food-selection-creation {
-    width: 25rem;
+    width: 30rem;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .select-food-dropdown {
-    margin: 0 0 0 0.5rem;
     display: flex;
     justify-content: left;
+    align-items: center;
     font: inherit;
 }
 
@@ -27,13 +23,17 @@ select {
     border-radius: 5px;
 }
 
+.select-food__btn {
+    margin: 0 0.5rem;
+}
+
 .new-food__btn {
     margin: 0 1rem 0 0;
 }
 
 .select-food-dropdown,
 .add-food-form {
-    width: 25rem;
+    width: 30rem;
     max-width: 90%;
     padding: 0.5rem;
     color: #01484d;
@@ -101,4 +101,9 @@ button:active {
     font-weight: bold;
     color: white;
     cursor: pointer;
+}
+
+.food-form-btns__control {
+    display: flex;
+    justify-content: space-evenly;
 }

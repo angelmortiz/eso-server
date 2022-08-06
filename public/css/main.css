@@ -10,6 +10,10 @@ main {
     justify-content: center;
 }
 
+select {
+    background-color: white;
+}
+
 /* HEADER */
 .main-header {        
     width: 100%;

@@ -2,13 +2,13 @@
 <html lang="en">
 
 <head>
-    <%- include('../includes/head.ejs') %> 
-    <link rel="stylesheet" href="/css/nutrition/view-food.css">
+    <%- include('../includes/head.ejs') %>
+        <link rel="stylesheet" href="/css/nutrition/food.css">
 </head>
 
 <body>
     <header class="main-header">
-        <%- include('../includes/navigation.ejs') %> 
+        <%- include('../includes/navigation.ejs') %>
     </header>
     <main>
         <div class="page-title__div">
@@ -16,81 +16,133 @@
                 <%= pageTitle %>:
             </h2>
         </div>
-        <div class="view-food-template">
-            <ul class="view-food-list">
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">ID:</span>
-                    <span class="view-food-list__value">62d9ad342aeacf742c28839e</span>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Nombre:</span>
-                    <span class="view-food-list__value">Pechuga de pollo</span>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Clasificación:</span>
-                    <span class="view-food-list__value">Carne</span>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Descripción:</span>
-                    <span class="view-food-list__value">Esto es una descripción corta a manera de ejemplo</span>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Macronutriente principal:</span>
-                    <span class="view-food-list__value">Proteína</span>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Macronutriente secundario:</span>
-                    <span class="view-food-list__value">Grasa</span>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Densidad de micronutrientes:</span>
-                    <span class="view-food-list__value">Medio</span>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Información nutricional:</span>
-                    <span class="view-food-list__value">{Objeto}</span>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Tipo de comida:</span>
-                    <ul>
-                        <li>Almuerzo</li>
-                        <li>Cena</li>
-                    </ul>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Seguro para condiciones:</span>
-                    <ul>
-                        <li>Diabetes tipo 1</li>
-                        <li>Diabetes tipo 2</li>
-                        <li>Enfermedades autoinmunes</li>
-                        <li>Sobrepeso/Obesidad</li>
-                    </ul>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">No recomendado para condiciones:</span>
-                    <ul>
-                    </ul>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Compatible con dietas:</span>
-                    <ul>
-                        <li>Keto</li>
-                        <li>Paleo</li>
-                    </ul>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Recomendado para fases menstruales:</span>
-                    <ul>
-                        <li>Lútea</li>
-                        <li>Sangrado</li>
-                    </ul>
-                </li>
-                <li class="view-food-list__item">
-                    <span class="view-food-list__name">Imagen:</span>
-                    <span class="view-food-list__value">{Añadir imagen}</span>
-                </li>
-            </ul>
-        </div>
+        <section class="food-selection-creation">
+            <div class="select-food-dropdown">
+                <label for="select-food" class="select-food-dropdown__title">Comida:</label>
+                <form action="/nutrition/foodInfo" method="POST">
+                    <select name="selectedFood" id="select-food-selection">
+                        <option value="">-- Elige --</option>
+                        <% foodNames.forEach( food=> { %>
+                            <option value="<%= food._id %>"
+                                <%= selectedFoodId == food._id ? 'selected' : ''%> 
+                                >
+                                <%= food.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button class="select-food__btn" type="submit">Mostrar</button>
+                </form>
+            </div>
+
+            <button class="new-food__btn" type="reset">Nueva</button>
+        </section>
+
+        <!-- Hides main form if no food has been selected yet -->
+        <% if (foodInfo) { %>
+            <form class="add-food-form" action="/nutrition/food" method="POST">
+                <div class="add-food-form__control">
+                    <div class="add-food-form__item">
+                        <label for="name" class="add-food-form__title">Nombre:</label>
+                        <input type="text" name="name" id="food-name" value="<%= foodInfo.name %>">
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="classification" class="add-food-form__title">Clasificación:</label>
+                        <select name="classification" id="classification-selection">
+                            <option value="">-- Elige --</option>
+                            <option value="vegetal">Vegetal</option>
+                            <option value="fruta">Fruta</option>
+                            <option value="carne">Carne</option>
+                            <option value="especia">Especia</option>
+                            <option value="bebida">Bebida</option>
+                        </select>
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="description" class="add-food-form__title">Descripción:</label>
+                        <input type="text" name="description" id="description">
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="mainMacronutrient" class="add-food-form__title">Macronutriente principal:</label>
+                        <select name="mainMacronutrient" id="mainMacronutrient-selection">
+                            <option value="">-- Elige --</option>
+                            <option value="proteína">Proteína</option>
+                            <option value="grasa">Grasa</option>
+                            <option value="carbohidrato">Carbohidrato</option>
+                        </select>
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="secondaryMacronutrient" class="add-food-form__title">Macronutriente secundario:</label>
+                        <select name="secondaryMacronutrient" id="secondaryMacronutrient-selection">
+                            <option value="">-- Elige --</option>
+                            <option value="proteína">Proteína</option>
+                            <option value="grasa">Grasa</option>
+                            <option value="carbohidrato">Carbohidrato</option>
+                        </select>
+                    </div>
+                    <div class="add-food-form__item">
+                        <label class="add-food-form__title">Tipo de comida:</label>
+                        <input type="checkbox" name="mealType-breakfast" id="mealType-selection">
+                        <label for="mealType-breakfast" class="add-food-form__title">Desayuno</label>
+                        <input type="checkbox" name="mealType-lunch" id="mealType-selection">
+                        <label for="mealType-lunch" class="add-food-form__title">Almuerzo</label>
+                        <input type="checkbox" name="mealType-dinner" id="mealType-selection">
+                        <label for="mealType-dinner" class="add-food-form__title">Cena</label>
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="micronutrientDensity" class="add-food-form__title">Densidad de micronutrientes:</label>
+                        <select name="micronutrientDensity" id="micronutrientDensity-selection">
+                            <option value="">-- Elige --</option>
+                            <option value="baja">Baja</option>
+                            <option value="media">Media</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="safeForConditions" class="add-food-form__title">Seguro para condiciones:</label>
+                        <select name="safeForConditions" id="safeForConditions-selection">
+                            <option value="">-- Elige --</option>
+                            <option value="diabetestipo1">Diabetes tipo 1</option>
+                            <option value="diabetestipo2">Diabetes tipo 2</option>
+                            <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
+                        </select>
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="notRecommendedForConditions" class="add-food-form__title">No recomendado para
+                            condiciones:</label>
+                        <select name="notRecommendedForConditions" id="notRecommendedForConditions-selection">
+                            <option value="">-- Elige --</option>
+                            <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
+                        </select>
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="dietFriendly" class="add-food-form__title">Compatible con dietas:</label>
+                        <select name="dietFriendly" id="dietFriendly-selection">
+                            <option value="">-- Elige --</option>
+                            <option value="keto">Keto</option>
+                            <option value="paleo">Paleo</option>
+                            <option value="vegana">Vegana</option>
+                        </select>
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="recommendedForCyclePhases" class="add-food-form__title">Recomendado para fases:</label>
+                        <select name="recommendedForCyclePhases" id="recommendedForCyclePhases-selection">
+                            <option value="">-- Elige --</option>
+                            <option value="periodo">Periodo</option>
+                            <option value="folicular">Folicular</option>
+                            <option value="ovulacion">Ovulación</option>
+                            <option value="secretora">Secretora</option>
+                        </select>
+                    </div>
+                    <div class="add-food-form__item">
+                        <label for="linkToImage" class="add-food-form__title">Enlace para imagen:</label>
+                        <input type="text" name="linkToImage" id="linkToImage">
+                    </div>
+                </div>
+                <div class="food-form-btns__control">
+                    <button class="update-food-form__btn" type="submit">Actualizar</button>
+                    <button class="delete-food-form__btn" type="submit">Borrar</button>
+                </div>
+            </form>
+        <% } %>
     </main>
 </body>
 
