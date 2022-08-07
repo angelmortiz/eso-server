@@ -9,9 +9,10 @@ exports.getFood = (request, response) => {
       response.render('./nutrition/view-food', {
         caller: 'view-food',
         pageTitle: 'Información de comida',
+        foodValues: Food.foodStaticValues,
         foodNames: foodNames,
-        foodInfo: undefined,
-        selectedFoodId: undefined
+        foodInfo: null,
+        selectedFoodId: null
       });
     })
     .catch((error) => {
@@ -28,6 +29,7 @@ exports.getFoodInfo = (request, response) => {
     response.render('./nutrition/view-food', {
       caller: 'view-food',
       pageTitle: 'Información de comida',
+      foodValues: Food.foodStaticValues,
       foodInfo: foodInfo,
       foodNames: _foodNames,
       selectedFoodId: selectedFoodId

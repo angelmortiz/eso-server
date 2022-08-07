@@ -94,4 +94,11 @@ module.exports = class Food {
         console.log(error);
       });
   }
+
+  static foodStaticValues = {
+    classification: ['Vegetal', 'Fruta', 'Carne', 'Especie', 'Bebida'],
+    macronutrients: ['Proteína', 'Grasa', 'Carbohidrato'],
+    micronutrientDensity: ['Baja', 'Media', 'Alta'],
+    menstrualPhases: ['Menstruación', 'Folicular', 'Ovulación', 'Lútea']
+  }
 };

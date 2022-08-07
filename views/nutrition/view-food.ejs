@@ -23,8 +23,7 @@
                     <select name="selectedFood" id="select-food-selection">
                         <option value="">-- Elige --</option>
                         <% foodNames.forEach( food=> { %>
-                            <option value="<%= food._id %>"
-                                <%= selectedFoodId == food._id ? 'selected' : ''%> 
+                            <option value="<%= food._id %>" <%=selectedFoodId==food._id ? 'selected' : '' %>
                                 >
                                 <%= food.name %>
                             </option>
@@ -49,11 +48,9 @@
                         <label for="classification" class="add-food-form__title">Clasificación:</label>
                         <select name="classification" id="classification-selection">
                             <option value="">-- Elige --</option>
-                            <option value="vegetal">Vegetal</option>
-                            <option value="fruta">Fruta</option>
-                            <option value="carne">Carne</option>
-                            <option value="especia">Especia</option>
-                            <option value="bebida">Bebida</option>
+                            <% foodValues.classification.forEach( c=> { %>
+                                <option value="<%= c %>"><%= c %></option>
+                            <% }); %>
                         </select>
                     </div>
                     <div class="add-food-form__item">
@@ -64,18 +61,19 @@
                         <label for="mainMacronutrient" class="add-food-form__title">Macronutriente principal:</label>
                         <select name="mainMacronutrient" id="mainMacronutrient-selection">
                             <option value="">-- Elige --</option>
-                            <option value="proteína">Proteína</option>
-                            <option value="grasa">Grasa</option>
-                            <option value="carbohidrato">Carbohidrato</option>
+                            <% foodValues.macronutrients.forEach( mn=> { %>
+                                <option value="<%= mn %>"><%= mn %></option>
+                            <% }); %>
                         </select>
                     </div>
                     <div class="add-food-form__item">
-                        <label for="secondaryMacronutrient" class="add-food-form__title">Macronutriente secundario:</label>
+                        <label for="secondaryMacronutrient" class="add-food-form__title">Macronutriente
+                            secundario:</label>
                         <select name="secondaryMacronutrient" id="secondaryMacronutrient-selection">
                             <option value="">-- Elige --</option>
-                            <option value="proteína">Proteína</option>
-                            <option value="grasa">Grasa</option>
-                            <option value="carbohidrato">Carbohidrato</option>
+                            <% foodValues.macronutrients.forEach( mn=> { %>
+                                <option value="<%= mn %>"><%= mn %></option>
+                            <% }); %>
                         </select>
                     </div>
                     <div class="add-food-form__item">
@@ -88,12 +86,13 @@
                         <label for="mealType-dinner" class="add-food-form__title">Cena</label>
                     </div>
                     <div class="add-food-form__item">
-                        <label for="micronutrientDensity" class="add-food-form__title">Densidad de micronutrientes:</label>
+                        <label for="micronutrientDensity" class="add-food-form__title">Densidad de
+                            micronutrientes:</label>
                         <select name="micronutrientDensity" id="micronutrientDensity-selection">
                             <option value="">-- Elige --</option>
-                            <option value="baja">Baja</option>
-                            <option value="media">Media</option>
-                            <option value="alta">Alta</option>
+                            <% foodValues.micronutrientDensity.forEach( md=> { %>
+                                <option value="<%= md %>"><%= md %></option>
+                            <% }); %>
                         </select>
                     </div>
                     <div class="add-food-form__item">
@@ -123,13 +122,13 @@
                         </select>
                     </div>
                     <div class="add-food-form__item">
-                        <label for="recommendedForCyclePhases" class="add-food-form__title">Recomendado para fases:</label>
+                        <label for="recommendedForCyclePhases" class="add-food-form__title">Recomendado para
+                            fases:</label>
                         <select name="recommendedForCyclePhases" id="recommendedForCyclePhases-selection">
                             <option value="">-- Elige --</option>
-                            <option value="periodo">Periodo</option>
-                            <option value="folicular">Folicular</option>
-                            <option value="ovulacion">Ovulación</option>
-                            <option value="secretora">Secretora</option>
+                            <% foodValues.menstrualPhases.forEach( mf=> { %>
+                                <option value="<%= mf %>"><%= mf %></option>
+                            <% }); %>
                         </select>
                     </div>
                     <div class="add-food-form__item">
@@ -142,7 +141,7 @@
                     <button class="delete-food-form__btn" type="submit">Borrar</button>
                 </div>
             </form>
-        <% } %>
+            <% } %>
     </main>
 </body>
 
