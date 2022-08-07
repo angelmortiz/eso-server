@@ -20,12 +20,9 @@ exports.getFood = (request, response) => {
     });
 };
 
-exports.redirectToFoodInfo = (request, response) => {
-  response.redirect(`/nutrition/food/${request.body.selectedFood}`)
-}
-
 exports.getFoodInfo = (request, response) => {
-  const selectedFoodId = request.params.foodId
+  const selectedFoodId = request.params.foodId;
+
   Food.fetchById(selectedFoodId)
   .then((foodInfo) => {
     //render page using food names
@@ -42,6 +39,10 @@ exports.getFoodInfo = (request, response) => {
     console.log(error);
   });
 };
+
+exports.redirectToFoodInfo = (request, response) => {
+  response.redirect(`/nutrition/food/${request.body.selectedFood}`)
+}
 
 exports.getAddFood = (request, response) => {
   response.render('./nutrition/add-food', {

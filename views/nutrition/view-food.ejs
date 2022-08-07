@@ -46,24 +46,28 @@
                         <input type="text" name="name" id="food-name" value="<%= foodInfo.name %>">
                     </div>
                     <div class="add-food-form__item">
+                        <label for="description" class="add-food-form__title">Descripción:</label>
+                        <input type="text" name="description" id="description" value="<%= foodInfo.description %>">
+                    </div>
+                    <div class="add-food-form__item">
                         <label for="classification" class="add-food-form__title">Clasificación:</label>
                         <select name="classification" id="classification-selection">
                             <option value="">-- Elige --</option>
                             <% foodValues.classification.forEach( c=> { %>
-                                <option value="<%= c %>"><%= c %></option>
+                                <option value="<%= c %>"
+                                    <%=foodInfo.classification == c ? 'selected' : '' %>
+                                    ><%= c %></option>
                             <% }); %>
                         </select>
-                    </div>
-                    <div class="add-food-form__item">
-                        <label for="description" class="add-food-form__title">Descripción:</label>
-                        <input type="text" name="description" id="description">
                     </div>
                     <div class="add-food-form__item">
                         <label for="mainMacronutrient" class="add-food-form__title">Macronutriente principal:</label>
                         <select name="mainMacronutrient" id="mainMacronutrient-selection">
                             <option value="">-- Elige --</option>
                             <% foodValues.macronutrients.forEach( mn=> { %>
-                                <option value="<%= mn %>"><%= mn %></option>
+                                <option value="<%= mn %>"
+                                    <%=foodInfo.mainMacronutrient == mn ? 'selected' : '' %>
+                                    ><%= mn %></option>
                             <% }); %>
                         </select>
                     </div>
@@ -73,17 +77,25 @@
                         <select name="secondaryMacronutrient" id="secondaryMacronutrient-selection">
                             <option value="">-- Elige --</option>
                             <% foodValues.macronutrients.forEach( mn=> { %>
-                                <option value="<%= mn %>"><%= mn %></option>
+                                <option value="<%= mn %>"
+                                    <%=foodInfo.secondaryMacronutrient == mn ? 'selected' : '' %>
+                                    ><%= mn %></option>
                             <% }); %>
                         </select>
                     </div>
                     <div class="add-food-form__item">
                         <label class="add-food-form__title">Tipo de comida:</label>
-                        <input type="checkbox" name="mealType-breakfast" id="mealType-selection">
+                        <input type="checkbox" name="mealType-breakfast" id="mealType-selection" 
+                            <%=foodInfo.mealType.includes('Desayuno') ? 'checked' : '' %>
+                        >
                         <label for="mealType-breakfast" class="add-food-form__title">Desayuno</label>
-                        <input type="checkbox" name="mealType-lunch" id="mealType-selection">
+                        <input type="checkbox" name="mealType-lunch" id="mealType-selection"
+                            <%=foodInfo.mealType.includes('Almuerzo') ? 'checked' : '' %>
+                        >
                         <label for="mealType-lunch" class="add-food-form__title">Almuerzo</label>
-                        <input type="checkbox" name="mealType-dinner" id="mealType-selection">
+                        <input type="checkbox" name="mealType-dinner" id="mealType-selection"
+                            <%=foodInfo.mealType.includes('Cena') ? 'checked' : '' %>
+                        >
                         <label for="mealType-dinner" class="add-food-form__title">Cena</label>
                     </div>
                     <div class="add-food-form__item">
@@ -92,7 +104,9 @@
                         <select name="micronutrientDensity" id="micronutrientDensity-selection">
                             <option value="">-- Elige --</option>
                             <% foodValues.micronutrientDensity.forEach( md=> { %>
-                                <option value="<%= md %>"><%= md %></option>
+                                <option value="<%= md %>"
+                                    <%=foodInfo.micronutrientDensity == md ? 'selected' : '' %>
+                                    ><%= md %></option>
                             <% }); %>
                         </select>
                     </div>
@@ -128,13 +142,15 @@
                         <select name="recommendedForCyclePhases" id="recommendedForCyclePhases-selection">
                             <option value="">-- Elige --</option>
                             <% foodValues.menstrualPhases.forEach( mf=> { %>
-                                <option value="<%= mf %>"><%= mf %></option>
+                                <option value="<%= mf %>"
+                                    <%=foodInfo.menstrualPhases == mf ? 'selected' : '' %>
+                                    ><%= mf %></option>
                             <% }); %>
                         </select>
                     </div>
                     <div class="add-food-form__item">
                         <label for="linkToImage" class="add-food-form__title">Enlace para imagen:</label>
-                        <input type="text" name="linkToImage" id="linkToImage">
+                        <input type="text" name="linkToImage" id="linkToImage" value="<%= foodInfo.linkToImage %>">
                     </div>
                 </div>
                 <div class="food-form-btns__control">

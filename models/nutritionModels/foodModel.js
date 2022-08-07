@@ -98,7 +98,7 @@ module.exports = class Food {
   static foodStaticValues = {
     classification: ['Vegetal', 'Fruta', 'Carne', 'Especie', 'Bebida'],
     macronutrients: ['Proteína', 'Grasa', 'Carbohidrato'],
-    micronutrientDensity: ['Baja', 'Media', 'Alta'],
+    micronutrientDensity: ['Bajo', 'Medio', 'Alto'],
     menstrualPhases: ['Menstruación', 'Folicular', 'Ovulación', 'Lútea']
   }
 };
