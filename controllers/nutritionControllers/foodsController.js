@@ -20,9 +20,12 @@ exports.getFood = (request, response) => {
     });
 };
 
-exports.getFoodInfo = (request, response) => {
-  const selectedFoodId = request.body.selectedFood;
+exports.redirectToFoodInfo = (request, response) => {
+  response.redirect(`/nutrition/food/${request.body.selectedFood}`)
+}
 
+exports.getFoodInfo = (request, response) => {
+  const selectedFoodId = request.params.foodId
   Food.fetchById(selectedFoodId)
   .then((foodInfo) => {
     //render page using food names

@@ -3,7 +3,7 @@
 
 <head>
     <%- include('../includes/head.ejs') %>
-        <link rel="stylesheet" href="/css/nutrition/food.css">
+    <link rel="stylesheet" href="/css/nutrition/food.css">
 </head>
 
 <body>
@@ -19,11 +19,12 @@
         <section class="food-selection-creation">
             <div class="select-food-dropdown">
                 <label for="select-food" class="select-food-dropdown__title">Comida:</label>
-                <form action="/nutrition/foodInfo" method="POST">
+                <form action="/nutrition/redirect-to-food-info" method="POST">
                     <select name="selectedFood" id="select-food-selection">
                         <option value="">-- Elige --</option>
                         <% foodNames.forEach( food=> { %>
-                            <option value="<%= food._id %>" <%=selectedFoodId==food._id ? 'selected' : '' %>
+                            <option value="<%= food._id %>"
+                                <%=selectedFoodId==food._id ? 'selected' : '' %>
                                 >
                                 <%= food.name %>
                             </option>

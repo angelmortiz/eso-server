@@ -10,7 +10,8 @@ const chronicConditionsController = require('../controllers/nutritionControllers
 
 /* FOOD */
 router.get('/food', foodsController.getFood);
-router.post('/foodInfo', foodsController.getFoodInfo);
+router.get('/food/:foodId', foodsController.getFoodInfo);
+router.post('/redirect-to-food-info', foodsController.redirectToFoodInfo);
 router.get('/add-food', foodsController.getAddFood);
 router.post('/food', foodsController.addFood);
 
