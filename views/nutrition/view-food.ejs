@@ -86,15 +86,15 @@
                     <div class="add-food-form__item">
                         <label class="add-food-form__title">Tipo de comida:</label>
                         <input type="checkbox" name="mealType-breakfast" id="mealType-selection" 
-                            <%=foodInfo.mealType.includes('Desayuno') ? 'checked' : '' %>
+                            <%=foodInfo.mealType?.includes('Desayuno') ? 'checked' : '' %>
                         >
                         <label for="mealType-breakfast" class="add-food-form__title">Desayuno</label>
                         <input type="checkbox" name="mealType-lunch" id="mealType-selection"
-                            <%=foodInfo.mealType.includes('Almuerzo') ? 'checked' : '' %>
+                            <%=foodInfo.mealType?.includes('Almuerzo') ? 'checked' : '' %>
                         >
                         <label for="mealType-lunch" class="add-food-form__title">Almuerzo</label>
                         <input type="checkbox" name="mealType-dinner" id="mealType-selection"
-                            <%=foodInfo.mealType.includes('Cena') ? 'checked' : '' %>
+                            <%=foodInfo.mealType?.includes('Cena') ? 'checked' : '' %>
                         >
                         <label for="mealType-dinner" class="add-food-form__title">Cena</label>
                     </div>
