@@ -99,6 +99,12 @@ module.exports = class Food {
     classification: ['Vegetal', 'Fruta', 'Carne', 'Especie', 'Bebida'],
     macronutrients: ['Proteína', 'Grasa', 'Carbohidrato'],
     micronutrientDensity: ['Bajo', 'Medio', 'Alto'],
-    menstrualPhases: ['Menstruación', 'Folicular', 'Ovulación', 'Lútea']
+    menstrualPhases: ['Menstruación', 'Folicular', 'Ovulación', 'Lútea'],
+    //TODO: DELETE ME
+    chronicConditions: [
+      {_id: "62db25e82aeacf742c2883b6", name: "Diabetes tipo 2"},
+      {_id: "62db26da2aeacf742c2883b7", name: "Diabetes tipo 1"},
+      {_id: "62db26fc2aeacf742c2883b9", name: "Enfermedades autoinnmunes"}
+    ]
   }
 };

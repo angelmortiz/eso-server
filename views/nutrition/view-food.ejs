@@ -112,12 +112,21 @@
                     </div>
                     <div class="add-food-form__item-rows">
                         <label for="safeForConditions" class="add-food-form__title">Seguro para condiciones:</label>
-                        <select name="safeForConditions" id="safeForConditions-selection">
+                        <!-- [Loop1] Loop for chronic conditions associated to curret food -->
+                        <% console.log('foodInfo:', foodInfo); %> 
+                        <% foodInfo.safeForConditions.forEach( (condition, index) => { %> 
+                        <select name="safeForConditions-<%- index %>">
                             <option value="">-- Elige --</option>
-                            <option value="diabetestipo1">Diabetes tipo 1</option>
-                            <option value="diabetestipo2">Diabetes tipo 2</option>
-                            <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
+                            <!-- [Loop1] Loop for all the chronic conditions options -->
+                            <% foodValues.chronicConditions.forEach( cc => { %>
+                                <option value="<%= cc._id %>"
+                                    <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                    ><%= cc.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop2] -->
                         </select>
+                        <% });  %> 
+                        <!-- [END-Loop1] -->
                     </div>
                     <div class="add-food-form__item-rows">
                         <label for="notRecommendedForConditions" class="add-food-form__title">No recomendado para
