@@ -116,6 +116,11 @@ button:active {
     cursor: pointer;
 }
 
+.add-food-form__add-btn{
+    max-width: 50%;
+    margin: auto;
+}
+
 .food-form-btns__control {
     display: flex;
     justify-content: space-evenly;

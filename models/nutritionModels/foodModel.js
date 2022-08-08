@@ -104,7 +104,12 @@ module.exports = class Food {
     chronicConditions: [
       {_id: "62db25e82aeacf742c2883b6", name: "Diabetes tipo 2"},
       {_id: "62db26da2aeacf742c2883b7", name: "Diabetes tipo 1"},
-      {_id: "62db26fc2aeacf742c2883b9", name: "Enfermedades autoinnmunes"}
+      {_id: "62db26fc2aeacf742c2883b9", name: "Enfermedades autoinnmunes"},
+      {_id: "62e448bc2aeacf742c28849d", name: "Alta presión"}
+    ],
+    diets: [
+      {_id: "62e3f8da2aeacf742c28842b", name: "Keto"},
+      {_id: "62e3f9a62aeacf742c28842c", name: "Paleo"}
     ]
   }
 };
