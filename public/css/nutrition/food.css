@@ -59,7 +59,7 @@
     margin: 0 0 1rem 0;
 }
 
-.add-food-form__item label{
+.add-food-form__item label {
     padding: 0 5px 0 0;
 }
 
@@ -71,11 +71,21 @@
     padding: 0.1rem 0.3rem;
 }
 
-.add-food-form__item select {
+.add-food-form__item select,
+.add-food-form__item-rows select {
     border: 1px solid #007E86;
     font: inherit;
     border-radius: 5px;
     padding: 0.1rem 0.3rem;
+}
+
+.add-food-form__item-rows {
+    display: grid;
+    margin: 0 0 1rem 0;
+}
+
+.add-food-form__item-rows label {
+    margin: 0 0 0.5rem 0;
 }
 
 .add-food-form__btn-control{
