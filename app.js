@@ -14,9 +14,14 @@ exp.use(bodyParser.urlencoded({extended: false})); //parses the body that comes 
 
 exp.use(express.static(path.join(rootDir, 'public'))); //uploads public files (css) to client
 
-exp.get('/', homeController.getHome); //navigates to home if no other address was provided
+//home
+exp.get('/', homeController.getHome); 
+//NodeJS internal routes
 exp.use('/nutrition', nutritionRouter.routes); //executes routes for nutrition
 exp.use('/activities', activitiesRouter.routes); //executes routes for activities
+//API external routes
+exp.use('/api/nutrition', nutritionRouter.routes);
+//error handling
 exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
 
 //connects to the database and starts the server after it's connected

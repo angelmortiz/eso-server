@@ -9,11 +9,12 @@ const dietsController = require('../controllers/nutritionControllers/dietsContro
 const chronicConditionsController = require('../controllers/nutritionControllers/chronicConditionsController');
 
 /* FOOD */
+//Internal
 router.get('/food', foodsController.getFood);
 router.get('/food/:foodId', foodsController.getFoodInfo);
 router.post('/redirect-to-food-info', foodsController.redirectToFoodInfo);
 router.get('/add-food', foodsController.getAddFood);
-router.post('/food', foodsController.addFood);
+//router.post('/food', foodsController.addFood);
 
 /* RECIPE */
 router.get('/recipe', recipesController.getRecipe);
@@ -27,9 +28,12 @@ router.post('/diet', dietsController.addDiet);
 
 
 /* CHRONIC CONDITION */
+//Internal
 router.get('/chronicCondition', chronicConditionsController.getChronicConditions);
 router.get('/add-chronicCondition', chronicConditionsController.getAddChronicConditions);
 router.post('/chronicCondition', chronicConditionsController.addChronicCondition);
+//APIs
+router.get('/chronicConditions', chronicConditionsController.apiGetChronicConditions);
 
 //exports
 exports.routes = router;

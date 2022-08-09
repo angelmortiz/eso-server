@@ -20,3 +20,7 @@ exports.addChronicCondition = (request) => {
   console.log(ChronicCondition.fetchAll());
   // response.redirect('/nutrition/chronicCondition')
 };
+
+exports.apiGetChronicConditions = (request, response) => {
+  response.json(ChronicCondition.chronicConditionsStaticValues.chronicConditions);
+};

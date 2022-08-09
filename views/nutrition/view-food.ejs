@@ -39,7 +39,7 @@
 
         <!-- Hides main form if no food has been selected yet -->
         <% if (foodInfo) { %>
-            <form class="add-food-form" action="/nutrition/food" method="POST">
+            <div class="add-food-form">
                 <div class="add-food-form__control">
                     <!-- NAME -->
                     <div class="add-food-form__item">
@@ -120,19 +120,21 @@
                     <!-- SAFE FOR CONDITIONS -->
                     <div class="add-food-form__item-rows">
                         <label for="safeForConditions" class="add-food-form__title">Seguro para condiciones:</label>
-                        <!-- [Loop1] Loop for chronic conditions associated to curret food -->
-                        <% foodInfo.safeForConditions.forEach( (condition, index) => { %> 
-                            <select name="safeForConditions-<%- index %>">
-                                <option value="">-- Elige --</option>
-                                <!-- [Loop2] Loop for all the chronic conditions options -->
-                                <% foodValues.chronicConditions.forEach( cc => { %>
-                                    <option value="<%= cc._id %>"
-                                        <%=condition.conditionId == cc._id ? 'selected' : '' %>
-                                        ><%= cc.name %></option>
-                                <% }); %>
-                                <!-- [END-Loop2] -->
-                            </select>
-                        <% });  %> 
+                        <div class="add-food-form__selects-div" id="safeForConditions-selects">
+                            <!-- [Loop1] Loop for chronic conditions associated to curret food -->
+                            <% foodInfo.safeForConditions.forEach( (condition, index) => { %> 
+                                <select name="safeForConditions">
+                                    <option value="">-- Elige --</option>
+                                    <!-- [Loop2] Loop for all the chronic conditions options -->
+                                    <% foodValues.chronicConditions.forEach( cc => { %>
+                                        <option value="<%= cc._id %>"
+                                            <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                            ><%= cc.name %></option>
+                                    <% }); %>
+                                    <!-- [END-Loop2] -->
+                                </select>
+                            <% });  %> 
+                        </div>
                         <!-- [END-Loop1] -->
                         <button class="add-food-form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
                     </div>
@@ -202,9 +204,7 @@
                     <button class="update-food-form__btn" type="submit">Actualizar</button>
                     <button class="delete-food-form__btn" type="submit">Borrar</button>
                 </div>
-            </form>
+            </div>
             <% } %>
     </main>
-</body>
-
-</html>
+<%- include('../includes/end.ejs') %>

@@ -1,6 +1,8 @@
 const Food = require('../../models/nutritionModels/foodModel');
 let _foodNames = [];
 
+exports.selectedFood = null;
+
 exports.getFood = (request, response) => {
     Food.fetchAllNames()
     .then((foodNames) => {
@@ -25,6 +27,9 @@ exports.getFoodInfo = (request, response) => {
 
   Food.fetchById(selectedFoodId)
   .then((foodInfo) => {
+    //save food value in share var
+    selectedFood = foodInfo;
+
     //render page using food names
     response.render('./nutrition/view-food', {
       caller: 'view-food',

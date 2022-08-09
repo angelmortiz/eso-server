@@ -91,7 +91,11 @@
     margin: 0 0 0.5rem 0;
 }
 
-.add-food-form__btn-control{
+.add-food-form__selects-div {
+    display: grid;
+}
+
+.add-food-form__btn-control {
     padding: 0.5rem 0;
     display: flex;
     justify-content: center;
