@@ -40,7 +40,7 @@ module.exports = class ChronicCondition {
     }
 
     static chronicConditionsStaticValues = {
-        //TODO: DELETE ME
+        //TODO: DELETE ME AND FETCH FROM DB
         chronicConditions: [
           {_id: "", name: "-- Elige --"},
           {_id: "62db25e82aeacf742c2883b6", name: "Diabetes tipo 2"},
@@ -48,5 +48,5 @@ module.exports = class ChronicCondition {
           {_id: "62db26fc2aeacf742c2883b9", name: "Enfermedades autoinnmunes"},
           {_id: "62e448bc2aeacf742c28849d", name: "Alta presión"}
         ]
-      }
+    }
 };

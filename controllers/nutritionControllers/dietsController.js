@@ -20,3 +20,7 @@ exports.addDiet = (request) => {
   console.log(Diet.fetchAll());
   // response.redirect('/nutrition/diet')
 };
+
+exports.apiGetDiets = (request, response) => {
+  response.json(Diet.dietCompatibleStaticValues.diets);
+};

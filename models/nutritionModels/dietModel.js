@@ -36,4 +36,13 @@ module.exports = class Diet {
     static fetchAllNames()  {
         return diets.map(f => ({id: f.id, name: f.name}));
     }
+
+    static dietCompatibleStaticValues = {
+        //TODO: DELETE ME AND FETCH FROM DB
+        diets: [
+          {_id: "", name: "-- Elige --"},
+          {_id: "62e3f8da2aeacf742c28842b", name: "Keto"},
+          {_id: "62e3f9a62aeacf742c28842c", name: "Paleo"}
+        ]
+    }
 };

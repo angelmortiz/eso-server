@@ -21,6 +21,7 @@ exp.use('/nutrition', nutritionRouter.routes); //executes routes for nutrition
 exp.use('/activities', activitiesRouter.routes); //executes routes for activities
 //API external routes
 exp.use('/api/nutrition', nutritionRouter.routes);
+exp.use('/api/activities', activitiesRouter.routes);
 //error handling
 exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
 
