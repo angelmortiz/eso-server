@@ -7,6 +7,7 @@ const foodsController = require('../controllers/nutritionControllers/foodsContro
 const recipesController = require('../controllers/nutritionControllers/recipesController');
 const dietsController = require('../controllers/nutritionControllers/dietsController');
 const chronicConditionsController = require('../controllers/nutritionControllers/chronicConditionsController');
+const menstrualCyclePhasesController = require('../controllers/general/menstrualCyclePhasesController');
 
 /* FOOD */
 //Renders
@@ -36,6 +37,10 @@ router.get('/add-chronicCondition', chronicConditionsController.getAddChronicCon
 router.post('/chronicCondition', chronicConditionsController.addChronicCondition);
 //APIs
 router.get('/chronicConditions', chronicConditionsController.apiGetChronicConditions);
+
+/* MENSTRUAL CYCLE PHASES */
+//APIs
+router.get('/menstrualCyclePhases', menstrualCyclePhasesController.apiGetPhases);
 
 //exports
 exports.routes = router;

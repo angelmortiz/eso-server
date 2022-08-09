@@ -126,7 +126,7 @@
                                 <select name="safeForConditions">
                                     <option value="">-- Elige --</option>
                                     <!-- [Loop2] Loop for all the chronic conditions options -->
-                                    <% foodValues.chronicConditions.forEach( cc => { %>
+                                    <% chronicConditions.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
                                             <%=condition.conditionId == cc._id ? 'selected' : '' %>
                                             ><%= cc.name %></option>
@@ -147,7 +147,7 @@
                                 <select name="notRecommendedForConditions">
                                     <option value="">-- Elige --</option>
                                     <!-- [Loop2] Loop for all the chronic conditions options -->
-                                    <% foodValues.chronicConditions.forEach( cc => { %>
+                                    <% chronicConditions.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
                                             <%=condition.conditionId == cc._id ? 'selected' : '' %>
                                             ><%= cc.name %></option>
@@ -168,7 +168,7 @@
                                 <select name="dietCompatible-<%- index %>">
                                     <option value="">-- Elige --</option>
                                 <!-- [Loop2] Loop for all the diets options -->
-                                <% foodValues.diets.forEach( d => { %>
+                                <% diets.forEach( d => { %>
                                     <option value="<%= d._id %>"
                                         <%=diet.dietId == d._id ? 'selected' : '' %>
                                         ><%= d.name %></option>
@@ -183,19 +183,21 @@
                     <!-- RECOMMENDED FOR CYCLE PHASES -->
                     <div class="add-food-form__item-rows">
                         <label for="recommendedForCyclePhases" class="add-food-form__title">Recomendado para fases:</label>
-                        <!-- [Loop1] Loop for diets associated to curret food -->
-                        <% foodInfo.recommendedForCyclePhases.forEach( (phase, index) => { %> 
-                            <select name="recommendedForCyclePhases-<%- index %>">
-                                <option value="">-- Elige --</option>
-                                <% foodValues.menstrualPhases.forEach( mf=> { %>
-                                    <option value="<%= mf %>"
-                                        <%=phase == mf ? 'selected' : '' %>
-                                        ><%= mf %></option>
-                                <% }); %>
-                            <!-- [END-Loop2] -->
-                            </select>
-                        <% });  %> 
-                        <!-- [END-Loop1] -->
+                        <div class="add-food-form__selects-div" id="menstrualCyclePhases-selects">
+                            <!-- [Loop1] Loop for diets associated to curret food -->
+                            <% foodInfo.recommendedForCyclePhases.forEach( (phase, index) => { %> 
+                                <select name="recommendedForCyclePhases">
+                                    <option value="">-- Elige --</option>
+                                    <% menstrualCyclePhases.forEach( mf=> { %>
+                                        <option value="<%= mf %>"
+                                            <%=phase == mf ? 'selected' : '' %>
+                                            ><%= mf %></option>
+                                    <% }); %>
+                                <!-- [END-Loop2] -->
+                                </select>
+                            <% });  %> 
+                            <!-- [END-Loop1] -->
+                        </div>
                         <button class="add-food-form__add-btn" id="btn-add-new-phase">Añadir fase</button>
                     </div>
                     <!-- LINK TO IMAGE -->

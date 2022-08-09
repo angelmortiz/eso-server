@@ -80,8 +80,8 @@ async function addNewDietCompatibleSelect() {
     dietCompatibleDiv.appendChild(selectNode);
 
     //adds options to the dropdown
-    diets?.forEach(cc => {
-        let option = new Option(cc.name, cc._id);
+    diets?.forEach(d => {
+        let option = new Option(d.name, d._id);
         selectNode.appendChild(option);
     });
 };
@@ -89,3 +89,35 @@ async function addNewDietCompatibleSelect() {
 //listeners
 btnDietCompatible?.addEventListener('click', addNewDietCompatibleSelect);
 /** [END] DIET COMPATIBLE **/
+
+/** MENSTRUAL PHASES **/
+//elements
+const btnMenstrualCyclePhase = document.querySelector('#btn-add-new-phase');
+const menstrualCyclePhaseDiv = document.querySelector('#menstrualCyclePhases-selects');
+
+//vars
+let phases;
+
+//FIXME: Implement a better async solution to fetch values
+let getPhases = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/nutrition/menstrualCyclePhases`);
+    phases = await response.json();
+};
+
+async function addNewDCyclePhaseSelect() {
+    if (!phases) { await getPhases(); }
+
+    //creates new dropdown element and adds it to the DOM
+    const selectNode = document.createElement("select");
+    menstrualCyclePhaseDiv.appendChild(selectNode);
+
+    //adds options to the dropdown
+    phases?.forEach(mcp => {
+        let option = new Option(mcp, mcp);
+        selectNode.appendChild(option);
+    });
+};
+
+//listeners
+btnMenstrualCyclePhase?.addEventListener('click', addNewDCyclePhaseSelect);
+/** [END] MENSTRUAL PHASES **/

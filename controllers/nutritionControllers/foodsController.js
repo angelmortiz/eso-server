@@ -1,8 +1,12 @@
+const MenstrualCyclePhase = require('../../models/general/menstrualCyclePhase');
+const ChronicCondition = require('../../models/nutritionModels/chronicConditionModel');
+const Diet = require('../../models/nutritionModels/dietModel');
 const Food = require('../../models/nutritionModels/foodModel');
 let _foodNames = [];
 
 exports.selectedFood = null;
 
+//FIXME: Maybe create one method mergin getFood and getFoodInfo
 exports.getFood = (request, response) => {
     Food.fetchAllNames()
     .then((foodNames) => {
@@ -37,7 +41,10 @@ exports.getFoodInfo = (request, response) => {
       foodValues: Food.foodStaticValues,
       foodInfo: foodInfo,
       foodNames: _foodNames,
-      selectedFoodId: selectedFoodId
+      selectedFoodId: selectedFoodId,
+      chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
+      diets: Diet.dietCompatibleStaticValues.diets,
+      menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases
     });
   })
   .catch((error) => {
