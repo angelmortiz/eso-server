@@ -141,20 +141,22 @@
                     <!-- NOT RECOMMENDED FOR CONDITIONS -->
                     <div class="add-food-form__item-rows">
                         <label for="notRecommendedForConditions" class="add-food-form__title">No recomendado para condiciones:</label>
-                        <!-- [Loop1] Loop for chronic conditions associated to curret food -->
-                        <% foodInfo.notRecommendedForConditions.forEach( (condition, index) => { %> 
-                            <select name="notRecommendedForConditions-<%- index %>">
-                                <option value="">-- Elige --</option>
-                                 <!-- [Loop2] Loop for all the chronic conditions options -->
-                                <% foodValues.chronicConditions.forEach( cc => { %>
-                                    <option value="<%= cc._id %>"
-                                        <%=condition.conditionId == cc._id ? 'selected' : '' %>
-                                        ><%= cc.name %></option>
-                                <% }); %>
-                                <!-- [END-Loop2] -->
-                            </select>
-                        <% });  %> 
-                        <!-- [END-Loop1] -->
+                        <div class="add-food-form__selects-div" id="notRecommendedForConditions-selects">
+                            <!-- [Loop1] Loop for chronic conditions associated to curret food -->
+                            <% foodInfo.notRecommendedForConditions.forEach( (condition, index) => { %> 
+                                <select name="notRecommendedForConditions">
+                                    <option value="">-- Elige --</option>
+                                    <!-- [Loop2] Loop for all the chronic conditions options -->
+                                    <% foodValues.chronicConditions.forEach( cc => { %>
+                                        <option value="<%= cc._id %>"
+                                            <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                            ><%= cc.name %></option>
+                                    <% }); %>
+                                    <!-- [END-Loop2] -->
+                                </select>
+                            <% });  %> 
+                            <!-- [END-Loop1] -->
+                        </div>
                         <button class="add-food-form__add-btn" id="btn-add-new-not-recommended-condition">Añadir condición</button>
                     </div>
                     <!-- DIET FRIENDLY -->

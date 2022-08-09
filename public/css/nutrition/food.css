@@ -120,7 +120,7 @@ button:active {
     cursor: pointer;
 }
 
-.add-food-form__add-btn{
+.add-food-form__add-btn {
     max-width: 50%;
     margin: auto;
 }
