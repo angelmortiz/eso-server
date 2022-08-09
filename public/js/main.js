@@ -31,7 +31,11 @@ async function addNewSafeConditionSelect() {
 };
 
 //listeners
-btnSafeForConditions?.addEventListener('click', addNewSafeConditionSelect);
+btnSafeForConditions?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addNewSafeConditionSelect();
+});
+
 /** [END] SAFE FOR CONDITIONS **/
 
 /** NOT RECOMMENDED FOR CONDITIONS **/
@@ -55,7 +59,10 @@ async function addNewNotRecommendedForConditionSelect() {
 };
 
 //listeners
-btnNotRecommendedForConditions?.addEventListener('click', addNewNotRecommendedForConditionSelect);
+btnNotRecommendedForConditions?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addNewNotRecommendedForConditionSelect();
+});
 /** [END] NOT RECOMMENDED CONDITIONS **/
 
 /** DIET COMPATIBLE **/
@@ -87,7 +94,10 @@ async function addNewDietCompatibleSelect() {
 };
 
 //listeners
-btnDietCompatible?.addEventListener('click', addNewDietCompatibleSelect);
+btnDietCompatible?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addNewDietCompatibleSelect()}
+);
 /** [END] DIET COMPATIBLE **/
 
 /** MENSTRUAL PHASES **/
@@ -119,5 +129,8 @@ async function addNewDCyclePhaseSelect() {
 };
 
 //listeners
-btnMenstrualCyclePhase?.addEventListener('click', addNewDCyclePhaseSelect);
+btnMenstrualCyclePhase?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addNewDCyclePhaseSelect()
+});
 /** [END] MENSTRUAL PHASES **/

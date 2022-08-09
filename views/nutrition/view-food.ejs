@@ -39,7 +39,7 @@
 
         <!-- Hides main form if no food has been selected yet -->
         <% if (foodInfo) { %>
-            <div class="add-food-form">
+            <form class="add-food-form">
                 <div class="add-food-form__control">
                     <!-- NAME -->
                     <div class="add-food-form__item">
@@ -210,7 +210,7 @@
                     <button class="update-food-form__btn" type="submit">Actualizar</button>
                     <button class="delete-food-form__btn" type="submit">Borrar</button>
                 </div>
-            </div>
+            </form>
             <% } %>
     </main>
 <%- include('../includes/end.ejs') %>
