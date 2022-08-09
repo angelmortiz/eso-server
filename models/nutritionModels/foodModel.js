@@ -14,7 +14,7 @@ module.exports = class Food {
   safeForConditions;
   notRecommendedForConditions;
   recommendedForCyclePhases;
-  dietFriendly;
+  dietCompatible;
   linkToImage;
 
   constructor(inputValues) {

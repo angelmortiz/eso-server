@@ -15,7 +15,7 @@ module.exports = class Recipe {
     safeForConditions;
     notRecommendedForConditions;
     recommendedForCyclePhases;
-    dietFriendly;
+    dietCompatible;
     linkToImage;
     linkToVideo;
 
