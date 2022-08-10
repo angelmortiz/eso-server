@@ -15,6 +15,8 @@ router.get('/food', foodsController.getFood);
 router.get('/food/:foodId', foodsController.getFoodInfo);
 router.post('/redirect-to-food-info', foodsController.redirectToFoodInfo);
 router.get('/add-food', foodsController.getAddFood);
+//APIs
+router.delete('/food/:foodId', foodsController.apiDeleteFood);
 //router.post('/food', foodsController.addFood);
 
 /* RECIPE */

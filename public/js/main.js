@@ -1,5 +1,7 @@
 //***GLOBAL
 const SERVER_ADDRESS = "http://localhost:3000/api";
+
+//********* Add New [Buttons] */
 let chronicConditions;
 
 //TODO: Create generic methods that can be reused (DRY)
@@ -12,8 +14,8 @@ let getChronicConditions = async () => {
 
 /** SAFE FOR CONDITIONS **/
 //elements
-const btnSafeForConditions = document.querySelector('#btn-add-new-safe-condition');
-const safeForCondtionsDiv = document.querySelector('#safeForConditions-selects');
+const btnSafeForConditions = document.getElementById('btn-add-new-safe-condition');
+const safeForCondtionsDiv = document.getElementById('safeForConditions-selects');
 
 async function addNewSafeConditionSelect() {
     //pulls conditions names and ids from server
@@ -40,8 +42,8 @@ btnSafeForConditions?.addEventListener('click', (event) => {
 
 /** NOT RECOMMENDED FOR CONDITIONS **/
 //elements
-const btnNotRecommendedForConditions = document.querySelector('#btn-add-new-not-recommended-condition');
-const notRecommendedForCondtionsDiv = document.querySelector('#notRecommendedForConditions-selects');
+const btnNotRecommendedForConditions = document.getElementById('btn-add-new-not-recommended-condition');
+const notRecommendedForCondtionsDiv = document.getElementById('notRecommendedForConditions-selects');
 
 async function addNewNotRecommendedForConditionSelect() {
     //pulls conditions names and ids from server
@@ -67,8 +69,8 @@ btnNotRecommendedForConditions?.addEventListener('click', (event) => {
 
 /** DIET COMPATIBLE **/
 //elements
-const btnDietCompatible = document.querySelector('#btn-add-new-diet');
-const dietCompatibleDiv = document.querySelector('#dietCompatible-selects');
+const btnDietCompatible = document.getElementById('btn-add-new-diet');
+const dietCompatibleDiv = document.getElementById('dietCompatible-selects');
 
 //vars
 let diets;
@@ -96,14 +98,14 @@ async function addNewDietCompatibleSelect() {
 //listeners
 btnDietCompatible?.addEventListener('click', (event) => { 
     event.preventDefault();
-    addNewDietCompatibleSelect()}
-);
+    addNewDietCompatibleSelect();
+});
 /** [END] DIET COMPATIBLE **/
 
 /** MENSTRUAL PHASES **/
 //elements
-const btnMenstrualCyclePhase = document.querySelector('#btn-add-new-phase');
-const menstrualCyclePhaseDiv = document.querySelector('#menstrualCyclePhases-selects');
+const btnMenstrualCyclePhase = document.getElementById('btn-add-new-phase');
+const menstrualCyclePhaseDiv = document.getElementById('menstrualCyclePhases-selects');
 
 //vars
 let phases;
@@ -131,6 +133,40 @@ async function addNewDCyclePhaseSelect() {
 //listeners
 btnMenstrualCyclePhase?.addEventListener('click', (event) => { 
     event.preventDefault();
-    addNewDCyclePhaseSelect()
+    addNewDCyclePhaseSelect();
 });
 /** [END] MENSTRUAL PHASES **/
+
+/** FOOD **/
+//********* Delete [Button] */
+//elements
+const btnDeleteFood = document.getElementById('btn-delete-food');
+const selectedFood = document.getElementById('select-food-selection');
+const selectedFoodName = selectedFood.options[selectedFood.selectedIndex].text;
+const selectedFoodId = selectedFood.options[selectedFood.selectedIndex].value;
+
+
+deleteFood = async () => {
+    const isDelete = showDeleteConfirmation(selectedFoodName);
+    if (!isDelete) return;
+    
+    const status = await sendDeleteCommand();
+};
+
+showDeleteConfirmation = (name) => {
+    return confirm(`¿Seguro que deseas borrar la comida '${name}'?`);
+}
+
+sendDeleteCommand = async () => {
+     const response = await fetch(`${SERVER_ADDRESS}/nutrition/food/${selectedFoodId}`,
+      {method: 'DELETE'});
+     const jsonResponse =  await response.json();
+     return jsonResponse.status;
+};
+
+//listeners
+btnDeleteFood?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteFood();
+});
+/** [END] FOOD **/

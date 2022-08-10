@@ -95,6 +95,19 @@ module.exports = class Food {
       });
   }
 
+  static deleteById(id) {
+    const db = getDb();
+    return db
+      .collection('foods')
+      .deleteOne({_id: new ObjectId(id)})
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   static foodStaticValues = {
     classification: ['Vegetal', 'Fruta', 'Carne', 'Especie', 'Bebida'],
     macronutrients: ['Proteína', 'Grasa', 'Carbohidrato'],

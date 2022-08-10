@@ -76,3 +76,15 @@ exports.addFood = (request) => {
 
   // response.redirect('/nutrition/food')
 };
+
+exports.apiDeleteFood = (request, response) => {
+  Food.deleteById(request.params.foodId)
+  .then( deleteResponse => {
+    console.log('deleteResponse', deleteResponse);
+    response.json({"status": "Deleted"});
+  })
+  .catch(err => {
+    console.log('Error while deleting Food: ', err);
+    response.json({"status": "Error", "description": err});
+  });
+};
