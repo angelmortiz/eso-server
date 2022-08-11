@@ -83,16 +83,15 @@ exports.getAddFood = (request, response) => {
 exports.addFood = (request) => {
   let food = new Food(request.body);
   food = refactorValuesForDb(food);
-  console.log('food', food);
 
-  // food
-  //   .save()
-  //   .then((result) => {
-  //     console.log('New food was saved to db.');
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
+  food
+    .save()
+    .then((result) => {
+      console.log('New document added to database.', result);
+    })
+    .catch((error) => {
+      console.log('Error while inserting document to db', error);
+    });
 
   // response.redirect('/nutrition/food')
 };

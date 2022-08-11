@@ -23,6 +23,7 @@ async function addNewSafeConditionSelect() {
 
     //creates new dropdown element and adds it to the DOM
     const selectNode = document.createElement("select");
+    selectNode.name = "safeForConditions";
     safeForCondtionsDiv.appendChild(selectNode);
 
     //adds options to the dropdown
@@ -51,6 +52,7 @@ async function addNewNotRecommendedForConditionSelect() {
 
     //creates new dropdown element and adds it to the DOM
     const selectNode = document.createElement("select");
+    selectNode.name = "notRecommendedForConditions";
     notRecommendedForCondtionsDiv.appendChild(selectNode);
 
     //adds options to the dropdown
@@ -86,6 +88,7 @@ async function addNewCompatibleWithDietsSelect() {
 
     //creates new dropdown element and adds it to the DOM
     const selectNode = document.createElement("select");
+    selectNode.name = "compatibleWithDiets";
     compatibleWithDietsDiv.appendChild(selectNode);
 
     //adds options to the dropdown
@@ -121,6 +124,7 @@ async function addNewDCyclePhaseSelect() {
 
     //creates new dropdown element and adds it to the DOM
     const selectNode = document.createElement("select");
+    selectNode.name = "recommendedForCyclePhases";
     menstrualCyclePhaseDiv.appendChild(selectNode);
 
     //adds options to the dropdown

@@ -33,9 +33,11 @@
                     <button class="select-food__btn" type="submit">Mostrar</button>
                 </form>
             </div>
-            <button class="new-food__btn" type="reset">Nueva</button>
+            <form action="/nutrition/add-food" method="GET">
+                <button class="new-food__btn" type="submit">Nueva</button>
+            </form>
         </section>
-        <form class="food-form" action="/nutrition/food" method="POST">
+        <form class="food-form" action="/nutrition/food" method="POST" id="add-food-form">
             <div class="food-form__control">
                 <!-- NAME -->
                 <div class="food-form__item">
@@ -162,7 +164,7 @@
                 </div>
             </div>
             <div class="food-form-btns__control">
-                <button class="add-food-form__btn" type="submit">Añadir</button>
+                <button class="add-food-form__btn"  type="submit" id="add-food-form-btn">Añadir</button>
             </div>
         </form>
     </main>
