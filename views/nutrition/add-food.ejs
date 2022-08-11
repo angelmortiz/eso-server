@@ -3,7 +3,7 @@
 
 <head>
     <%- include('../includes/head.ejs') %>
-        <link rel="stylesheet" href="/css/nutrition/food.css">
+    <link rel="stylesheet" href="/css/nutrition/food.css">
 </head>
 
 <body>
@@ -19,109 +19,151 @@
         <section class="food-selection-creation">
             <div class="select-food-dropdown">
                 <label for="select-food" class="select-food-dropdown__title">Comida:</label>
-                <select name="select-food" id="select-food-selection">
-                    <option value="com1">Comida 1</option>
-                    <option value="com2">Comida 2</option>
-                    <option value="com3">Comida 3</option>
-                </select>
+                <form action="/nutrition/redirect-to-view-food" method="POST">
+                    <select name="selectedFood" id="select-food-selection">
+                        <option value="">-- Elige --</option>
+                        <% foodNames.forEach( food=> { %>
+                            <option value="<%= food._id %>"
+                                <%=selectedFoodId==food._id ? 'selected' : '' %>
+                                >
+                                <%= food.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button class="select-food__btn" type="submit">Mostrar</button>
+                </form>
             </div>
-            <button class="new-food__btn" type="submit">Nueva</button>
+            <button class="new-food__btn" type="reset">Nueva</button>
         </section>
-        <form class="add-food-form" action="/nutrition/food" method="POST">
-            <div class="add-food-form__control">
-                <div class="add-food-form__item">
-                    <label for="name" class="add-food-form__title">Nombre:</label>
+        <form class="food-form" action="/nutrition/food" method="POST">
+            <div class="food-form__control">
+                <!-- NAME -->
+                <div class="food-form__item">
+                    <label for="name" class="food-form__title">Nombre:</label>
                     <input type="text" name="name" id="food-name">
                 </div>
-                <div class="add-food-form__item">
-                    <label for="classification" class="add-food-form__title">Clasificación:</label>
-                    <select name="classification" id="classification-selection">
-                        <option value="vegetal">Vegetal</option>
-                        <option value="fruta">Fruta</option>
-                        <option value="carne">Carne</option>
-                        <option value="especia">Especia</option>
-                        <option value="bebida">Bebida</option>
-                    </select>
-                </div>
-                <div class="add-food-form__item">
-                    <label for="description" class="add-food-form__title">Descripción:</label>
+                <!-- DESCRIPTION -->
+                <div class="food-form__item">
+                    <label for="description" class="food-form__title">Descripción:</label>
                     <input type="text" name="description" id="description">
                 </div>
-                <div class="add-food-form__item">
-                    <label for="mainMacronutrient" class="add-food-form__title">Macronutriente principal:</label>
+                <!-- CLASSIFICATION -->
+                <div class="food-form__item">
+                    <label for="classification" class="food-form__title">Clasificación:</label>
+                    <select name="classification" id="classification-selection">
+                        <option value="">-- Elige --</option>
+                        <% foodValues.classification.forEach( c=> { %>
+                            <option value="<%= c %>"><%= c %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <!-- MAIN MACRONUTRIENT -->
+                <div class="food-form__item">
+                    <label for="mainMacronutrient" class="food-form__title">Macronutriente principal:</label>
                     <select name="mainMacronutrient" id="mainMacronutrient-selection">
-                        <option value="proteína">Proteína</option>
-                        <option value="grasa">Grasa</option>
-                        <option value="carbohidrato">Carbohidrato</option>
+                        <option value="">-- Elige --</option>
+                        <% foodValues.macronutrients.forEach( mn=> { %>
+                            <option value="<%= mn %>"><%= mn %></option>
+                        <% }); %>
                     </select>
                 </div>
-                <div class="add-food-form__item">
-                    <label for="secondaryMacronutrient" class="add-food-form__title">Macronutriente secundario:</label>
+                <!-- SECONDARY MACRONUTRIENT -->
+                <div class="food-form__item">
+                    <label for="secondaryMacronutrient" class="food-form__title">Macronutriente
+                        secundario:</label>
                     <select name="secondaryMacronutrient" id="secondaryMacronutrient-selection">
-                        <option value="proteína">Proteína</option>
-                        <option value="grasa">Grasa</option>
-                        <option value="carbohidrato">Carbohidrato</option>
+                        <option value="">-- Elige --</option>
+                        <% foodValues.macronutrients.forEach( mn=> { %>
+                            <option value="<%= mn %>"><%= mn %></option>
+                        <% }); %>
                     </select>
                 </div>
-                <div class="add-food-form__item">
-                    <label class="add-food-form__title">Tipo de comida:</label>
-                    <input type="checkbox" name="mealType-breakfast" id="mealType-selection">
-                    <label for="mealType-breakfast" class="add-food-form__title">Desayuno</label>
-                    <input type="checkbox" name="mealType-lunch" id="mealType-selection">
-                    <label for="mealType-lunch" class="add-food-form__title">Almuerzo</label>
-                    <input type="checkbox" name="mealType-dinner" id="mealType-selection">
-                    <label for="mealType-dinner" class="add-food-form__title">Cena</label>
+                <!-- MEAL TYPE -->
+                <div class="food-form__item">
+                    <label class="food-form__title">Tipo de comida:</label>
+                    <input type="checkbox" name="breakfast" id="mealType-selection">
+                    <label for="mealType-breakfast" class="food-form__title">Desayuno</label>
+                    <input type="checkbox" name="lunch" id="mealType-selection">
+                    <label for="mealType-lunch" class="food-form__title">Almuerzo</label>
+                    <input type="checkbox" name="dinner" id="mealType-selection">
+                    <label for="mealType-dinner" class="food-form__title">Cena</label>
                 </div>
-                <div class="add-food-form__item">
-                    <label for="micronutrientDensity" class="add-food-form__title">Densidad de micronutrientes:</label>
+                <!-- MICRONUTRIENT DENSITY -->
+                <div class="food-form__item">
+                    <label for="micronutrientDensity" class="food-form__title">Densidad de
+                        micronutrientes:</label>
                     <select name="micronutrientDensity" id="micronutrientDensity-selection">
-                        <option value="baja">Baja</option>
-                        <option value="media">Media</option>
-                        <option value="alta">Alta</option>
+                        <option value="">-- Elige --</option>
+                        <% foodValues.micronutrientDensity.forEach( md=> { %>
+                            <option value="<%= md %>"><%= md %></option>
+                        <% }); %>
                     </select>
                 </div>
-                <div class="add-food-form__item">
-                    <label for="safeForConditions" class="add-food-form__title">Seguro para condiciones:</label>
-                    <select name="safeForConditions" id="safeForConditions-selection">
-                        <option value="diabetestipo1">Diabetes tipo 1</option>
-                        <option value="diabetestipo2">Diabetes tipo 2</option>
-                        <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
-                    </select>
+                <!-- SAFE FOR CONDITIONS -->
+                <div class="food-form__item-rows">
+                    <label for="safeForConditions" class="food-form__title">Seguro para condiciones:</label>
+                    <div class="food-form__selects-div" id="safeForConditions-selects">
+                        <select name="safeForConditions">
+                            <!-- [Loop1] Loop for all the chronic conditions options -->
+                            <% chronicConditions.forEach( cc => { %>
+                                <option value="<%= cc._id %>"><%= cc.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="food-form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
                 </div>
-                <div class="add-food-form__item">
-                    <label for="notRecommendedForConditions" class="add-food-form__title">No recomendado para
-                        condiciones:</label>
-                    <select name="notRecommendedForConditions" id="notRecommendedForConditions-selection">
-                        <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
-                    </select>
+                <!-- NOT RECOMMENDED FOR CONDITIONS -->
+                <div class="food-form__item-rows">
+                    <label for="notRecommendedForConditions" class="food-form__title">No recomendado para condiciones:</label>
+                    <div class="food-form__selects-div" id="notRecommendedForConditions-selects">
+                        <select name="notRecommendedForConditions">
+                            <!-- [Loop1] Loop for all the chronic conditions options -->
+                            <% chronicConditions.forEach( cc => { %>
+                                <option value="<%= cc._id %>"><%= cc.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="food-form__add-btn" id="btn-add-new-not-recommended-condition">Añadir condición</button>
                 </div>
-                <div class="add-food-form__item">
-                    <label for="compatibleWithDiets" class="add-food-form__title">Compatible con dietas:</label>
-                    <select name="compatibleWithDiets" id="compatibleWithDiets-selection">
-                        <option value="keto">Keto</option>
-                        <option value="paleo">Paleo</option>
-                        <option value="vegana">Vegana</option>
-                    </select>
+                <!-- DIET COMPATIBLE -->
+                <div class="food-form__item-rows">
+                    <label for="compatibleWithDiets" class="food-form__title">Compatible con dietas:</label>
+                    <div class="food-form__selects-div" id="compatibleWithDiets-selects">
+                        <select name="compatibleWithDiets">
+                        <!-- [Loop1] Loop for all the diets options -->
+                        <% diets.forEach( d => { %>
+                            <option value="<%= d._id %>"><%= d.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="food-form__add-btn" id="btn-add-new-diet">Añadir dieta</button>
                 </div>
-                <div class="add-food-form__item">
-                    <label for="recommendedForCyclePhases" class="add-food-form__title">Recomendado para fases:</label>
-                    <select name="recommendedForCyclePhases" id="recommendedForCyclePhases-selection">
-                        <option value="periodo">Periodo</option>
-                        <option value="folicular">Folicular</option>
-                        <option value="ovulacion">Ovulación</option>
-                        <option value="secretora">Secretora</option>
-                    </select>
+                <!-- RECOMMENDED FOR CYCLE PHASES -->
+                <div class="food-form__item-rows">
+                    <label for="recommendedForCyclePhases" class="food-form__title">Recomendado para fases:</label>
+                    <div class="food-form__selects-div" id="menstrualCyclePhases-selects">
+                        <select name="recommendedForCyclePhases">
+                        <!-- [Loop1] Loop for all the phases options -->
+                            <% menstrualCyclePhases.forEach( mf=> { %>
+                                <option value="<%= mf %>"><%= mf %></option>
+                            <% }); %>
+                        <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="food-form__add-btn" id="btn-add-new-phase">Añadir fase</button>
                 </div>
-                <div class="add-food-form__item">
-                    <label for="linkToImage" class="add-food-form__title">Enlace para imagen:</label>
+                <!-- LINK TO IMAGE -->
+                <div class="food-form__item">
+                    <label for="linkToImage" class="food-form__title">Enlace para imagen:</label>
                     <input type="text" name="linkToImage" id="linkToImage">
                 </div>
             </div>
-            <div class="add-food-form__btn-control">
+            <div class="food-form-btns__control">
                 <button class="add-food-form__btn" type="submit">Añadir</button>
             </div>
         </form>
     </main>
-</body>
-
-</html>
+<%- include('../includes/end.ejs') %>

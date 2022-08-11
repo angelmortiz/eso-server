@@ -11,16 +11,18 @@ const menstrualCyclePhasesController = require('../controllers/general/menstrual
 
 /* FOOD */
 //Renders
-router.get('/', foodsController.getFood); //defeault render for nutrition
+//TODO: Change the default to add-food (with blank page)
+router.get('/', foodsController.redirectToSelectFood); //defeault render for nutrition=
 router.get('/food', foodsController.getFood);
 router.get('/food/:foodId', foodsController.getViewFood);
 router.get('/add-food', foodsController.getAddFood);
 //Actions
 router.post('/update-food/:foodId', foodsController.updateFood);
-router.post('/redirect-to-food-info', foodsController.redirectToFoodInfo);
+router.post('/redirect-to-view-food', foodsController.redirectToViewFood);
+router.post('/food', foodsController.addFood);
 //APIs
 router.delete('/food/:foodId', foodsController.apiDeleteFood);
-//router.post('/food', foodsController.addFood);
+
 
 /* RECIPE */
 router.get('/recipe', recipesController.getRecipe);

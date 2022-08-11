@@ -19,7 +19,7 @@
         <section class="food-selection-creation">
             <div class="select-food-dropdown">
                 <label for="select-food" class="select-food-dropdown__title">Comida:</label>
-                <form action="/nutrition/redirect-to-food-info" method="POST">
+                <form action="/nutrition/redirect-to-view-food" method="POST">
                     <select name="selectedFood" id="select-food-selection">
                         <option value="">-- Elige --</option>
                         <% foodNames.forEach( food=> { %>
@@ -33,7 +33,9 @@
                     <button class="select-food__btn" type="submit">Mostrar</button>
                 </form>
             </div>
-            <button class="new-food__btn" type="reset">Nueva</button>
+            <form action="/nutrition/add-food" method="GET">
+                <button class="new-food__btn" type="submit">Nueva</button>
+            </form>
         </section>
 
         <!-- Hides main form if no food has been selected yet -->
@@ -123,7 +125,6 @@
                             <!-- [Loop1] Loop for chronic conditions associated to curret food -->
                             <% foodInfo.safeForConditions.forEach( (condition, index) => { %> 
                                 <select name="safeForConditions">
-                                    <option value="">-- Elige --</option>
                                     <!-- [Loop2] Loop for all the chronic conditions options -->
                                     <% chronicConditions.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
@@ -144,7 +145,6 @@
                             <!-- [Loop1] Loop for chronic conditions associated to curret food -->
                             <% foodInfo.notRecommendedForConditions.forEach( (condition, index) => { %> 
                                 <select name="notRecommendedForConditions">
-                                    <option value="">-- Elige --</option>
                                     <!-- [Loop2] Loop for all the chronic conditions options -->
                                     <% chronicConditions.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
@@ -165,7 +165,6 @@
                             <!-- [Loop1] Loop for diets associated to curret food -->
                             <% foodInfo.compatibleWithDiets.forEach( (diet, index) => { %> 
                                 <select name="compatibleWithDiets">
-                                    <option value="">-- Elige --</option>
                                 <!-- [Loop2] Loop for all the diets options -->
                                 <% diets.forEach( d => { %>
                                     <option value="<%= d._id %>"
@@ -186,7 +185,6 @@
                             <!-- [Loop1] Loop for diets associated to curret food -->
                             <% foodInfo.recommendedForCyclePhases.forEach( (phase, index) => { %> 
                                 <select name="recommendedForCyclePhases">
-                                    <option value="">-- Elige --</option>
                                     <% menstrualCyclePhases.forEach( mf=> { %>
                                         <option value="<%= mf %>"
                                             <%=phase == mf ? 'selected' : '' %>

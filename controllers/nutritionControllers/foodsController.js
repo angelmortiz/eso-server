@@ -10,6 +10,11 @@ let _dietNames = [];
 exports.selectedFood = null;
 
 /** RENDERS */
+exports.redirectToSelectFood = (request, response) => {
+  response.redirect(`/nutrition/food`);
+}
+
+
 //FIXME: Maybe create one method mergin getFood and getViewFood
 exports.getFood = (request, response) => {
     Food.fetchAllNames()
@@ -42,9 +47,9 @@ exports.getViewFood = (request, response) => {
     response.render('./nutrition/view-food', {
       caller: 'view-food',
       pageTitle: 'Información de comida',
+      foodNames: _foodNames,
       foodValues: Food.foodStaticValues,
       foodInfo: foodInfo,
-      foodNames: _foodNames,
       selectedFoodId: selectedFoodId,
       chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
       diets: Diet.compatibleWithDietsStaticValues.diets,
@@ -56,27 +61,38 @@ exports.getViewFood = (request, response) => {
   });
 };
 
-exports.redirectToFoodInfo = (request, response) => {
-  response.redirect(`/nutrition/food/${request.body.selectedFood}`)
+exports.redirectToViewFood = (request, response) => {
+  response.redirect(`/nutrition/food/${request.body.selectedFood}`);
 }
 
 exports.getAddFood = (request, response) => {
   response.render('./nutrition/add-food', {
     caller: 'add-food',
     pageTitle: 'Añadir comida',
+    foodNames: _foodNames,
+    foodValues: Food.foodStaticValues,
+    chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
+    diets: Diet.compatibleWithDietsStaticValues.diets,
+    menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases,
+    foodInfo: null,
+    selectedFoodId: null
   });
+
 };
 
 exports.addFood = (request) => {
-  const food = new Food(request.body);
-  food
-    .save()
-    .then((result) => {
-      console.log('New food was saved to db.');
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  let food = new Food(request.body);
+  food = refactorValuesForDb(food);
+  console.log('food', food);
+
+  // food
+  //   .save()
+  //   .then((result) => {
+  //     console.log('New food was saved to db.');
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
 
   // response.redirect('/nutrition/food')
 };
