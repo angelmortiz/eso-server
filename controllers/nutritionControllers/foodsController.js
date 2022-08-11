@@ -1,3 +1,4 @@
+const { ObjectID } = require('bson');
 const MenstrualCyclePhase = require('../../models/general/menstrualCyclePhase');
 const ChronicCondition = require('../../models/nutritionModels/chronicConditionModel');
 const Diet = require('../../models/nutritionModels/dietModel');
@@ -6,6 +7,7 @@ let _foodNames = [];
 
 exports.selectedFood = null;
 
+/** RENDERS */
 //FIXME: Maybe create one method mergin getFood and getFoodInfo
 exports.getFood = (request, response) => {
     Food.fetchAllNames()
@@ -77,6 +79,53 @@ exports.addFood = (request) => {
   // response.redirect('/nutrition/food')
 };
 
+exports.updateFood = (request) => {
+  let food = new Food(request.body);
+  food.id = request.params.foodId;
+
+  food = refactorValuesForDb(food);
+
+  console.log('food', food);
+  
+  food.update();
+  // response.redirect('/nutrition/food')
+};
+
+refactorValuesForDb = (food) => {
+  food.safeForConditions = refactorSafeForConditions(food.safeForConditions);
+  food = refactorMealTypeValues(food);
+  return food;
+};
+
+refactorSafeForConditions = (conditions) => {
+  if (!conditions) return null;
+  
+  let newConditions = [];
+  conditions.forEach(condition => newConditions.push(new ObjectID(condition)) );
+  
+  return newConditions;
+};
+
+refactorMealTypeValues = (food) => {
+  food.mealType = [];
+
+  if (food.breakfast) {
+    food.mealType.push('Desayuno');
+    delete food.breakfast;
+  }
+  if (food.lunch) {
+    food.mealType.push('Almuerzo');
+    delete food.lunch;
+  }
+  if (food.dinner) {
+    food.mealType.push('Cena');
+    delete food.dinner;
+  }
+
+  return food;
+};
+
+/** APIS */
 exports.apiDeleteFood = (request, response) => {
   Food.deleteById(request.params.foodId)
   .then( deleteResponse => {

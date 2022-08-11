@@ -38,21 +38,21 @@
 
         <!-- Hides main form if no food has been selected yet -->
         <% if (foodInfo) { %>
-            <form class="add-food-form">
-                <div class="add-food-form__control">
+            <form class="food-form" action="/nutrition/update-food/<%- foodInfo._id %> " method="POST">
+                <div class="food-form__control">
                     <!-- NAME -->
-                    <div class="add-food-form__item">
-                        <label for="name" class="add-food-form__title">Nombre:</label>
+                    <div class="food-form__item">
+                        <label for="name" class="food-form__title">Nombre:</label>
                         <input type="text" name="name" id="food-name" value="<%= foodInfo.name %>">
                     </div>
                     <!-- DESCRIPTION -->
-                    <div class="add-food-form__item">
-                        <label for="description" class="add-food-form__title">Descripción:</label>
+                    <div class="food-form__item">
+                        <label for="description" class="food-form__title">Descripción:</label>
                         <input type="text" name="description" id="description" value="<%= foodInfo.description %>">
                     </div>
                     <!-- CLASSIFICATION -->
-                    <div class="add-food-form__item">
-                        <label for="classification" class="add-food-form__title">Clasificación:</label>
+                    <div class="food-form__item">
+                        <label for="classification" class="food-form__title">Clasificación:</label>
                         <select name="classification" id="classification-selection">
                             <option value="">-- Elige --</option>
                             <% foodValues.classification.forEach( c=> { %>
@@ -63,8 +63,8 @@
                         </select>
                     </div>
                     <!-- MAIN MACRONUTRIENT -->
-                    <div class="add-food-form__item">
-                        <label for="mainMacronutrient" class="add-food-form__title">Macronutriente principal:</label>
+                    <div class="food-form__item">
+                        <label for="mainMacronutrient" class="food-form__title">Macronutriente principal:</label>
                         <select name="mainMacronutrient" id="mainMacronutrient-selection">
                             <option value="">-- Elige --</option>
                             <% foodValues.macronutrients.forEach( mn=> { %>
@@ -75,8 +75,8 @@
                         </select>
                     </div>
                     <!-- SECONDARY MACRONUTRIENT -->
-                    <div class="add-food-form__item">
-                        <label for="secondaryMacronutrient" class="add-food-form__title">Macronutriente
+                    <div class="food-form__item">
+                        <label for="secondaryMacronutrient" class="food-form__title">Macronutriente
                             secundario:</label>
                         <select name="secondaryMacronutrient" id="secondaryMacronutrient-selection">
                             <option value="">-- Elige --</option>
@@ -88,24 +88,24 @@
                         </select>
                     </div>
                     <!-- MEAL TYPE -->
-                    <div class="add-food-form__item">
-                        <label class="add-food-form__title">Tipo de comida:</label>
-                        <input type="checkbox" name="mealType-breakfast" id="mealType-selection" 
+                    <div class="food-form__item">
+                        <label class="food-form__title">Tipo de comida:</label>
+                        <input type="checkbox" name="breakfast" id="mealType-selection" 
                             <%=foodInfo.mealType?.includes('Desayuno') ? 'checked' : '' %>
                         >
-                        <label for="mealType-breakfast" class="add-food-form__title">Desayuno</label>
-                        <input type="checkbox" name="mealType-lunch" id="mealType-selection"
+                        <label for="mealType-breakfast" class="food-form__title">Desayuno</label>
+                        <input type="checkbox" name="lunch" id="mealType-selection"
                             <%=foodInfo.mealType?.includes('Almuerzo') ? 'checked' : '' %>
                         >
-                        <label for="mealType-lunch" class="add-food-form__title">Almuerzo</label>
-                        <input type="checkbox" name="mealType-dinner" id="mealType-selection"
+                        <label for="mealType-lunch" class="food-form__title">Almuerzo</label>
+                        <input type="checkbox" name="dinner" id="mealType-selection"
                             <%=foodInfo.mealType?.includes('Cena') ? 'checked' : '' %>
                         >
-                        <label for="mealType-dinner" class="add-food-form__title">Cena</label>
+                        <label for="mealType-dinner" class="food-form__title">Cena</label>
                     </div>
                     <!-- MICRONUTRIENT DENSITY -->
-                    <div class="add-food-form__item">
-                        <label for="micronutrientDensity" class="add-food-form__title">Densidad de
+                    <div class="food-form__item">
+                        <label for="micronutrientDensity" class="food-form__title">Densidad de
                             micronutrientes:</label>
                         <select name="micronutrientDensity" id="micronutrientDensity-selection">
                             <option value="">-- Elige --</option>
@@ -117,9 +117,9 @@
                         </select>
                     </div>
                     <!-- SAFE FOR CONDITIONS -->
-                    <div class="add-food-form__item-rows">
-                        <label for="safeForConditions" class="add-food-form__title">Seguro para condiciones:</label>
-                        <div class="add-food-form__selects-div" id="safeForConditions-selects">
+                    <div class="food-form__item-rows">
+                        <label for="safeForConditions" class="food-form__title">Seguro para condiciones:</label>
+                        <div class="food-form__selects-div" id="safeForConditions-selects">
                             <!-- [Loop1] Loop for chronic conditions associated to curret food -->
                             <% foodInfo.safeForConditions.forEach( (condition, index) => { %> 
                                 <select name="safeForConditions">
@@ -135,12 +135,12 @@
                             <% });  %> 
                         </div>
                         <!-- [END-Loop1] -->
-                        <button class="add-food-form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
+                        <button class="food-form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
                     </div>
                     <!-- NOT RECOMMENDED FOR CONDITIONS -->
-                    <div class="add-food-form__item-rows">
-                        <label for="notRecommendedForConditions" class="add-food-form__title">No recomendado para condiciones:</label>
-                        <div class="add-food-form__selects-div" id="notRecommendedForConditions-selects">
+                    <div class="food-form__item-rows">
+                        <label for="notRecommendedForConditions" class="food-form__title">No recomendado para condiciones:</label>
+                        <div class="food-form__selects-div" id="notRecommendedForConditions-selects">
                             <!-- [Loop1] Loop for chronic conditions associated to curret food -->
                             <% foodInfo.notRecommendedForConditions.forEach( (condition, index) => { %> 
                                 <select name="notRecommendedForConditions">
@@ -156,15 +156,15 @@
                             <% });  %> 
                             <!-- [END-Loop1] -->
                         </div>
-                        <button class="add-food-form__add-btn" id="btn-add-new-not-recommended-condition">Añadir condición</button>
+                        <button class="food-form__add-btn" id="btn-add-new-not-recommended-condition">Añadir condición</button>
                     </div>
-                    <!-- DIET FRIENDLY -->
-                    <div class="add-food-form__item-rows">
-                        <label for="dietCompatible" class="add-food-form__title">Compatible con dietas:</label>
-                        <div class="add-food-form__selects-div" id="dietCompatible-selects">
+                    <!-- DIET COMPATIBLE -->
+                    <div class="food-form__item-rows">
+                        <label for="dietCompatible" class="food-form__title">Compatible con dietas:</label>
+                        <div class="food-form__selects-div" id="dietCompatible-selects">
                             <!-- [Loop1] Loop for diets associated to curret food -->
                             <% foodInfo.dietCompatible.forEach( (diet, index) => { %> 
-                                <select name="dietCompatible-<%- index %>">
+                                <select name="dietCompatible">
                                     <option value="">-- Elige --</option>
                                 <!-- [Loop2] Loop for all the diets options -->
                                 <% diets.forEach( d => { %>
@@ -177,12 +177,12 @@
                             <% });  %> 
                             <!-- [END-Loop1] -->
                         </div>
-                        <button class="add-food-form__add-btn" id="btn-add-new-diet">Añadir dieta</button>
+                        <button class="food-form__add-btn" id="btn-add-new-diet">Añadir dieta</button>
                     </div>
                     <!-- RECOMMENDED FOR CYCLE PHASES -->
-                    <div class="add-food-form__item-rows">
-                        <label for="recommendedForCyclePhases" class="add-food-form__title">Recomendado para fases:</label>
-                        <div class="add-food-form__selects-div" id="menstrualCyclePhases-selects">
+                    <div class="food-form__item-rows">
+                        <label for="recommendedForCyclePhases" class="food-form__title">Recomendado para fases:</label>
+                        <div class="food-form__selects-div" id="menstrualCyclePhases-selects">
                             <!-- [Loop1] Loop for diets associated to curret food -->
                             <% foodInfo.recommendedForCyclePhases.forEach( (phase, index) => { %> 
                                 <select name="recommendedForCyclePhases">
@@ -197,11 +197,11 @@
                             <% });  %> 
                             <!-- [END-Loop1] -->
                         </div>
-                        <button class="add-food-form__add-btn" id="btn-add-new-phase">Añadir fase</button>
+                        <button class="food-form__add-btn" id="btn-add-new-phase">Añadir fase</button>
                     </div>
                     <!-- LINK TO IMAGE -->
-                    <div class="add-food-form__item">
-                        <label for="linkToImage" class="add-food-form__title">Enlace para imagen:</label>
+                    <div class="food-form__item">
+                        <label for="linkToImage" class="food-form__title">Enlace para imagen:</label>
                         <input type="text" name="linkToImage" id="linkToImage" value="<%= foodInfo.linkToImage %>">
                     </div>
                 </div>

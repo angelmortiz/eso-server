@@ -22,6 +22,10 @@ module.exports = class Food {
     this.mapValues(inputValues);
   }
 
+  mapValues(inputValues) {
+    Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
+  }
+
   save() {
     const db = getDb();
     delete this.id; //removes property before inserting to db to prevent double id to be created
@@ -29,17 +33,29 @@ module.exports = class Food {
       .collection('foods')
       .insertOne(this)
       .then((result) => {
-        console.log('New data inserted successfully.', result);
+        console.log('New document inserted successfully.', result);
       })
       .catch((error) => {
-        console.log('There was an error trying to insert new data.', error);
+        console.log('There was an error trying to insert new document.', error);
       });
   }
 
-  mapValues(inputValues) {
-    Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
+  update() {
+    const db = getDb();
+    const selectDocument = {"_id": new ObjectId(this.id)};
+    delete this.id; //removes property before inserting to db to prevent double id to be created
+    
+    return db
+      .collection('foods')
+      .updateOne(selectDocument, { $set: this })
+      .then((result) => {
+        console.log('Document updated successfully.', result);
+      })
+      .catch((error) => {
+        console.log('There was an error trying to update the document.', error);
+      });
   }
-
+  
   static fetchByName(name) {
     const db = getDb();
     return db

@@ -11,8 +11,9 @@ const menstrualCyclePhasesController = require('../controllers/general/menstrual
 
 /* FOOD */
 //Renders
-router.get('/food', foodsController.getFood);
+router.get('/food', foodsController.getFood); //FIXME: CHANGE TO /food-view
 router.get('/food/:foodId', foodsController.getFoodInfo);
+router.post('/update-food/:foodId', foodsController.updateFood);
 router.post('/redirect-to-food-info', foodsController.redirectToFoodInfo);
 router.get('/add-food', foodsController.getAddFood);
 //APIs
