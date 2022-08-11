@@ -4,6 +4,8 @@ const ChronicCondition = require('../../models/nutritionModels/chronicConditionM
 const Diet = require('../../models/nutritionModels/dietModel');
 const Food = require('../../models/nutritionModels/foodModel');
 let _foodNames = [];
+let _conditionNames = [];
+let _dietNames = [];
 
 exports.selectedFood = null;
 
@@ -82,28 +84,74 @@ exports.addFood = (request) => {
 exports.updateFood = (request) => {
   let food = new Food(request.body);
   food.id = request.params.foodId;
-
   food = refactorValuesForDb(food);
-
-  console.log('food', food);
-  
   food.update();
   // response.redirect('/nutrition/food')
 };
 
 refactorValuesForDb = (food) => {
-  food.safeForConditions = refactorSafeForConditions(food.safeForConditions);
+  food.safeForConditions = refactorChronicConditions(food.safeForConditions);
+  food.notRecommendedForConditions = refactorChronicConditions(food.notRecommendedForConditions);
+  food.dietCompatible = refactorDietCompatible(food.dietCompatible);
   food = refactorMealTypeValues(food);
   return food;
 };
 
-refactorSafeForConditions = (conditions) => {
-  if (!conditions) return null;
+refactorChronicConditions = (selectedConditions) => {
+  if (!selectedConditions){ return null; }
+
+  //TODO: TEST WITH NO CONDITIONS BEING PASSED
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(selectedConditions) === 'string') {
+    selectedConditions = [selectedConditions]; 
+  }
+  //Fetches all the chronic conditions to pair with their names
+  if (!_conditionNames || _conditionNames.length === 0) {
+    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+    _conditionNames = ChronicCondition.chronicConditionsStaticValues.chronicConditions;
+  }
+
+  let refactoredConditions = [];
+  selectedConditions.forEach(conditionId => 
+    {
+      const conditionObject = {
+        conditionId: new ObjectID(conditionId),
+        conditionName: _conditionNames.find(c => c._id === conditionId)?.name
+      };
+
+      refactoredConditions.push(conditionObject);
+    });
   
-  let newConditions = [];
-  conditions.forEach(condition => newConditions.push(new ObjectID(condition)) );
+  return refactoredConditions;
+};
+
+refactorDietCompatible = (selectedDietsCompatible) => {
+  if (!selectedDietsCompatible) {return null;}
+
+  //TODO: TEST WITH NO DIETS BEING PASSED
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(selectedDietsCompatible) === 'string') {
+    selectedDietsCompatible = [selectedDietsCompatible]; 
+  }
+  //Fetches all the diets to pair with their names
+  if (!_dietNames || _dietNames.length === 0) {
+    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+    _dietNames = Diet.dietCompatibleStaticValues.diets;
+  }
+
+  let refactoredDiets = [];
+  selectedDietsCompatible.forEach(dietId => 
+    {
+      const dietObject = {
+        dietId: new ObjectID(dietId),
+        dietName: _dietNames.find(c => c._id === dietId)?.name
+      };
+
+      refactoredDiets.push(dietObject);
+    });
   
-  return newConditions;
+  return refactoredDiets;
+
 };
 
 refactorMealTypeValues = (food) => {
