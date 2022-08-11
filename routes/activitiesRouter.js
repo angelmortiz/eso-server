@@ -9,6 +9,7 @@ const equipmentsController = require('../controllers/activitiesControllers/equip
 const physicalConditionsController = require('../controllers/activitiesControllers/physicalConditionsController');
 
 /* EXERCISE */
+router.get('/', exercisesController.getExercise); //defeault render for activities
 router.get('/exercise', exercisesController.getExercise);
 router.get('/add-exercise', exercisesController.getAddExercise);
 router.post('/exercise', exercisesController.addExercise);

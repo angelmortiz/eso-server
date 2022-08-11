@@ -10,7 +10,7 @@ let _dietNames = [];
 exports.selectedFood = null;
 
 /** RENDERS */
-//FIXME: Maybe create one method mergin getFood and getFoodInfo
+//FIXME: Maybe create one method mergin getFood and getViewFood
 exports.getFood = (request, response) => {
     Food.fetchAllNames()
     .then((foodNames) => {
@@ -30,7 +30,7 @@ exports.getFood = (request, response) => {
     });
 };
 
-exports.getFoodInfo = (request, response) => {
+exports.getViewFood = (request, response) => {
   const selectedFoodId = request.params.foodId;
 
   Food.fetchById(selectedFoodId)
@@ -89,6 +89,20 @@ exports.updateFood = (request) => {
   // response.redirect('/nutrition/food')
 };
 
+/** APIS */
+exports.apiDeleteFood = (request, response) => {
+  Food.deleteById(request.params.foodId)
+  .then( deleteResponse => {
+    console.log('deleteResponse', deleteResponse);
+    response.json({"status": "Deleted"});
+  })
+  .catch(err => {
+    console.log('Error while deleting Food: ', err);
+    response.json({"status": "Error", "description": err});
+  });
+};
+
+/*** FUNCTIONS */
 refactorValuesForDb = (food) => {
   food.safeForConditions = refactorChronicConditions(food.safeForConditions);
   food.notRecommendedForConditions = refactorChronicConditions(food.notRecommendedForConditions);
@@ -171,17 +185,4 @@ refactorMealTypeValues = (food) => {
   }
 
   return food;
-};
-
-/** APIS */
-exports.apiDeleteFood = (request, response) => {
-  Food.deleteById(request.params.foodId)
-  .then( deleteResponse => {
-    console.log('deleteResponse', deleteResponse);
-    response.json({"status": "Deleted"});
-  })
-  .catch(err => {
-    console.log('Error while deleting Food: ', err);
-    response.json({"status": "Error", "description": err});
-  });
 };
