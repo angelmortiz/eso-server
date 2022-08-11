@@ -22,5 +22,5 @@ exports.addDiet = (request) => {
 };
 
 exports.apiGetDiets = (request, response) => {
-  response.json(Diet.dietCompatibleStaticValues.diets);
+  response.json(Diet.compatibleWithDietsStaticValues.diets);
 };

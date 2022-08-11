@@ -160,11 +160,11 @@
                     </div>
                     <!-- DIET COMPATIBLE -->
                     <div class="food-form__item-rows">
-                        <label for="dietCompatible" class="food-form__title">Compatible con dietas:</label>
-                        <div class="food-form__selects-div" id="dietCompatible-selects">
+                        <label for="compatibleWithDiets" class="food-form__title">Compatible con dietas:</label>
+                        <div class="food-form__selects-div" id="compatibleWithDiets-selects">
                             <!-- [Loop1] Loop for diets associated to curret food -->
-                            <% foodInfo.dietCompatible.forEach( (diet, index) => { %> 
-                                <select name="dietCompatible">
+                            <% foodInfo.compatibleWithDiets.forEach( (diet, index) => { %> 
+                                <select name="compatibleWithDiets">
                                     <option value="">-- Elige --</option>
                                 <!-- [Loop2] Loop for all the diets options -->
                                 <% diets.forEach( d => { %>

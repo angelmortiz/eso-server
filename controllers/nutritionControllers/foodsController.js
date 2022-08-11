@@ -47,7 +47,7 @@ exports.getFoodInfo = (request, response) => {
       foodNames: _foodNames,
       selectedFoodId: selectedFoodId,
       chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
-      diets: Diet.dietCompatibleStaticValues.diets,
+      diets: Diet.compatibleWithDietsStaticValues.diets,
       menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases
     });
   })
@@ -92,7 +92,7 @@ exports.updateFood = (request) => {
 refactorValuesForDb = (food) => {
   food.safeForConditions = refactorChronicConditions(food.safeForConditions);
   food.notRecommendedForConditions = refactorChronicConditions(food.notRecommendedForConditions);
-  food.dietCompatible = refactorDietCompatible(food.dietCompatible);
+  food.compatibleWithDiets = refactorCompatibleWithDiets(food.compatibleWithDiets);
   food = refactorMealTypeValues(food);
   return food;
 };
@@ -125,7 +125,7 @@ refactorChronicConditions = (selectedConditions) => {
   return refactoredConditions;
 };
 
-refactorDietCompatible = (selectedDietsCompatible) => {
+refactorCompatibleWithDiets = (selectedDietsCompatible) => {
   if (!selectedDietsCompatible) {return null;}
 
   //TODO: TEST WITH NO DIETS BEING PASSED
@@ -136,7 +136,7 @@ refactorDietCompatible = (selectedDietsCompatible) => {
   //Fetches all the diets to pair with their names
   if (!_dietNames || _dietNames.length === 0) {
     //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _dietNames = Diet.dietCompatibleStaticValues.diets;
+    _dietNames = Diet.compatibleWithDietsStaticValues.diets;
   }
 
   let refactoredDiets = [];

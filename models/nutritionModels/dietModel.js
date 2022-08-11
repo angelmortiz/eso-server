@@ -37,7 +37,7 @@ module.exports = class Diet {
         return diets.map(f => ({id: f.id, name: f.name}));
     }
 
-    static dietCompatibleStaticValues = {
+    static compatibleWithDietsStaticValues = {
         //TODO: DELETE ME AND FETCH FROM DB
         diets: [
           {_id: "", name: "-- Elige --"},

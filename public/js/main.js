@@ -69,8 +69,8 @@ btnNotRecommendedForConditions?.addEventListener('click', (event) => {
 
 /** DIET COMPATIBLE **/
 //elements
-const btnDietCompatible = document.getElementById('btn-add-new-diet');
-const dietCompatibleDiv = document.getElementById('dietCompatible-selects');
+const btnCompatibleWithDiets = document.getElementById('btn-add-new-diet');
+const compatibleWithDietsDiv = document.getElementById('compatibleWithDiets-selects');
 
 //vars
 let diets;
@@ -81,12 +81,12 @@ let getDiets = async () => {
     diets = await response.json();
 };
 
-async function addNewDietCompatibleSelect() {
+async function addNewCompatibleWithDietsSelect() {
     if (!diets) { await getDiets(); }
 
     //creates new dropdown element and adds it to the DOM
     const selectNode = document.createElement("select");
-    dietCompatibleDiv.appendChild(selectNode);
+    compatibleWithDietsDiv.appendChild(selectNode);
 
     //adds options to the dropdown
     diets?.forEach(d => {
@@ -96,9 +96,9 @@ async function addNewDietCompatibleSelect() {
 };
 
 //listeners
-btnDietCompatible?.addEventListener('click', (event) => { 
+btnCompatibleWithDiets?.addEventListener('click', (event) => { 
     event.preventDefault();
-    addNewDietCompatibleSelect();
+    addNewCompatibleWithDietsSelect();
 });
 /** [END] DIET COMPATIBLE **/
 
@@ -144,7 +144,6 @@ const btnDeleteFood = document.getElementById('btn-delete-food');
 const selectedFood = document.getElementById('select-food-selection');
 const selectedFoodName = selectedFood.options[selectedFood.selectedIndex].text;
 const selectedFoodId = selectedFood.options[selectedFood.selectedIndex].value;
-
 
 deleteFood = async () => {
     const isDelete = showDeleteConfirmation(selectedFoodName);

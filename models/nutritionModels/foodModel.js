@@ -14,7 +14,7 @@ module.exports = class Food {
   safeForConditions;
   notRecommendedForConditions;
   recommendedForCyclePhases;
-  dietCompatible;
+  compatibleWithDiets;
   linkToImage;
 
   constructor(inputValues) {
@@ -44,7 +44,7 @@ module.exports = class Food {
     const db = getDb();
     const selectDocument = {"_id": new ObjectId(this.id)};
     delete this.id; //removes property before inserting to db to prevent double id to be created
-    
+
     return db
       .collection('foods')
       .updateOne(selectDocument, { $set: this })
