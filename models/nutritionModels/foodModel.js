@@ -34,9 +34,11 @@ module.exports = class Food {
       .insertOne(this)
       .then((result) => {
         console.log('New document inserted successfully.', result);
+        return result;
       })
       .catch((error) => {
         console.log('There was an error trying to insert new document.', error);
+        return error;
       });
   }
 
@@ -50,9 +52,11 @@ module.exports = class Food {
       .updateOne(selectDocument, { $set: this })
       .then((result) => {
         console.log('Document updated successfully.', result);
+        return result;
       })
       .catch((error) => {
         console.log('There was an error trying to update the document.', error);
+        return error;
       });
   }
   
@@ -66,6 +70,7 @@ module.exports = class Food {
       })
       .catch((error) => {
         console.log(error);
+        return error;
       });
   }
 
@@ -79,6 +84,7 @@ module.exports = class Food {
       })
       .catch((error) => {
         console.log(error);
+        return error;
       });
   }
 
@@ -93,6 +99,7 @@ module.exports = class Food {
       })
       .catch((error) => {
         console.log(error);
+        return error;
       });
   }
 
@@ -108,6 +115,7 @@ module.exports = class Food {
       })
       .catch((error) => {
         console.log(error);
+        return error;
       });
   }
 
@@ -121,6 +129,7 @@ module.exports = class Food {
       })
       .catch((error) => {
         console.log(error);
+        return error;
       });
   }
 

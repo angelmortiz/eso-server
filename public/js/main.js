@@ -149,18 +149,18 @@ const selectedFood = document.getElementById('select-food-selection');
 const selectedFoodName = selectedFood.options[selectedFood.selectedIndex].text;
 const selectedFoodId = selectedFood.options[selectedFood.selectedIndex].value;
 
-deleteFood = async () => {
+let deleteFood = async () => {
     const isDelete = showDeleteConfirmation(selectedFoodName);
     if (!isDelete) return;
     
     const status = await sendDeleteCommand();
 };
 
-showDeleteConfirmation = (name) => {
+let showDeleteConfirmation = (name) => {
     return confirm(`¿Seguro que deseas borrar la comida '${name}'?`);
 }
 
-sendDeleteCommand = async () => {
+let sendDeleteCommand = async () => {
      const response = await fetch(`${SERVER_ADDRESS}/nutrition/food/${selectedFoodId}`,
       {method: 'DELETE'});
      const jsonResponse =  await response.json();

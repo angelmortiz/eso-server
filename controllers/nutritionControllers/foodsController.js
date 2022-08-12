@@ -16,19 +16,16 @@ exports.redirectToViewSelectedFood = (request, response) => {
   response.redirect(`/nutrition/food/${request.body.selectedFood}`);
 }
 
-//FIXME: Maybe create one method mergin getFood and getViewFood
 exports.getViewToSelectFood = (request, response) => {
     Food.fetchAllNames()
     .then((foodNames) => {
       _foodNames = foodNames;
-      //render page using food names
       response.render('./nutrition/view-food', {
         caller: 'view-food',
         pageTitle: 'Información de comida',
-        foodValues: Food.foodSelectOptions,
+        foodSelectOptions: Food.foodSelectOptions,
         foodNames: foodNames,
-        foodInfo: null,
-        selectedFoodId: null
+        selectedFoodInfo: null
       });
     })
     .catch((error) => {
@@ -36,22 +33,20 @@ exports.getViewToSelectFood = (request, response) => {
     });
 };
 
-exports.getViewOfSelectedFood = (request, response) => {
+exports.getViewOfSelectedFood = async (request, response) => {
   const selectedFoodId = request.params.foodId;
 
-  Food.fetchById(selectedFoodId)
-  .then((foodInfo) => {
-    //save food value in share var
-    selectedFood = foodInfo;
+  //Fetches the foodNames from db if names don't exist or if the current foodId is not contained
+  (_foodNames?.indexOf(selectedFoodId) > -1) ? await fetchFoodNames(false) : await fetchFoodNames(true);
 
-    //render page using food names
+  Food.fetchById(selectedFoodId)
+  .then((selectedFoodInfo) => {
     response.render('./nutrition/view-food', {
       caller: 'view-food',
       pageTitle: 'Información de comida',
       foodNames: _foodNames,
-      foodValues: Food.foodSelectOptions,
-      foodInfo: foodInfo,
-      selectedFoodId: selectedFoodId,
+      foodSelectOptions: Food.foodSelectOptions,
+      selectedFoodInfo: selectedFoodInfo,
       chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
       diets: Diet.compatibleWithDietsStaticValues.diets,
       menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases
@@ -62,35 +57,33 @@ exports.getViewOfSelectedFood = (request, response) => {
   });
 };
 
-exports.getViewToAddFood = (request, response) => {
+exports.getViewToAddFood = async (request, response) => {
+  //Fetches the foodNames from db if for some reason the data was lost from previous method
+  await fetchFoodNames();
+
   response.render('./nutrition/add-food', {
     caller: 'add-food',
     pageTitle: 'Añadir comida',
     foodNames: _foodNames,
-    foodValues: Food.foodSelectOptions,
+    foodSelectOptions: Food.foodSelectOptions,
+    selectedFoodInfo: null,
     chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
     diets: Diet.compatibleWithDietsStaticValues.diets,
-    menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases,
-    foodInfo: null,
-    selectedFoodId: null
+    menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases
   });
-
 };
 
-exports.addFood = (request) => {
+exports.addFood = (request, response) => {
   let food = new Food(request.body);
   food = refactorValuesForDb(food);
 
-  food
-    .save()
+  food.save()
     .then((result) => {
-      console.log('New document added to database.', result);
+      response.redirect(`/nutrition/food/${result.insertedId.toString()}`);
     })
     .catch((error) => {
       console.log('Error while inserting document to db', error);
     });
-
-  // response.redirect('/nutrition/food')
 };
 
 exports.updateFood = (request) => {
@@ -115,7 +108,15 @@ exports.apiDeleteFood = (request, response) => {
 };
 
 /*** FUNCTIONS */
-refactorValuesForDb = (food) => {
+let fetchFoodNames = async (forceFetch = false) => {
+  //Fetches the foodNames from db if for some reason the data was lost from previous method
+  if (forceFetch || !_foodNames || _foodNames.length === 0) {
+    await Food.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
+    console.log('Food names fetched.')
+  }
+};
+
+let refactorValuesForDb = (food) => {
   food.safeForConditions = refactorChronicConditions(food.safeForConditions);
   food.notRecommendedForConditions = refactorChronicConditions(food.notRecommendedForConditions);
   food.compatibleWithDiets = refactorCompatibleWithDiets(food.compatibleWithDiets);
@@ -124,7 +125,7 @@ refactorValuesForDb = (food) => {
   return food;
 };
 
-refactorChronicConditions = (selectedConditions) => {
+let refactorChronicConditions = (selectedConditions) => {
   if (!selectedConditions){ return null; }
 
   //TODO: TEST WITH NO CONDITIONS BEING PASSED
@@ -152,7 +153,7 @@ refactorChronicConditions = (selectedConditions) => {
   return refactoredConditions;
 };
 
-refactorCompatibleWithDiets = (selectedDietsCompatible) => {
+let refactorCompatibleWithDiets = (selectedDietsCompatible) => {
   if (!selectedDietsCompatible) {return null;}
 
   //TODO: TEST WITH NO DIETS BEING PASSED
@@ -181,7 +182,7 @@ refactorCompatibleWithDiets = (selectedDietsCompatible) => {
 
 };
 
-refactorMealTypeValues = (food) => {
+let refactorMealTypeValues = (food) => {
   food.mealType = [];
 
   if (food.breakfast) {
@@ -200,7 +201,7 @@ refactorMealTypeValues = (food) => {
   return food;
 };
 
-refactorCyclePhases = (phases) => {
+let refactorCyclePhases = (phases) => {
   //TODO: TEST WITH NO PHASES BEING PASSED
   //Handles cases when the user only chooses one option and form returns a string
   return (typeof(phases) === 'string') ? [phases] : phases;

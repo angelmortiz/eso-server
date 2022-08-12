@@ -24,7 +24,7 @@
                         <option value="">-- Elige --</option>
                         <% foodNames.forEach( food=> { %>
                             <option value="<%= food._id %>"
-                                <%=selectedFoodId==food._id ? 'selected' : '' %>
+                                <%=selectedFoodInfo?._id?.toString() == food._id ? 'selected' : '' %>
                                 >
                                 <%= food.name %>
                             </option>
@@ -54,7 +54,7 @@
                     <label for="classification" class="food-form__title">Clasificación:</label>
                     <select name="classification" id="classification-selection">
                         <option value="">-- Elige --</option>
-                        <% foodValues.classification.forEach( c=> { %>
+                        <% foodSelectOptions.classification.forEach( c=> { %>
                             <option value="<%= c %>"><%= c %></option>
                         <% }); %>
                     </select>
@@ -64,7 +64,7 @@
                     <label for="mainMacronutrient" class="food-form__title">Macronutriente principal:</label>
                     <select name="mainMacronutrient" id="mainMacronutrient-selection">
                         <option value="">-- Elige --</option>
-                        <% foodValues.macronutrients.forEach( mn=> { %>
+                        <% foodSelectOptions.macronutrients.forEach( mn=> { %>
                             <option value="<%= mn %>"><%= mn %></option>
                         <% }); %>
                     </select>
@@ -75,7 +75,7 @@
                         secundario:</label>
                     <select name="secondaryMacronutrient" id="secondaryMacronutrient-selection">
                         <option value="">-- Elige --</option>
-                        <% foodValues.macronutrients.forEach( mn=> { %>
+                        <% foodSelectOptions.macronutrients.forEach( mn=> { %>
                             <option value="<%= mn %>"><%= mn %></option>
                         <% }); %>
                     </select>
@@ -96,7 +96,7 @@
                         micronutrientes:</label>
                     <select name="micronutrientDensity" id="micronutrientDensity-selection">
                         <option value="">-- Elige --</option>
-                        <% foodValues.micronutrientDensity.forEach( md=> { %>
+                        <% foodSelectOptions.micronutrientDensity.forEach( md=> { %>
                             <option value="<%= md %>"><%= md %></option>
                         <% }); %>
                     </select>
