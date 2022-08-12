@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 const getDb = require('../../util/database').getNutritionDb;
 
 module.exports = class Food {
@@ -124,7 +124,7 @@ module.exports = class Food {
       });
   }
 
-  static foodStaticValues = {
+  static foodSelectOptions = {
     classification: ['Vegetal', 'Fruta', 'Carne', 'Especie', 'Bebida'],
     macronutrients: ['Proteína', 'Grasa', 'Carbohidrato'],
     micronutrientDensity: ['Bajo', 'Medio', 'Alto']

@@ -1,4 +1,4 @@
-const { ObjectID } = require('bson');
+const ObjectId = require('mongodb').ObjectId;
 const MenstrualCyclePhase = require('../../models/general/menstrualCyclePhase');
 const ChronicCondition = require('../../models/nutritionModels/chronicConditionModel');
 const Diet = require('../../models/nutritionModels/dietModel');
@@ -7,16 +7,17 @@ let _foodNames = [];
 let _conditionNames = [];
 let _dietNames = [];
 
-exports.selectedFood = null;
-
 /** RENDERS */
-exports.redirectToSelectFood = (request, response) => {
+exports.redirectToViewSelectFood = (request, response) => {
   response.redirect(`/nutrition/food`);
 }
 
+exports.redirectToViewSelectedFood = (request, response) => {
+  response.redirect(`/nutrition/food/${request.body.selectedFood}`);
+}
 
 //FIXME: Maybe create one method mergin getFood and getViewFood
-exports.getFood = (request, response) => {
+exports.getViewToSelectFood = (request, response) => {
     Food.fetchAllNames()
     .then((foodNames) => {
       _foodNames = foodNames;
@@ -24,7 +25,7 @@ exports.getFood = (request, response) => {
       response.render('./nutrition/view-food', {
         caller: 'view-food',
         pageTitle: 'Información de comida',
-        foodValues: Food.foodStaticValues,
+        foodValues: Food.foodSelectOptions,
         foodNames: foodNames,
         foodInfo: null,
         selectedFoodId: null
@@ -35,7 +36,7 @@ exports.getFood = (request, response) => {
     });
 };
 
-exports.getViewFood = (request, response) => {
+exports.getViewOfSelectedFood = (request, response) => {
   const selectedFoodId = request.params.foodId;
 
   Food.fetchById(selectedFoodId)
@@ -48,7 +49,7 @@ exports.getViewFood = (request, response) => {
       caller: 'view-food',
       pageTitle: 'Información de comida',
       foodNames: _foodNames,
-      foodValues: Food.foodStaticValues,
+      foodValues: Food.foodSelectOptions,
       foodInfo: foodInfo,
       selectedFoodId: selectedFoodId,
       chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
@@ -61,16 +62,12 @@ exports.getViewFood = (request, response) => {
   });
 };
 
-exports.redirectToViewFood = (request, response) => {
-  response.redirect(`/nutrition/food/${request.body.selectedFood}`);
-}
-
-exports.getAddFood = (request, response) => {
+exports.getViewToAddFood = (request, response) => {
   response.render('./nutrition/add-food', {
     caller: 'add-food',
     pageTitle: 'Añadir comida',
     foodNames: _foodNames,
-    foodValues: Food.foodStaticValues,
+    foodValues: Food.foodSelectOptions,
     chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
     diets: Diet.compatibleWithDietsStaticValues.diets,
     menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases,
@@ -122,6 +119,7 @@ refactorValuesForDb = (food) => {
   food.safeForConditions = refactorChronicConditions(food.safeForConditions);
   food.notRecommendedForConditions = refactorChronicConditions(food.notRecommendedForConditions);
   food.compatibleWithDiets = refactorCompatibleWithDiets(food.compatibleWithDiets);
+  food.recommendedForCyclePhases = refactorCyclePhases(food.recommendedForCyclePhases);
   food = refactorMealTypeValues(food);
   return food;
 };
@@ -144,7 +142,7 @@ refactorChronicConditions = (selectedConditions) => {
   selectedConditions.forEach(conditionId => 
     {
       const conditionObject = {
-        conditionId: new ObjectID(conditionId),
+        conditionId: new ObjectId(conditionId),
         conditionName: _conditionNames.find(c => c._id === conditionId)?.name
       };
 
@@ -172,7 +170,7 @@ refactorCompatibleWithDiets = (selectedDietsCompatible) => {
   selectedDietsCompatible.forEach(dietId => 
     {
       const dietObject = {
-        dietId: new ObjectID(dietId),
+        dietId: new ObjectId(dietId),
         dietName: _dietNames.find(c => c._id === dietId)?.name
       };
 
@@ -200,4 +198,10 @@ refactorMealTypeValues = (food) => {
   }
 
   return food;
+};
+
+refactorCyclePhases = (phases) => {
+  //TODO: TEST WITH NO PHASES BEING PASSED
+  //Handles cases when the user only chooses one option and form returns a string
+  return (typeof(phases) === 'string') ? [phases] : phases;
 };

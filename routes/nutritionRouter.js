@@ -10,16 +10,16 @@ const chronicConditionsController = require('../controllers/nutritionControllers
 const menstrualCyclePhasesController = require('../controllers/general/menstrualCyclePhasesController');
 
 /* FOOD */
-//Renders
+//Render Views
 //TODO: Change the default to add-food (with blank page)
-router.get('/', foodsController.redirectToSelectFood); //defeault render for nutrition=
-router.get('/food', foodsController.getFood);
-router.get('/food/:foodId', foodsController.getViewFood);
-router.get('/add-food', foodsController.getAddFood);
+router.get('/', foodsController.redirectToViewSelectFood); //defeault render for '/nutrition'
+router.get('/food', foodsController.getViewToSelectFood);
+router.get('/food/:foodId', foodsController.getViewOfSelectedFood);
+router.get('/add-food', foodsController.getViewToAddFood);
 //Actions
+router.post('/add-food', foodsController.addFood);
 router.post('/update-food/:foodId', foodsController.updateFood);
-router.post('/redirect-to-view-food', foodsController.redirectToViewFood);
-router.post('/food', foodsController.addFood);
+router.post('/redirect-to-view-selected-food', foodsController.redirectToViewSelectedFood);
 //APIs
 router.delete('/food/:foodId', foodsController.apiDeleteFood);
 
