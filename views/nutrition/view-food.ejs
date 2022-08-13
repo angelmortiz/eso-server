@@ -123,10 +123,10 @@
                         <label for="safeForConditions" class="food-form__title">Seguro para condiciones:</label>
                         <div class="food-form__selects-div" id="safeForConditions-selects">
                             <!-- [Loop1] Loop for chronic conditions associated to curret food -->
-                            <% selectedFoodInfo.safeForConditions.forEach( (condition, index) => { %> 
+                            <% selectedFoodInfo?.safeForConditions?.forEach( (condition, index) => { %> 
                                 <select name="safeForConditions">
                                     <!-- [Loop2] Loop for all the chronic conditions options -->
-                                    <% chronicConditions.forEach( cc => { %>
+                                    <% chronicConditions?.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
                                             <%=condition.conditionId == cc._id ? 'selected' : '' %>
                                             ><%= cc.name %></option>
@@ -143,10 +143,10 @@
                         <label for="notRecommendedForConditions" class="food-form__title">No recomendado para condiciones:</label>
                         <div class="food-form__selects-div" id="notRecommendedForConditions-selects">
                             <!-- [Loop1] Loop for chronic conditions associated to curret food -->
-                            <% selectedFoodInfo.notRecommendedForConditions.forEach( (condition, index) => { %> 
+                            <% selectedFoodInfo?.notRecommendedForConditions?.forEach( (condition, index) => { %> 
                                 <select name="notRecommendedForConditions">
                                     <!-- [Loop2] Loop for all the chronic conditions options -->
-                                    <% chronicConditions.forEach( cc => { %>
+                                    <% chronicConditions?.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
                                             <%=condition.conditionId == cc._id ? 'selected' : '' %>
                                             ><%= cc.name %></option>
@@ -163,10 +163,10 @@
                         <label for="compatibleWithDiets" class="food-form__title">Compatible con dietas:</label>
                         <div class="food-form__selects-div" id="compatibleWithDiets-selects">
                             <!-- [Loop1] Loop for diets associated to curret food -->
-                            <% selectedFoodInfo.compatibleWithDiets.forEach( (diet, index) => { %> 
+                            <% selectedFoodInfo?.compatibleWithDiets?.forEach( (diet, index) => { %> 
                                 <select name="compatibleWithDiets">
                                 <!-- [Loop2] Loop for all the diets options -->
-                                <% diets.forEach( d => { %>
+                                <% diets?.forEach( d => { %>
                                     <option value="<%= d._id %>"
                                         <%=diet.dietId == d._id ? 'selected' : '' %>
                                         ><%= d.name %></option>
@@ -183,9 +183,9 @@
                         <label for="recommendedForCyclePhases" class="food-form__title">Recomendado para fases:</label>
                         <div class="food-form__selects-div" id="menstrualCyclePhases-selects">
                             <!-- [Loop1] Loop for diets associated to curret food -->
-                            <% selectedFoodInfo.recommendedForCyclePhases.forEach( (phase, index) => { %> 
+                            <% selectedFoodInfo?.recommendedForCyclePhases?.forEach( (phase, index) => { %> 
                                 <select name="recommendedForCyclePhases">
-                                    <% menstrualCyclePhases.forEach( mf=> { %>
+                                    <% menstrualCyclePhases?.forEach( mf=> { %>
                                         <option value="<%= mf %>"
                                             <%=phase == mf ? 'selected' : '' %>
                                             ><%= mf %></option>

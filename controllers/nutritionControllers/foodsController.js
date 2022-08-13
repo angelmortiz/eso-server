@@ -77,7 +77,7 @@ exports.getViewToAddFood = async (request, response) => {
 exports.addFood = (request, response) => {
   let food = new Food(request.body);
   food = refactorValuesForDb(food);
-
+  
   food.save()
   .then((result) => {
     response.redirect(`/nutrition/food/${result.insertedId.toString()}`);
@@ -92,6 +92,7 @@ exports.updateFood = (request, response) => {
   let food = new Food(request.body);
   food.id = foodId;
   food = refactorValuesForDb(food);
+  
   food.update()
   .then((result) => {
     response.redirect(`/nutrition/food/${foodId}`);
@@ -104,7 +105,7 @@ exports.updateFood = (request, response) => {
 /** APIS */
 exports.apiDeleteFood = (request, response) => {
   const foodId = request.params.foodId;
-  
+
   Food.deleteById(foodId)
   .then( deleteResponse => {
     console.log('deleteResponse', deleteResponse);
@@ -129,69 +130,12 @@ let fetchFoodNames = async (forceFetch = false) => {
 };
 
 let refactorValuesForDb = (food) => {
+  food = refactorMealTypeValues(food);
   food.safeForConditions = refactorChronicConditions(food.safeForConditions);
   food.notRecommendedForConditions = refactorChronicConditions(food.notRecommendedForConditions);
   food.compatibleWithDiets = refactorCompatibleWithDiets(food.compatibleWithDiets);
   food.recommendedForCyclePhases = refactorCyclePhases(food.recommendedForCyclePhases);
-  food = refactorMealTypeValues(food);
   return food;
-};
-
-let refactorChronicConditions = (selectedConditions) => {
-  if (!selectedConditions){ return null; }
-
-  //TODO: TEST WITH NO CONDITIONS BEING PASSED
-  //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(selectedConditions) === 'string') {
-    selectedConditions = [selectedConditions]; 
-  }
-  //Fetches all the chronic conditions to pair with their names
-  if (!_conditionNames || _conditionNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _conditionNames = ChronicCondition.chronicConditionsStaticValues.chronicConditions;
-  }
-
-  let refactoredConditions = [];
-  selectedConditions.forEach(conditionId => 
-    {
-      const conditionObject = {
-        conditionId: new ObjectId(conditionId),
-        conditionName: _conditionNames.find(c => c._id === conditionId)?.name
-      };
-
-      refactoredConditions.push(conditionObject);
-    });
-  
-  return refactoredConditions;
-};
-
-let refactorCompatibleWithDiets = (selectedDietsCompatible) => {
-  if (!selectedDietsCompatible) {return null;}
-
-  //TODO: TEST WITH NO DIETS BEING PASSED
-  //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(selectedDietsCompatible) === 'string') {
-    selectedDietsCompatible = [selectedDietsCompatible]; 
-  }
-  //Fetches all the diets to pair with their names
-  if (!_dietNames || _dietNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _dietNames = Diet.compatibleWithDietsStaticValues.diets;
-  }
-
-  let refactoredDiets = [];
-  selectedDietsCompatible.forEach(dietId => 
-    {
-      const dietObject = {
-        dietId: new ObjectId(dietId),
-        dietName: _dietNames.find(c => c._id === dietId)?.name
-      };
-
-      refactoredDiets.push(dietObject);
-    });
-  
-  return refactoredDiets;
-
 };
 
 let refactorMealTypeValues = (food) => {
@@ -213,8 +157,78 @@ let refactorMealTypeValues = (food) => {
   return food;
 };
 
-let refactorCyclePhases = (phases) => {
-  //TODO: TEST WITH NO PHASES BEING PASSED
+let refactorChronicConditions = (selectedConditions) => {
+  if (!selectedConditions){ return null; }
+
   //Handles cases when the user only chooses one option and form returns a string
-  return (typeof(phases) === 'string') ? [phases] : phases;
+  if (typeof(selectedConditions) === 'string') {
+    selectedConditions = [selectedConditions]; 
+  }
+  //Fetches all the chronic conditions to pair with their names
+  if (!_conditionNames || _conditionNames.length === 0) {
+    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+    _conditionNames = ChronicCondition.chronicConditionsStaticValues.chronicConditions;
+  }
+
+  let refactoredConditions = [];
+  selectedConditions.forEach(conditionId => 
+    {
+      if (!conditionId) return; //skips empty selections
+
+      const conditionObject = {
+        conditionId: new ObjectId(conditionId),
+        conditionName: _conditionNames.find(c => c._id === conditionId)?.name
+      };
+
+      refactoredConditions.push(conditionObject);
+    });
+  
+  return refactoredConditions;
+};
+
+let refactorCompatibleWithDiets = (selectedDietsCompatible) => {
+  if (!selectedDietsCompatible) {return null;}
+
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(selectedDietsCompatible) === 'string') {
+    selectedDietsCompatible = [selectedDietsCompatible]; 
+  }
+  //Fetches all the diets to pair with their names
+  if (!_dietNames || _dietNames.length === 0) {
+    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+    _dietNames = Diet.compatibleWithDietsStaticValues.diets;
+  }
+
+  let refactoredDiets = [];
+  selectedDietsCompatible.forEach(dietId => 
+    {
+      if (!dietId) return; //skips empty selections
+
+      const dietObject = {
+        dietId: new ObjectId(dietId),
+        dietName: _dietNames.find(c => c._id === dietId)?.name
+      };
+
+      refactoredDiets.push(dietObject);
+    });
+  
+  return refactoredDiets;
+
+};
+
+let refactorCyclePhases = (phases) => {
+  if (!phases) { return null; }
+
+  const placeHolderName = '-- Elige --';
+
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(phases) === 'string')
+  {
+    if (phases ===  placeHolderName) return []; //if the only option is empty, skips the rest of the logic
+    phases = [phases];
+  }
+
+  //removes all empty options if neccessary.
+  if (phases.indexOf(placeHolderName) === -1 ) return phases;
+  return phases.filter(p => p !== placeHolderName);
 };
