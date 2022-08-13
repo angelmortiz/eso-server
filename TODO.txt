@@ -1,10 +1,6 @@
 //NEXT
-//TODO: Redirect user to new food after adding a new food
-//TODO: Redirect user to "select food" after deleting a food
-//TODO: Remove option from dropdown after deleting it
-//TODO: Render updated food after updating (it keeps spinnning)
-//TODO: Repopulate the food dropdown if no values were found (fetch from db)
 //TODO: Add button to remove options from selects
+//TODO: CHECK BEHAVIOR WHEN THERE ARE NO OPTIONS GIVEN INTO SELECTS
 
 
 //FUTURE

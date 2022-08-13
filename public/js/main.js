@@ -153,7 +153,7 @@ let deleteFood = async () => {
     const isDelete = showDeleteConfirmation(selectedFoodName);
     if (!isDelete) return;
     
-    const status = await sendDeleteCommand();
+    await sendDeleteCommand();
 };
 
 let showDeleteConfirmation = (name) => {
@@ -161,10 +161,8 @@ let showDeleteConfirmation = (name) => {
 }
 
 let sendDeleteCommand = async () => {
-     const response = await fetch(`${SERVER_ADDRESS}/nutrition/food/${selectedFoodId}`,
-      {method: 'DELETE'});
-     const jsonResponse =  await response.json();
-     return jsonResponse.status;
+     const response = await fetch(`${SERVER_ADDRESS}/nutrition/food/${selectedFoodId}`, {method: 'DELETE'});
+     window.location.href = response.url;
 };
 
 //listeners

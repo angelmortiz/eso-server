@@ -36,8 +36,9 @@ exports.getViewToSelectFood = (request, response) => {
 exports.getViewOfSelectedFood = async (request, response) => {
   const selectedFoodId = request.params.foodId;
 
-  //Fetches the foodNames from db if names don't exist or if the current foodId is not contained
-  (_foodNames?.indexOf(selectedFoodId) > -1) ? await fetchFoodNames(false) : await fetchFoodNames(true);
+  //Fetches the foodNames from db if names don't exist or if the current foodId doesn't exist in array
+  const index = _foodNames?.findIndex(f => f._id.toString() == selectedFoodId);
+  (index > -1) ? await fetchFoodNames(false) : await fetchFoodNames(true);
 
   Food.fetchById(selectedFoodId)
   .then((selectedFoodInfo) => {
@@ -78,32 +79,44 @@ exports.addFood = (request, response) => {
   food = refactorValuesForDb(food);
 
   food.save()
-    .then((result) => {
-      response.redirect(`/nutrition/food/${result.insertedId.toString()}`);
-    })
-    .catch((error) => {
-      console.log('Error while inserting document to db', error);
-    });
+  .then((result) => {
+    response.redirect(`/nutrition/food/${result.insertedId.toString()}`);
+  })
+  .catch((error) => {
+    console.log('Error while inserting document to db', error);
+  });
 };
 
-exports.updateFood = (request) => {
+exports.updateFood = (request, response) => {
+  const foodId = request.params.foodId;
   let food = new Food(request.body);
-  food.id = request.params.foodId;
+  food.id = foodId;
   food = refactorValuesForDb(food);
-  food.update();
-  // response.redirect('/nutrition/food')
+  food.update()
+  .then((result) => {
+    response.redirect(`/nutrition/food/${foodId}`);
+  })
+  .catch((error) => {
+    console.log('Error while inserting document to db', error);
+  });
 };
 
 /** APIS */
 exports.apiDeleteFood = (request, response) => {
-  Food.deleteById(request.params.foodId)
+  const foodId = request.params.foodId;
+  
+  Food.deleteById(foodId)
   .then( deleteResponse => {
     console.log('deleteResponse', deleteResponse);
-    response.json({"status": "Deleted"});
+    //removes the food from foods dropdown
+    const index = _foodNames?.findIndex(f => f._id.toString() == foodId);
+    if (index > -1){
+      _foodNames.splice(index, 1);
+    }
+    response.redirect(`/nutrition/food/`);
   })
   .catch(err => {
     console.log('Error while deleting Food: ', err);
-    response.json({"status": "Error", "description": err});
   });
 };
 
@@ -112,7 +125,6 @@ let fetchFoodNames = async (forceFetch = false) => {
   //Fetches the foodNames from db if for some reason the data was lost from previous method
   if (forceFetch || !_foodNames || _foodNames.length === 0) {
     await Food.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
-    console.log('Food names fetched.')
   }
 };
 
