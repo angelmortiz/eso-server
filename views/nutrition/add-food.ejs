@@ -149,8 +149,8 @@
                     <div class="food-form__selects-div" id="menstrualCyclePhases-selects">
                         <select name="recommendedForCyclePhases">
                         <!-- [Loop1] Loop for all the phases options -->
-                            <% menstrualCyclePhases?.forEach( mf=> { %>
-                                <option value="<%= mf %>"><%= mf %></option>
+                            <% menstrualCyclePhases?.forEach( mcp=> { %>
+                                <option value="<%= mcp._id %>"><%= mcp.name %></option>
                             <% }); %>
                         <!-- [END-Loop1] -->
                         </select>

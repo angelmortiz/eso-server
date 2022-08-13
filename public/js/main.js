@@ -124,7 +124,7 @@ async function addNewDCyclePhaseSelect() {
 
     //adds options to the dropdown
     phases?.forEach(mcp => {
-        let option = new Option(mcp, mcp);
+        let option = new Option(mcp.name, mcp._id);
         selectNode.appendChild(option);
     });
 };

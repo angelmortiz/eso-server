@@ -183,12 +183,12 @@
                         <label for="recommendedForCyclePhases" class="food-form__title">Recomendado para fases:</label>
                         <div class="food-form__selects-div" id="menstrualCyclePhases-selects">
                             <!-- [Loop1] Loop for diets associated to curret food -->
-                            <% selectedFoodInfo?.recommendedForCyclePhases?.forEach( (phase, index) => { %> 
+                            <% selectedFoodInfo?.recommendedForCyclePhases?.forEach( (phase) => { %> 
                                 <select name="recommendedForCyclePhases">
-                                    <% menstrualCyclePhases?.forEach( mf=> { %>
-                                        <option value="<%= mf %>"
-                                            <%=phase == mf ? 'selected' : '' %>
-                                            ><%= mf %></option>
+                                    <% menstrualCyclePhases?.forEach( mcp=> { %>
+                                        <option value="<%= mcp._id %>"
+                                            <%=phase == mcp._id ? 'selected' : '' %>
+                                            ><%= mcp.name %></option>
                                     <% }); %>
                                 <!-- [END-Loop2] -->
                                 </select>

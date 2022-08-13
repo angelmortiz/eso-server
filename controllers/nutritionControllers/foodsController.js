@@ -89,6 +89,7 @@ exports.addFood = (request, response) => {
 
 exports.updateFood = (request, response) => {
   const foodId = request.params.foodId;
+
   let food = new Food(request.body);
   food.id = foodId;
   food = refactorValuesForDb(food);
@@ -216,19 +217,16 @@ let refactorCompatibleWithDiets = (selectedDietsCompatible) => {
 
 };
 
-let refactorCyclePhases = (phases) => {
-  if (!phases) { return null; }
-
-  const placeHolderName = '-- Elige --';
+let refactorCyclePhases = (selectedPhases) => {
+  if (!selectedPhases) { return null; }
 
   //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(phases) === 'string')
+  if (typeof(selectedPhases) === 'string')
   {
-    if (phases ===  placeHolderName) return []; //if the only option is empty, skips the rest of the logic
-    phases = [phases];
+    selectedPhases = [selectedPhases];
   }
-
-  //removes all empty options if neccessary.
-  if (phases.indexOf(placeHolderName) === -1 ) return phases;
-  return phases.filter(p => p !== placeHolderName);
+  
+  //removes all empty options if necessary.
+  const filtered = selectedPhases.filter(p => p);
+  return filtered;
 };
