@@ -2,13 +2,23 @@
 const SERVER_ADDRESS = "http://localhost:3000/api";
 
 //********* Add New [Buttons] */
-let chronicConditions;
+let addSelectToDiv = async (selectOptions, getOptionsFunc, selectName, divNode) => {
+    //gets options from server
+    if (!selectOptions) { 
+        selectOptions = await getOptionsFunc();
+    }
 
-//TODO: Create generic methods that can be reused (DRY)
-let getChronicConditions = async () => {
-    const response = await fetch(`${SERVER_ADDRESS}/nutrition/chronicConditions`);
-    chronicConditions = await response.json();
-};
+    //creates new dropdown element and adds it to the DOM
+    const selectNode = document.createElement("select");
+    selectNode.name = selectName;
+    divNode.appendChild(selectNode);
+
+    //adds options to the dropdown
+    selectOptions?.forEach(selectOpt => {
+        let option = new Option(selectOpt.name, selectOpt._id);
+        selectNode.appendChild(option);
+    });
+}
 //*** [END] GLOBAL
 
 /** SAFE FOR CONDITIONS **/
@@ -16,26 +26,17 @@ let getChronicConditions = async () => {
 const btnSafeForConditions = document.getElementById('btn-add-new-safe-condition');
 const safeForCondtionsDiv = document.getElementById('safeForConditions-selects');
 
-async function addNewSafeConditionSelect() {
-    //pulls conditions names and ids from server
-    if (!chronicConditions) { await getChronicConditions(); }
-
-    //creates new dropdown element and adds it to the DOM
-    const selectNode = document.createElement("select");
-    selectNode.name = "safeForConditions";
-    safeForCondtionsDiv.appendChild(selectNode);
-
-    //adds options to the dropdown
-    chronicConditions?.forEach(cc => {
-        let option = new Option(cc.name, cc._id);
-        selectNode.appendChild(option);
-    });
+let chronicConditions;
+let getChronicConditions = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/nutrition/chronicConditions`);
+    chronicConditions = await response.json();
+    return chronicConditions
 };
 
 //listeners
 btnSafeForConditions?.addEventListener('click', (event) => { 
     event.preventDefault();
-    addNewSafeConditionSelect();
+    addSelectToDiv(chronicConditions, getChronicConditions, "safeForConditions", safeForCondtionsDiv);
 });
 /** [END] SAFE FOR CONDITIONS **/
 
@@ -44,26 +45,10 @@ btnSafeForConditions?.addEventListener('click', (event) => {
 const btnNotRecommendedForConditions = document.getElementById('btn-add-new-not-recommended-condition');
 const notRecommendedForCondtionsDiv = document.getElementById('notRecommendedForConditions-selects');
 
-async function addNewNotRecommendedForConditionSelect() {
-    //pulls conditions names and ids from server
-    if (!chronicConditions) { await getChronicConditions(); }
-
-    //creates new dropdown element and adds it to the DOM
-    const selectNode = document.createElement("select");
-    selectNode.name = "notRecommendedForConditions";
-    notRecommendedForCondtionsDiv.appendChild(selectNode);
-
-    //adds options to the dropdown
-    chronicConditions?.forEach(cc => {
-        let option = new Option(cc.name, cc._id);
-        selectNode.appendChild(option);
-    });
-};
-
 //listeners
 btnNotRecommendedForConditions?.addEventListener('click', (event) => { 
     event.preventDefault();
-    addNewNotRecommendedForConditionSelect();
+    addSelectToDiv(chronicConditions, getChronicConditions, "notRecommendedForConditions", notRecommendedForCondtionsDiv);
 });
 /** [END] NOT RECOMMENDED CONDITIONS **/
 
@@ -77,27 +62,13 @@ let diets;
 let getDiets = async () => {
     const response = await fetch(`${SERVER_ADDRESS}/nutrition/diets`);
     diets = await response.json();
-};
-
-async function addNewCompatibleWithDietsSelect() {
-    if (!diets) { await getDiets(); }
-
-    //creates new dropdown element and adds it to the DOM
-    const selectNode = document.createElement("select");
-    selectNode.name = "compatibleWithDiets";
-    compatibleWithDietsDiv.appendChild(selectNode);
-
-    //adds options to the dropdown
-    diets?.forEach(d => {
-        let option = new Option(d.name, d._id);
-        selectNode.appendChild(option);
-    });
+    return diets;
 };
 
 //listeners
 btnCompatibleWithDiets?.addEventListener('click', (event) => { 
     event.preventDefault();
-    addNewCompatibleWithDietsSelect();
+    addSelectToDiv(diets, getDiets, "compatibleWithDiets", compatibleWithDietsDiv);
 });
 /** [END] DIET COMPATIBLE **/
 
@@ -108,31 +79,16 @@ const menstrualCyclePhaseDiv = document.getElementById('menstrualCyclePhases-sel
 
 //vars
 let phases;
-
 let getPhases = async () => {
     const response = await fetch(`${SERVER_ADDRESS}/nutrition/menstrualCyclePhases`);
     phases = await response.json();
-};
-
-async function addNewDCyclePhaseSelect() {
-    if (!phases) { await getPhases(); }
-
-    //creates new dropdown element and adds it to the DOM
-    const selectNode = document.createElement("select");
-    selectNode.name = "recommendedForCyclePhases";
-    menstrualCyclePhaseDiv.appendChild(selectNode);
-
-    //adds options to the dropdown
-    phases?.forEach(mcp => {
-        let option = new Option(mcp.name, mcp._id);
-        selectNode.appendChild(option);
-    });
+    return phases;
 };
 
 //listeners
 btnMenstrualCyclePhase?.addEventListener('click', (event) => { 
     event.preventDefault();
-    addNewDCyclePhaseSelect();
+    addSelectToDiv(phases, getPhases, "recommendedForCyclePhases", menstrualCyclePhaseDiv);
 });
 /** [END] MENSTRUAL PHASES **/
 
@@ -144,13 +100,6 @@ const selectedFood = document.getElementById('select-food-selection');
 const selectedFoodName = selectedFood.options[selectedFood.selectedIndex].text;
 const selectedFoodId = selectedFood.options[selectedFood.selectedIndex].value;
 
-let deleteFood = async () => {
-    const isDelete = showDeleteConfirmation(selectedFoodName);
-    if (!isDelete) return;
-    
-    await sendDeleteCommand();
-};
-
 let showDeleteConfirmation = (name) => {
     return confirm(`¿Seguro que deseas borrar la comida '${name}'?`);
 }
@@ -158,6 +107,13 @@ let showDeleteConfirmation = (name) => {
 let sendDeleteCommand = async () => {
      const response = await fetch(`${SERVER_ADDRESS}/nutrition/food/${selectedFoodId}`, {method: 'DELETE'});
      window.location.href = response.url;
+};
+
+let deleteFood = async () => {
+    const isDelete = showDeleteConfirmation(selectedFoodName);
+    if (!isDelete) return;
+    
+    await sendDeleteCommand();
 };
 
 //listeners
