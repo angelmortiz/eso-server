@@ -14,13 +14,11 @@ const mongodbConnection = (callback) => {
         nutritionDb: client.db('nutrition'),
         activitiesDb: client.db('activities'),
       };
-
-      //FIXME: Add log to a file
       console.log('Connected to databases.');
       callback();
     })
     .catch((error) => {
-      //FIXME: Add log to a file
+    
       console.log(error);
       throw error;
     });
@@ -30,7 +28,6 @@ const getDbs = () => {
   if (_dbs) {
     return _dbs;
   }
-  //FIXME: Add log to a file
   throw 'No database found';
 };
 
@@ -38,7 +35,6 @@ const getNutritionDb = () => {
   if (_dbs && _dbs.nutritionDb) {
     return _dbs.nutritionDb;
   }
-  //FIXME: Add log to a file
   throw 'No database found';
 };
 
@@ -46,7 +42,6 @@ const getActivitiesDb = () => {
   if (_dbs && _dbs.activitiesDb) {
     return _dbs.activitiesDb;
   }
-  //FIXME: Add log to a file
   throw 'No database found';
 };
 

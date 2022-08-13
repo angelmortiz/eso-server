@@ -1,7 +1,6 @@
 //NEXT
-//TODO: Re-add select fields if no options are found.
-
 
 //FUTURE
 //TODO: Add button to remove options from selects
 //TODO: Log errores into a file instead of logging into the console.
+//TODO: Re-add select fields if no options are found.

@@ -11,7 +11,6 @@ const menstrualCyclePhasesController = require('../controllers/general/menstrual
 
 /* FOOD */
 //Render Views
-//TODO: Change the default to add-food (with blank page)
 router.get('/', foodsController.redirectToViewSelectFood); //defeault render for '/nutrition'
 router.get('/food', foodsController.getViewToSelectFood);
 router.get('/food/:foodId', foodsController.getViewOfSelectedFood);

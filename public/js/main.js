@@ -5,7 +5,6 @@ const SERVER_ADDRESS = "http://localhost:3000/api";
 let chronicConditions;
 
 //TODO: Create generic methods that can be reused (DRY)
-//FIXME: Implement a better async solution to fetch values
 let getChronicConditions = async () => {
     const response = await fetch(`${SERVER_ADDRESS}/nutrition/chronicConditions`);
     chronicConditions = await response.json();
@@ -38,7 +37,6 @@ btnSafeForConditions?.addEventListener('click', (event) => {
     event.preventDefault();
     addNewSafeConditionSelect();
 });
-
 /** [END] SAFE FOR CONDITIONS **/
 
 /** NOT RECOMMENDED FOR CONDITIONS **/
@@ -76,8 +74,6 @@ const compatibleWithDietsDiv = document.getElementById('compatibleWithDiets-sele
 
 //vars
 let diets;
-
-//FIXME: Implement a better async solution to fetch values
 let getDiets = async () => {
     const response = await fetch(`${SERVER_ADDRESS}/nutrition/diets`);
     diets = await response.json();
@@ -113,7 +109,6 @@ const menstrualCyclePhaseDiv = document.getElementById('menstrualCyclePhases-sel
 //vars
 let phases;
 
-//FIXME: Implement a better async solution to fetch values
 let getPhases = async () => {
     const response = await fetch(`${SERVER_ADDRESS}/nutrition/menstrualCyclePhases`);
     phases = await response.json();
