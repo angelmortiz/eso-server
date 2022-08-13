@@ -8,19 +8,19 @@ let _conditionNames = [];
 let _dietNames = [];
 
 /** RENDERS */
-exports.redirectToViewSelectFood = (request, response) => {
-  response.redirect(`/nutrition/food`);
+exports.redirectToViewSelectFood = (req, res) => {
+  res.redirect(`/nutrition/food`);
 }
 
-exports.redirectToViewSelectedFood = (request, response) => {
-  response.redirect(`/nutrition/food/${request.body.selectedFood}`);
+exports.redirectToViewSelectedFood = (req, res) => {
+  res.redirect(`/nutrition/food/${req.body.selectedFood}`);
 }
 
-exports.getViewToSelectFood = (request, response) => {
+exports.getViewToSelectFood = (req, res) => {
     Food.fetchAllNames()
     .then((foodNames) => {
       _foodNames = foodNames;
-      response.render('./nutrition/view-food', {
+      res.render('./nutrition/view-food', {
         caller: 'view-food',
         pageTitle: 'Información de comida',
         foodSelectOptions: Food.foodSelectOptions,
@@ -28,21 +28,22 @@ exports.getViewToSelectFood = (request, response) => {
         selectedFoodInfo: null
       });
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((err) => {
+      console.log(err);
     });
 };
 
-exports.getViewOfSelectedFood = async (request, response) => {
-  const selectedFoodId = request.params.foodId;
+exports.getViewOfSelectedFood = async (req, res) => {
+  const selectedFoodId = req.params.foodId;
 
   //Fetches the foodNames from db if names don't exist or if the current foodId doesn't exist in array
+  //Note: This logic is needed to fetch the new food info once a new food has been added to the db
   const index = _foodNames?.findIndex(f => f._id.toString() == selectedFoodId);
   (index > -1) ? await fetchFoodNames(false) : await fetchFoodNames(true);
 
   Food.fetchById(selectedFoodId)
   .then((selectedFoodInfo) => {
-    response.render('./nutrition/view-food', {
+    res.render('./nutrition/view-food', {
       caller: 'view-food',
       pageTitle: 'Información de comida',
       foodNames: _foodNames,
@@ -53,16 +54,16 @@ exports.getViewOfSelectedFood = async (request, response) => {
       menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases
     });
   })
-  .catch((error) => {
-    console.log(error);
+  .catch((err) => {
+    console.log(err);
   });
 };
 
-exports.getViewToAddFood = async (request, response) => {
+exports.getViewToAddFood = async (req, res) => {
   //Fetches the foodNames from db if for some reason the data was lost from previous method
   await fetchFoodNames();
 
-  response.render('./nutrition/add-food', {
+  res.render('./nutrition/add-food', {
     caller: 'add-food',
     pageTitle: 'Añadir comida',
     foodNames: _foodNames,
@@ -74,38 +75,38 @@ exports.getViewToAddFood = async (request, response) => {
   });
 };
 
-exports.addFood = (request, response) => {
-  let food = new Food(request.body);
+exports.addFood = (req, res) => {
+  let food = new Food(req.body);
   food = refactorValuesForDb(food);
   
   food.save()
   .then((result) => {
-    response.redirect(`/nutrition/food/${result.insertedId.toString()}`);
+    res.redirect(`/nutrition/food/${result.insertedId.toString()}`);
   })
-  .catch((error) => {
-    console.log('Error while inserting document to db', error);
+  .catch((err) => {
+    console.log('Error while inserting document to db', err);
   });
 };
 
-exports.updateFood = (request, response) => {
-  const foodId = request.params.foodId;
+exports.updateFood = (req, res) => {
+  const foodId = req.params.foodId;
 
-  let food = new Food(request.body);
+  let food = new Food(req.body);
   food.id = foodId;
   food = refactorValuesForDb(food);
   
   food.update()
   .then((result) => {
-    response.redirect(`/nutrition/food/${foodId}`);
+    res.redirect(`/nutrition/food/${foodId}`);
   })
-  .catch((error) => {
-    console.log('Error while inserting document to db', error);
+  .catch((err) => {
+    console.log('Error while inserting document to db', err);
   });
 };
 
 /** APIS */
-exports.apiDeleteFood = (request, response) => {
-  const foodId = request.params.foodId;
+exports.apiDeleteFood = (req, res) => {
+  const foodId = req.params.foodId;
 
   Food.deleteById(foodId)
   .then( deleteResponse => {
@@ -115,7 +116,7 @@ exports.apiDeleteFood = (request, response) => {
     if (index > -1){
       _foodNames.splice(index, 1);
     }
-    response.redirect(`/nutrition/food/`);
+    res.redirect(`/nutrition/food/`);
   })
   .catch(err => {
     console.log('Error while deleting Food: ', err);
@@ -124,7 +125,8 @@ exports.apiDeleteFood = (request, response) => {
 
 /*** FUNCTIONS */
 let fetchFoodNames = async (forceFetch = false) => {
-  //Fetches the foodNames from db if for some reason the data was lost from previous method
+  //Fetches the foodNames from db only when foodNames is not available or when forced
+  //Note: This is forced to fetch when a new value has been added to the database
   if (forceFetch || !_foodNames || _foodNames.length === 0) {
     await Food.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
   }
@@ -227,6 +229,5 @@ let refactorCyclePhases = (selectedPhases) => {
   }
   
   //removes all empty options if necessary.
-  const filtered = selectedPhases.filter(p => p);
-  return filtered;
+  return selectedPhases.filter(p => p);
 };
