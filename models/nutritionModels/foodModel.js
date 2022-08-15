@@ -18,7 +18,7 @@ module.exports = class Food {
   linkToImage;
 
   constructor(inputValues) {
-    if (!inputValues) return; //if no values were provided, ignore the rest of the logic
+    if (!inputValues) return; //if no values were provided, do not map
     this.mapValues(inputValues);
   }
 

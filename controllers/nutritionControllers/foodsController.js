@@ -22,7 +22,7 @@ exports.getViewToSelectFood = (req, res) => {
       _foodNames = foodNames;
       res.render('./nutrition/view-food', {
         caller: 'view-food',
-        pageTitle: 'Información de comida',
+        pageTitle: 'Selecciona la comida',
         foodSelectOptions: Food.foodSelectOptions,
         foodNames: foodNames,
         selectedFoodInfo: null
