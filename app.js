@@ -16,7 +16,7 @@ exp.use(express.static(path.join(rootDir, 'public'))); //uploads public files (c
 
 //home
 exp.get('/', homeController.getHome); 
-//NodeJS internal routes
+//server side internal routes
 exp.use('/nutrition', nutritionRouter.routes); //executes routes for nutrition
 exp.use('/activities', activitiesRouter.routes); //executes routes for activities
 //API external routes
