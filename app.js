@@ -7,7 +7,7 @@ const activitiesRouter = require('./routes/activitiesRouter'); //routes for acti
 const homeController = require('./controllers/homeController'); //imports logic to load home page
 const errorController = require('./controllers/errorsController'); //imports logic to load home page
 const exp = express(); //initializing express framework
-const mongodbConnection = require('./util/database').mongodbConnection; //importing connection for mongodb
+const mongooseConnections = require('./util/database').mongooseConnections; //importing connection for mongoose
 
 exp.set('view engine', 'ejs'); //activates ejs templates to create dynamic htmls
 exp.use(bodyParser.urlencoded({extended: false})); //parses the body that comes from the client
@@ -26,6 +26,6 @@ exp.use('/api/activities', activitiesRouter.routes);
 exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
 
 //connects to the database and starts the server after it's connected
-mongodbConnection(() => {
+mongooseConnections(() => {
     exp.listen(3000); //specifying port #
 });
