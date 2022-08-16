@@ -79,7 +79,7 @@ exports.addFood = (req, res) => {
   let food = new Food(req.body);
   food = refactorValuesForDb(food);
   
-  food.save()
+  food.insert()
   .then((result) => {
     res.redirect(`/nutrition/food/${result.insertedId.toString()}`);
   })

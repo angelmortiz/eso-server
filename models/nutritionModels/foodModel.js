@@ -26,7 +26,7 @@ module.exports = class Food {
     Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
   }
 
-  save() {
+  insert() {
     const db = getDb();
     delete this.id; //removes property before inserting to db to prevent double id to be created
     return db
