@@ -2,8 +2,10 @@ const ObjectId = require('mongodb').ObjectId;
 const MenstrualCyclePhase = require('../../models/general/menstrualCyclePhase');
 const ChronicCondition = require('../../models/nutritionModels/chronicConditionModel');
 const Diet = require('../../models/nutritionModels/dietModel');
-const Food = require('../../models/nutritionModels/foodModel');
-let _foodNames = [];
+const {FoodHandler, Food} = require('../../models/nutritionModels/foodModel');
+let _foodNames = [
+  {_id: "3erq32efq23ef23f", name: "Test Food"}
+];
 let _conditionNames = [];
 let _dietNames = [];
 
@@ -17,19 +19,28 @@ exports.redirectToViewSelectedFood = (req, res) => {
 }
 
 exports.getViewToSelectFood = (req, res) => {
-    Food.fetchAllNames()
-    .then((foodNames) => {
-      _foodNames = foodNames;
-      res.render('./nutrition/view-food', {
-        caller: 'view-food',
-        pageTitle: 'Selecciona la comida',
-        foodSelectOptions: Food.foodSelectOptions,
-        foodNames: foodNames,
-        selectedFoodInfo: null
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+
+    // FoodHandler.fetchAllNames()
+    // .then((foodNames) => {
+    //   _foodNames = foodNames;
+    //   res.render('./nutrition/view-food', {
+    //     caller: 'view-food',
+    //     pageTitle: 'Selecciona la comida',
+    //     foodSelectOptions: FoodHandler.foodSelectOptions,
+    //     foodNames: foodNames,
+    //     selectedFoodInfo: null
+    //   });
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // });
+
+    res.render('./nutrition/view-food', {
+      caller: 'view-food',
+      pageTitle: 'Selecciona la comida',
+      foodSelectOptions: FoodHandler.foodSelectOptions,
+      foodNames: _foodNames,
+      selectedFoodInfo: null
     });
 };
 
@@ -41,13 +52,13 @@ exports.getViewOfSelectedFood = async (req, res) => {
   const index = _foodNames?.findIndex(f => f._id.toString() == selectedFoodId);
   (index > -1) ? await fetchFoodNames(false) : await fetchFoodNames(true);
 
-  Food.fetchById(selectedFoodId)
+  FoodHandler.fetchById(selectedFoodId)
   .then((selectedFoodInfo) => {
     res.render('./nutrition/view-food', {
       caller: 'view-food',
       pageTitle: 'Información de comida',
       foodNames: _foodNames,
-      foodSelectOptions: Food.foodSelectOptions,
+      foodSelectOptions: FoodHandler.foodSelectOptions,
       selectedFoodInfo: selectedFoodInfo,
       chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
       diets: Diet.compatibleWithDietsStaticValues.diets,
@@ -67,7 +78,7 @@ exports.getViewToAddFood = async (req, res) => {
     caller: 'add-food',
     pageTitle: 'Añadir comida',
     foodNames: _foodNames,
-    foodSelectOptions: Food.foodSelectOptions,
+    foodSelectOptions: FoodHandler.foodSelectOptions,
     selectedFoodInfo: null,
     chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
     diets: Diet.compatibleWithDietsStaticValues.diets,
@@ -76,12 +87,19 @@ exports.getViewToAddFood = async (req, res) => {
 };
 
 exports.addFood = (req, res) => {
-  let food = new Food(req.body);
-  food = refactorValuesForDb(food);
-  
-  food.insert()
+  // let foodHandler = new FoodHandler(req.body);
+  // foodHandler = refactorValuesForDb(food);
+
+  const food = new Food({
+    name: 'Test',
+    description: 'Test',
+    classification: 'Test'
+  });
+
+  food.save()
   .then((result) => {
-    res.redirect(`/nutrition/food/${result.insertedId.toString()}`);
+    console.log('Result =>>>', result);
+    res.redirect(`/nutrition/food/${result._id.toString()}`);
   })
   .catch((err) => {
     console.log('Error while inserting document to db', err);
@@ -91,7 +109,7 @@ exports.addFood = (req, res) => {
 exports.updateFood = (req, res) => {
   const foodId = req.params.foodId;
 
-  let food = new Food(req.body);
+  let food = new FoodHandler(req.body);
   food.id = foodId;
   food = refactorValuesForDb(food);
   
@@ -108,7 +126,7 @@ exports.updateFood = (req, res) => {
 exports.apiDeleteFood = (req, res) => {
   const foodId = req.params.foodId;
 
-  Food.deleteById(foodId)
+  FoodHandler.deleteById(foodId)
   .then( deleteResponse => {
     console.log('deleteResponse', deleteResponse);
     //removes the food from foods dropdown
@@ -128,7 +146,7 @@ let fetchFoodNames = async (forceFetch = false) => {
   //Fetches the foodNames from db only when foodNames is not available or when forced
   //Note: This is forced to fetch when a new value has been added to the database
   if (forceFetch || !_foodNames || _foodNames.length === 0) {
-    await Food.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
+    await FoodHandler.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
   }
 };
 

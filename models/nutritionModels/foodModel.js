@@ -1,7 +1,10 @@
 const ObjectId = require('mongodb').ObjectId;
-const getDb = require('../../util/database').getNutritionDb;
+const { nutritionDb } = require('../../util/database/connection');
+const FoodSchema = require('../../util/database/schemas/foodSchema');
 
-module.exports = class Food {
+exports.Food = nutritionDb.model('Food', FoodSchema);
+
+exports.FoodHandler = class FoodHandler {
   id;
   name;
   classification;
@@ -27,7 +30,7 @@ module.exports = class Food {
   }
 
   insert() {
-    const db = getDb();
+    const db = getNutritionDb();
     delete this.id; //removes property before inserting to db to prevent double id to be created
     return db
       .collection('foods')
@@ -43,7 +46,7 @@ module.exports = class Food {
   }
 
   update() {
-    const db = getDb();
+    const db = getNutritionDb();
     const selectDocument = {"_id": new ObjectId(this.id)};
     delete this.id; //removes property before inserting to db to prevent double id to be created
 
@@ -61,7 +64,7 @@ module.exports = class Food {
   }
   
   static fetchByName(name) {
-    const db = getDb();
+    const db = getNutritionDb();
     return db
       .collection('foods')
       .findOne({name: name})
@@ -75,7 +78,7 @@ module.exports = class Food {
   }
 
   static fetchById(id) {
-    const db = getDb();
+    const db = getNutritionDb();
     return db
       .collection('foods')
       .findOne({_id:  new ObjectId(id)})
@@ -89,7 +92,7 @@ module.exports = class Food {
   }
 
   static fetchAll() {
-    const db = getDb();
+    const db = getNutritionDb();
     return db
       .collection('foods')
       .find()
@@ -105,7 +108,7 @@ module.exports = class Food {
 
   //extracts id and name properties and creates a new object with {id, name}
   static fetchAllNames() {
-    const db = getDb();
+    const db = getNutritionDb();
     return db
       .collection('foods')
       .find({}, {projection:{name: 1}})
@@ -120,7 +123,7 @@ module.exports = class Food {
   }
 
   static deleteById(id) {
-    const db = getDb();
+    const db = getNutritionDb();
     return db
       .collection('foods')
       .deleteOne({_id: new ObjectId(id)})
