@@ -1,7 +1,8 @@
-const ObjectId = require('mongodb').ObjectId;
-const getDb = require('../../util/database').getNutritionDb;
+const { nutritionDb } = require('../../util/database/connection');
+const FoodSchema = require('../../util/database/schemas/foodSchema');
+const FoodModel = nutritionDb.model('Food', FoodSchema);
 
-module.exports = class Food {
+exports.FoodHandler = class FoodHandler {
   id;
   name;
   classification;
@@ -26,111 +27,91 @@ module.exports = class Food {
     Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
   }
 
-  insert() {
-    const db = getDb();
-    delete this.id; //removes property before inserting to db to prevent double id to be created
-    return db
-      .collection('foods')
-      .insertOne(this)
-      .then((result) => {
-        console.log('New document inserted successfully.', result);
-        return result;
-      })
-      .catch((error) => {
-        console.log('There was an error trying to insert new document.', error);
-        return error;
-      });
+  save() {
+    return new FoodModel(this)
+    .save()
+    .then((result) => {
+      console.log('New document inserted successfully.');
+      return result._id.toString();
+    })
+    .catch((error) => {
+      console.log('There was an error trying to insert new document.', error);
+      return error;
+    });
   }
 
   update() {
-    const db = getDb();
-    const selectDocument = {"_id": new ObjectId(this.id)};
-    delete this.id; //removes property before inserting to db to prevent double id to be created
-
-    return db
-      .collection('foods')
-      .updateOne(selectDocument, { $set: this })
-      .then((result) => {
-        console.log('Document updated successfully.', result);
-        return result;
-      })
-      .catch((error) => {
-        console.log('There was an error trying to update the document.', error);
-        return error;
-      });
+    return FoodModel
+    .updateOne({_id: this.id}, this)
+    .then((result) => {
+      console.log('Document updated successfully.', result);
+      return result;
+    })
+    .catch((error) => {
+      console.log('There was an error trying to update the document.', error);
+      return error;
+    });
   }
   
-  static fetchByName(name) {
-    const db = getDb();
-    return db
-      .collection('foods')
-      .findOne({name: name})
-      .then((product) => {
-        return product;
-      })
-      .catch((error) => {
-        console.log(error);
-        return error;
-      });
+  static fetchByName(foodName) {
+    return FoodModel
+    .findOne({name: foodName})
+    .then((product) => {
+      return product;
+    })
+    .catch((error) => {
+      console.log(error);
+      return error;
+    });
   }
 
   static fetchById(id) {
-    const db = getDb();
-    return db
-      .collection('foods')
-      .findOne({_id:  new ObjectId(id)})
-      .then((product) => {
-        return product;
-      })
-      .catch((error) => {
-        console.log(error);
-        return error;
-      });
+    return FoodModel
+    .findById(id)
+    .then((product) => {
+      return product;
+    })
+    .catch((error) => {
+      console.log(error);
+      return error;
+    });
   }
 
   static fetchAll() {
-    const db = getDb();
-    return db
-      .collection('foods')
-      .find()
-      .toArray()
-      .then((products) => {
-        return products;
-      })
-      .catch((error) => {
-        console.log(error);
-        return error;
-      });
+    return FoodModel
+    .find()
+    .then((products) => {
+      return products;
+    })
+    .catch((error) => {
+      console.log(error);
+      return error;
+    });
   }
 
   //extracts id and name properties and creates a new object with {id, name}
   static fetchAllNames() {
-    const db = getDb();
-    return db
-      .collection('foods')
-      .find({}, {projection:{name: 1}})
-      .toArray()
-      .then((products) => {
-        return products;
-      })
-      .catch((error) => {
-        console.log(error);
-        return error;
-      });
+    return FoodModel
+    .find({}, 'name')
+    .then((products) => {
+      return products;
+    })
+    .catch((error) => {
+      console.log(error);
+      return error;
+    });
   }
 
   static deleteById(id) {
-    const db = getDb();
-    return db
-      .collection('foods')
-      .deleteOne({_id: new ObjectId(id)})
-      .then((response) => {
-        return response;
-      })
-      .catch((error) => {
-        console.log(error);
-        return error;
-      });
+    return FoodModel
+    .findByIdAndDelete(id)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      return error;
+    });
   }
 
   static foodSelectOptions = {

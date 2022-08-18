@@ -1,8 +1,8 @@
 const ObjectId = require('mongodb').ObjectId;
-const MenstrualCyclePhase = require('../../models/general/menstrualCyclePhase');
 const ChronicCondition = require('../../models/nutritionModels/chronicConditionModel');
 const Diet = require('../../models/nutritionModels/dietModel');
-const Food = require('../../models/nutritionModels/foodModel');
+const MenstrualCyclePhase = require('../../models/general/menstrualCyclePhase');
+const FoodHandler = require('../../models/nutritionModels/foodModel').FoodHandler;
 let _foodNames = [];
 let _conditionNames = [];
 let _dietNames = [];
@@ -17,13 +17,13 @@ exports.redirectToViewSelectedFood = (req, res) => {
 }
 
 exports.getViewToSelectFood = (req, res) => {
-    Food.fetchAllNames()
+    FoodHandler.fetchAllNames()
     .then((foodNames) => {
       _foodNames = foodNames;
       res.render('./nutrition/view-food', {
         caller: 'view-food',
         pageTitle: 'Selecciona la comida',
-        foodSelectOptions: Food.foodSelectOptions,
+        foodSelectOptions: FoodHandler.foodSelectOptions,
         foodNames: foodNames,
         selectedFoodInfo: null
       });
@@ -35,19 +35,19 @@ exports.getViewToSelectFood = (req, res) => {
 
 exports.getViewOfSelectedFood = async (req, res) => {
   const selectedFoodId = req.params.foodId;
-
+  
   //Fetches the foodNames from db if names don't exist or if the current foodId doesn't exist in array
   //Note: This logic is needed to fetch the new food info once a new food has been added to the db
   const index = _foodNames?.findIndex(f => f._id.toString() == selectedFoodId);
   (index > -1) ? await fetchFoodNames(false) : await fetchFoodNames(true);
 
-  Food.fetchById(selectedFoodId)
+  FoodHandler.fetchById(selectedFoodId)
   .then((selectedFoodInfo) => {
     res.render('./nutrition/view-food', {
       caller: 'view-food',
       pageTitle: 'Información de comida',
       foodNames: _foodNames,
-      foodSelectOptions: Food.foodSelectOptions,
+      foodSelectOptions: FoodHandler.foodSelectOptions,
       selectedFoodInfo: selectedFoodInfo,
       chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
       diets: Diet.compatibleWithDietsStaticValues.diets,
@@ -67,7 +67,7 @@ exports.getViewToAddFood = async (req, res) => {
     caller: 'add-food',
     pageTitle: 'Añadir comida',
     foodNames: _foodNames,
-    foodSelectOptions: Food.foodSelectOptions,
+    foodSelectOptions: FoodHandler.foodSelectOptions,
     selectedFoodInfo: null,
     chronicConditions: ChronicCondition.chronicConditionsStaticValues.chronicConditions,
     diets: Diet.compatibleWithDietsStaticValues.diets,
@@ -76,27 +76,19 @@ exports.getViewToAddFood = async (req, res) => {
 };
 
 exports.addFood = (req, res) => {
-  let food = new Food(req.body);
-  food = refactorValuesForDb(food);
-  
-  food.insert()
-  .then((result) => {
-    res.redirect(`/nutrition/food/${result.insertedId.toString()}`);
-  })
-  .catch((err) => {
-    console.log('Error while inserting document to db', err);
-  });
+  let foodHandler = new FoodHandler(req.body);
+  foodHandler = refactorValuesForDb(foodHandler);
+  foodHandler.save().then( id => res.redirect(`/nutrition/food/${id}`) );
 };
 
 exports.updateFood = (req, res) => {
   const foodId = req.params.foodId;
-
-  let food = new Food(req.body);
+  let food = new FoodHandler(req.body);
   food.id = foodId;
   food = refactorValuesForDb(food);
   
   food.update()
-  .then((result) => {
+  .then(() => {
     res.redirect(`/nutrition/food/${foodId}`);
   })
   .catch((err) => {
@@ -108,7 +100,7 @@ exports.updateFood = (req, res) => {
 exports.apiDeleteFood = (req, res) => {
   const foodId = req.params.foodId;
 
-  Food.deleteById(foodId)
+  FoodHandler.deleteById(foodId)
   .then( deleteResponse => {
     console.log('deleteResponse', deleteResponse);
     //removes the food from foods dropdown
@@ -128,7 +120,7 @@ let fetchFoodNames = async (forceFetch = false) => {
   //Fetches the foodNames from db only when foodNames is not available or when forced
   //Note: This is forced to fetch when a new value has been added to the database
   if (forceFetch || !_foodNames || _foodNames.length === 0) {
-    await Food.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
+    await FoodHandler.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
   }
 };
 
