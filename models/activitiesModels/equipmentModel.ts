@@ -1,12 +1,15 @@
-const equipments = [];
+import { ObjectId } from 'bson';
+import { IEquipment } from '../../util/interfaces/activitiesInterfaces';
 
-module.exports = class Equipment  {
-    id;
-    name;
-    alternativeName;
-    description;
-    exercises;
-    linkToImage;
+const equipments: IEquipment[] = [];
+
+export default class Equipment implements IEquipment {
+    id: ObjectId | string;
+    name: string;
+    alternativeName: string;
+    description: string;
+    exercises: any[];
+    linkToImage: string;
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
@@ -21,11 +24,11 @@ module.exports = class Equipment  {
         Object.keys(inputValues).map(key => this[key] = inputValues[key]);
     }
 
-    static fetchByName(name) {
+    static fetchByName(name: string) {
         return equipments.find(f => f.name === name);
     }
 
-    static fetchById(id) {
+    static fetchById(id: string) {
         return equipments.find(f => f.id === id);
     }
 

@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId } from 'bson';
 import { IdAndName, ConditionIdAndName, DietnIdAndName } from '../../util/types/nutritionTypes';
 import ChronicCondition from '../../models/nutritionModels/chronicConditionModel';
 import Diet from '../../models/nutritionModels/dietModel';

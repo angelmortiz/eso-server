@@ -1,19 +1,23 @@
-const exercises = [];
+import { ObjectId } from "bson";
+import { IExercise } from "../../util/interfaces/activitiesInterfaces";
+import { ConditionIdAndName } from "../../util/types/nutritionTypes";
 
-module.exports = class Exercise {
-    id;
-    name;
-    alternativeName;
-    difficulty;
-    types;
-    compundMovement;
-    mainMuscle;
-    secondaryMuscles;
-    equipments;
-    safeForConditions;
-    notRecommendedForConditions;
-    recommendedForCyclePhases;
-    linkToVideo;
+const exercises: IExercise[] = [];
+
+export default class Exercise implements IExercise{
+    id: ObjectId | string;
+    name: string;
+    alternativeName: string;
+    difficulty: string;
+    types: string[];
+    compundMovement: boolean;
+    mainMuscle: string;
+    secondaryMuscles: string[];
+    equipments: any[];
+    safeForConditions: ConditionIdAndName[];
+    notRecommendedForConditions: ConditionIdAndName[];
+    recommendedForCyclePhases: string[];
+    linkToVideo: string;
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic

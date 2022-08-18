@@ -1,4 +1,4 @@
-const Equipment = require('../../models/activitiesModels/equipmentModel');
+Equipment = require('../../models/activitiesModels/equipmentModel');
 
 exports.getEquipment = (request, response, next) => {
     response.render('./activities/view-equipment', {

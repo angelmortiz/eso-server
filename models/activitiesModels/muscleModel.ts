@@ -1,11 +1,14 @@
-const muscles = [];
+import { ObjectId } from 'bson';
+import { IMuscle } from '../../util/interfaces/activitiesInterfaces';
 
-module.exports = class Muscle {
-    id;
-    name;
-    alternativeName;
-    type;
-    linkToImage;
+const muscles: IMuscle[] = [];
+
+export default class Muscle implements IMuscle {
+    id: ObjectId | string;
+    name: string;
+    alternativeName: string;
+    type: string;
+    linkToImage: string;
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
