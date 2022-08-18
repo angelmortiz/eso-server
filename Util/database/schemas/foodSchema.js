@@ -1,6 +1,29 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-module.exports = new mongoose.Schema({
+const chronicConditionSubSchema = new Schema({
+  conditionId: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+  conditionName: {
+    type: String,
+    required: true
+  }
+}, {_id: false});
+
+const dietSubSchema = new Schema({
+  dietId: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+  dietName: {
+    type: String,
+    required: true
+  }
+}, {_id: false});
+
+module.exports = new Schema({
   name: {
     type: String,
     required: true
@@ -33,12 +56,12 @@ module.exports = new mongoose.Schema({
     type: String,
     required: true
   },
-  safeForConditions: {
-    type: Array,
+  safeForConditions:{
+    type: [chronicConditionSubSchema],
     required: false
   },
   notRecommendedForConditions: {
-    type: Array,
+    type: [chronicConditionSubSchema],
     required: false
   },
   recommendedForCyclePhases: {
@@ -46,7 +69,7 @@ module.exports = new mongoose.Schema({
     required: false
   },
   compatibleWithDiets: {
-    type: Array,
+    type: [dietSubSchema],
     required: true
   },
   linkToImage: {
