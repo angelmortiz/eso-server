@@ -13,7 +13,6 @@ exports.redirectToViewSelectFood = (req, res) => {
 }
 
 exports.redirectToViewSelectedFood = (req, res) => {
-  console.log('req.body.selectedFood', req.body.selectedFood);
   res.redirect(`/nutrition/food/${req.body.selectedFood}`);
 }
 
@@ -36,7 +35,7 @@ exports.getViewToSelectFood = (req, res) => {
 
 exports.getViewOfSelectedFood = async (req, res) => {
   const selectedFoodId = req.params.foodId;
-  console.log('selectedFoodId', selectedFoodId);
+  
   //Fetches the foodNames from db if names don't exist or if the current foodId doesn't exist in array
   //Note: This logic is needed to fetch the new food info once a new food has been added to the db
   const index = _foodNames?.findIndex(f => f._id.toString() == selectedFoodId);
