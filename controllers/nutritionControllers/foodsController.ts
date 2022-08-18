@@ -104,12 +104,14 @@ export const apiDeleteFood = (req, res) => {
 
   FoodHandler.deleteById(foodId)
   .then( deleteResponse => {
-    console.log('deleteResponse', deleteResponse);
     //removes the food from foods dropdown
     const index: number = _foodNames?.findIndex(f => f._id.toString() == foodId);
     if (index > -1){
       _foodNames.splice(index, 1);
     }
+
+    console.log(`'${deleteResponse.name}' food deleted successfully.`);
+
     res.redirect(`/nutrition/food/`);
   })
   .catch(err => {
