@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+//TODO: Add references to other schemas once they're added
 const chronicConditionSubSchema = new Schema({
   conditionId: {
     type: Schema.Types.ObjectId,
