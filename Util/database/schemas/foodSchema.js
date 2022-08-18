@@ -24,7 +24,7 @@ const dietSubSchema = new Schema({
   }
 }, {_id: false});
 
-module.exports = new Schema({
+module.exports.FoodSchema = new Schema({
   name: {
     type: String,
     required: true

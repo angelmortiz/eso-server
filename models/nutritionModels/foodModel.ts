@@ -1,18 +1,18 @@
-const { nutritionDb } = require('../../util/database/connection');
-const FoodSchema = require('../../util/database/schemas/foodSchema');
+import { nutritionDb } from '../../util/database/connection';
+import { FoodSchema } from '../../util/database/schemas/foodSchema';
 const FoodModel = nutritionDb.model('Food', FoodSchema);
 
 exports.FoodHandler = class FoodHandler {
-  id;
-  name;
-  classification;
-  description;
-  mainMacronutrient;
-  secondaryMacronutrient;
-  nutritionFacts;
-  mealType;
-  micronutrientDensity;
-  safeForConditions;
+  id: string;
+  name: string;
+  classification: string;
+  description: string;
+  mainMacronutrient: string;
+  secondaryMacronutrient: string;
+  nutritionFacts: object;
+  mealType: Array<string>;
+  micronutrientDensity: string;
+  safeForConditions: Array<object>;
   notRecommendedForConditions;
   recommendedForCyclePhases;
   compatibleWithDiets;
@@ -27,7 +27,7 @@ exports.FoodHandler = class FoodHandler {
     Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
   }
 
-  save() {
+  save(): Promise<string> {
     return new FoodModel(this)
     .save()
     .then((result) => {
@@ -36,7 +36,7 @@ exports.FoodHandler = class FoodHandler {
     })
     .catch((error) => {
       console.log('There was an error trying to insert new document.', error);
-      return error;
+      return error.toString();
     });
   }
 
