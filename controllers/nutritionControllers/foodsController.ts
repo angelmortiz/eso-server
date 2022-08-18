@@ -1,4 +1,5 @@
 import { ObjectId } from 'bson';
+import {Request, Response} from 'express';
 import { IdAndName, ConditionIdAndName, DietnIdAndName } from '../../util/types/nutritionTypes';
 import ChronicCondition from '../../models/nutritionModels/chronicConditionModel';
 import Diet from '../../models/nutritionModels/dietModel';
@@ -10,15 +11,15 @@ let _conditionNames: IdAndName[] = [];
 let _dietNames: IdAndName[] = [];
 
 /** RENDERS */
-export const redirectToViewSelectFood = (req, res) => {
+export const redirectToViewSelectFood = (req: Request, res: Response) => {
   res.redirect(`/nutrition/food`);
 }
 
-export const redirectToViewSelectedFood = (req, res) => {
+export const redirectToViewSelectedFood = (req: Request, res: Response) => {
   res.redirect(`/nutrition/food/${req.body.selectedFood}`);
 }
 
-export const getViewToSelectFood = (req, res) => {
+export const getViewToSelectFood = (req: Request, res: Response) => {
     FoodHandler.fetchAllNames()
     .then((foodNames) => {
       _foodNames = foodNames;
@@ -35,7 +36,7 @@ export const getViewToSelectFood = (req, res) => {
     });
 };
 
-export const getViewOfSelectedFood = async (req, res) => {
+export const getViewOfSelectedFood = async (req: Request, res: Response) => {
   const selectedFoodId: string = req.params.foodId;
   
   //Fetches the foodNames from db if names don't exist or if the current foodId doesn't exist in array
@@ -61,7 +62,7 @@ export const getViewOfSelectedFood = async (req, res) => {
   });
 };
 
-export const getViewToAddFood = async (req, res) => {
+export const getViewToAddFood = async (req: Request, res: Response) => {
   //Fetches the foodNames from db if for some reason the data was lost from previous method
   await fetchFoodNames();
 
@@ -77,13 +78,13 @@ export const getViewToAddFood = async (req, res) => {
   });
 };
 
-export const addFood = (req, res) => {
+export const addFood = (req: Request, res: Response) => {
   let foodHandler = new FoodHandler(req.body);
   foodHandler = refactorValuesForDb(foodHandler);
   foodHandler.save().then( id => res.redirect(`/nutrition/food/${id}`) );
 };
 
-export const updateFood = (req, res) => {
+export const updateFood = (req: Request, res: Response) => {
   const foodId: string = req.params.foodId;
   let food = new FoodHandler(req.body);
   food.id = foodId;
@@ -99,7 +100,7 @@ export const updateFood = (req, res) => {
 };
 
 /** APIS */
-export const apiDeleteFood = (req, res) => {
+export const apiDeleteFood = (req: Request, res: Response) => {
   const foodId: string = req.params.foodId;
 
   FoodHandler.deleteById(foodId)
@@ -128,7 +129,7 @@ let fetchFoodNames = async (forceFetch = false) => {
   }
 };
 
-let refactorValuesForDb = (food) => {
+let refactorValuesForDb = (food: FoodHandler) => {
   food = refactorMealTypeValues(food);
   food.safeForConditions = refactorChronicConditions(food.safeForConditions);
   food.notRecommendedForConditions = refactorChronicConditions(food.notRecommendedForConditions);

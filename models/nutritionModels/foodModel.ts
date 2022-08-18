@@ -16,10 +16,10 @@ export default class FoodHandler implements IFood {
   nutritionFacts: object;
   mealType: string[];
   micronutrientDensity: string;
-  safeForConditions: ConditionIdAndName[];
-  notRecommendedForConditions: ConditionIdAndName[];
-  recommendedForCyclePhases: string[];
-  compatibleWithDiets: DietnIdAndName[];
+  safeForConditions: ConditionIdAndName[] | null;
+  notRecommendedForConditions: ConditionIdAndName[] | null;
+  recommendedForCyclePhases: string[] | null;
+  compatibleWithDiets: DietnIdAndName[] | null;
   linkToImage: string;
 
   constructor(inputValues) {

@@ -11,10 +11,10 @@ export interface IFood {
     nutritionFacts: object;
     mealType: string[];
     micronutrientDensity: string;
-    safeForConditions: any[];
-    notRecommendedForConditions: any[];
-    recommendedForCyclePhases: string[];
-    compatibleWithDiets: any[];
+    safeForConditions: ConditionIdAndName[] | null;
+    notRecommendedForConditions: ConditionIdAndName[] | null;
+    recommendedForCyclePhases: string[] | null;
+    compatibleWithDiets: DietnIdAndName[] | null;
     linkToImage: string;
 }
 
@@ -30,10 +30,10 @@ export interface IRecipe {
     source: string;
     tools: string[];
     nutritionFacts: string[];
-    safeForConditions: ConditionIdAndName[];
-    notRecommendedForConditions: ConditionIdAndName[];
-    recommendedForCyclePhases: string[];
-    compatibleWithDiets: DietnIdAndName[];
+    safeForConditions: ConditionIdAndName[] | null;
+    notRecommendedForConditions: ConditionIdAndName[] | null;
+    recommendedForCyclePhases: string[] | null;
+    compatibleWithDiets: DietnIdAndName[] | null;
     linkToImage: string;
     linkToVideo: string;
 }
