@@ -1,9 +1,9 @@
 import { ObjectId } from 'bson';
-import { IPhysicalConditions } from '../../util/interfaces/activitiesInterfaces';
+import { IPhysicalCondition } from '../../util/interfaces/activitiesInterfaces';
 
-const physicalConditions: IPhysicalConditions[] = [];
+const physicalConditions: IPhysicalCondition[] = [];
 
-module.exports = class PhysicalConditions implements IPhysicalConditions{
+export default class PhysicalCondition implements IPhysicalCondition{
     id: ObjectId | string;
     name: string;
     description: string;

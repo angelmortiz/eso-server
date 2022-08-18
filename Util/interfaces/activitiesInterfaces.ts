@@ -34,7 +34,7 @@ export interface IEquipment {
     linkToImage: string;
 }
 
-export interface IPhysicalConditions {
+export interface IPhysicalCondition {
     id: ObjectId | string;
     name: string;
     description: string;

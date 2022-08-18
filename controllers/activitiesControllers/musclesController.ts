@@ -1,20 +1,20 @@
-const Muscle = require('../../models/activitiesModels/muscleModel');
+import Muscle from '../../models/activitiesModels/muscleModel';
 
-exports.getMuscle = (request, response) => {
+export const getMuscle = (request, response) => {
   response.render('./activities/view-muscle', {
     caller: 'view-muscle',
     pageTitle: 'Información de músculo',
   });
 };
 
-exports.getAddMuscle = (request, response) => {
+export const getAddMuscle = (request, response) => {
   response.render('./activities/add-muscle', {
     caller: 'add-muscle',
     pageTitle: 'Añadi;r músculo',
   });
 };
 
-exports.addMuscle = (request) => {
+export const addMuscle = (request) => {
   const muscle = new Muscle(request.body);
   muscle.save();
   console.log(Muscle.fetchAll());

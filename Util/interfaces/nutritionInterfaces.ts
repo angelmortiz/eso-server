@@ -38,6 +38,14 @@ export interface IRecipe {
     linkToVideo: string;
 }
 
+export interface IDiet {
+    id: ObjectId | string;
+    name: string;
+    officialName: string;
+    description: string;
+    safeForConditions: ConditionIdAndName;
+}
+
 export interface IChronicCondition {
     id: ObjectId | string;
     name: string;
@@ -46,12 +54,4 @@ export interface IChronicCondition {
     causes: string[];
     treatments: string[];
     tests: string[];
-}
-
-export interface IDiet {
-    id: ObjectId | string;
-    name: string;
-    officialName: string;
-    description: string;
-    safeForConditions: ConditionIdAndName;
 }
