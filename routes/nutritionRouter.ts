@@ -3,24 +3,24 @@ import { Router } from 'express';
 const router = Router();
 
 //Controllers imports
-const foodsController = require('../controllers/nutritionControllers/foodsController');
-const recipesController = require('../controllers/nutritionControllers/recipesController');
-const dietsController = require('../controllers/nutritionControllers/dietsController');
-const chronicConditionsController = require('../controllers/nutritionControllers/chronicConditionsController');
-const menstrualCyclePhasesController = require('../controllers/general/menstrualCyclePhasesController');
+import * as foodController from '../controllers/nutritionControllers/foodsController';
+import * as recipesController from '../controllers/nutritionControllers/recipesController';
+import * as dietsController from '../controllers/nutritionControllers/dietsController';
+import * as chronicConditionsController from '../controllers/nutritionControllers/chronicConditionsController';
+import * as menstrualCyclePhasesController from '../controllers/general/menstrualCyclePhasesController';
 
 /* FOOD */
 //Render Views
-router.get('/', foodsController.redirectToViewSelectFood); //defeault render for '/nutrition'
-router.get('/food', foodsController.getViewToSelectFood);
-router.get('/food/:foodId', foodsController.getViewOfSelectedFood);
-router.get('/add-food', foodsController.getViewToAddFood);
+router.get('/', foodController.redirectToViewSelectFood); //defeault render for '/nutrition'
+router.get('/food', foodController.getViewToSelectFood);
+router.get('/food/:foodId', foodController.getViewOfSelectedFood);
+router.get('/add-food', foodController.getViewToAddFood);
 //Actions
-router.post('/add-food', foodsController.addFood);
-router.post('/update-food/:foodId', foodsController.updateFood);
-router.post('/redirect-to-view-selected-food', foodsController.redirectToViewSelectedFood);
+router.post('/add-food', foodController.addFood);
+router.post('/update-food/:foodId', foodController.updateFood);
+router.post('/redirect-to-view-selected-food', foodController.redirectToViewSelectedFood);
 //APIs
-router.delete('/food/:foodId', foodsController.apiDeleteFood);
+router.delete('/food/:foodId', foodController.apiDeleteFood);
 
 
 /* RECIPE */

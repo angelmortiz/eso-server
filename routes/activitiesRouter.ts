@@ -3,10 +3,10 @@ import { Router } from 'express';
 const router = Router();
 
 //Controllers imports
-const exercisesController = require('../controllers/activitiesControllers/exercisesController');
-const musclesController = require('../controllers/activitiesControllers/musclesController');
-const equipmentsController = require('../controllers/activitiesControllers/equipmentsController');
-const physicalConditionsController = require('../controllers/activitiesControllers/physicalConditionsController');
+import * as exercisesController from '../controllers/activitiesControllers/exercisesController';
+import * as musclesController from '../controllers/activitiesControllers/musclesController';
+import * as equipmentsController from '../controllers/activitiesControllers/equipmentsController';
+import * as physicalConditionsController from '../controllers/activitiesControllers/physicalConditionsController';
 
 /* EXERCISE */
 router.get('/', exercisesController.getExercise); //defeault render for activities

@@ -10,15 +10,15 @@ let _conditionNames: IdAndName[] = [];
 let _dietNames: IdAndName[] = [];
 
 /** RENDERS */
-exports.redirectToViewSelectFood = (req, res) => {
+export const redirectToViewSelectFood = (req, res) => {
   res.redirect(`/nutrition/food`);
 }
 
-exports.redirectToViewSelectedFood = (req, res) => {
+export const redirectToViewSelectedFood = (req, res) => {
   res.redirect(`/nutrition/food/${req.body.selectedFood}`);
 }
 
-exports.getViewToSelectFood = (req, res) => {
+export const getViewToSelectFood = (req, res) => {
     FoodHandler.fetchAllNames()
     .then((foodNames) => {
       _foodNames = foodNames;
@@ -35,7 +35,7 @@ exports.getViewToSelectFood = (req, res) => {
     });
 };
 
-exports.getViewOfSelectedFood = async (req, res) => {
+export const getViewOfSelectedFood = async (req, res) => {
   const selectedFoodId: string = req.params.foodId;
   
   //Fetches the foodNames from db if names don't exist or if the current foodId doesn't exist in array
@@ -61,7 +61,7 @@ exports.getViewOfSelectedFood = async (req, res) => {
   });
 };
 
-exports.getViewToAddFood = async (req, res) => {
+export const getViewToAddFood = async (req, res) => {
   //Fetches the foodNames from db if for some reason the data was lost from previous method
   await fetchFoodNames();
 
@@ -77,13 +77,13 @@ exports.getViewToAddFood = async (req, res) => {
   });
 };
 
-exports.addFood = (req, res) => {
+export const addFood = (req, res) => {
   let foodHandler = new FoodHandler(req.body);
   foodHandler = refactorValuesForDb(foodHandler);
   foodHandler.save().then( id => res.redirect(`/nutrition/food/${id}`) );
 };
 
-exports.updateFood = (req, res) => {
+export const updateFood = (req, res) => {
   const foodId: string = req.params.foodId;
   let food = new FoodHandler(req.body);
   food.id = foodId;
@@ -99,7 +99,7 @@ exports.updateFood = (req, res) => {
 };
 
 /** APIS */
-exports.apiDeleteFood = (req, res) => {
+export const apiDeleteFood = (req, res) => {
   const foodId: string = req.params.foodId;
 
   FoodHandler.deleteById(foodId)
