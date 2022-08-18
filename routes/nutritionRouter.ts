@@ -1,6 +1,6 @@
 //imports
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
 //Controllers imports
 const foodsController = require('../controllers/nutritionControllers/foodsController');
@@ -49,4 +49,4 @@ router.get('/chronicConditions', chronicConditionsController.apiGetChronicCondit
 router.get('/menstrualCyclePhases', menstrualCyclePhasesController.apiGetPhases);
 
 //exports
-exports.routes = router;
+export default router;

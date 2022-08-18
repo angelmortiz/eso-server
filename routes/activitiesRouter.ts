@@ -1,6 +1,6 @@
 //imports
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
 //Controllers imports
 const exercisesController = require('../controllers/activitiesControllers/exercisesController');
@@ -30,4 +30,4 @@ router.get('/add-physicalCondition', physicalConditionsController.getAddPhysical
 router.post('/physicalCondition', physicalConditionsController.addPhysicalCondition);
 
 //exports
-exports.routes = router;
+export default router;
