@@ -1,5 +1,5 @@
-import { nutritionDb } from '../../util/database/connection';
-import { FoodSchema } from '../../util/database/schemas/foodSchema';
+import nutritionDb from '../../util/database/connection';
+import FoodSchema from '../../util/database/schemas/foodSchema';
 const FoodModel = nutritionDb.model('Food', FoodSchema);
 
 exports.FoodHandler = class FoodHandler {

@@ -1,20 +1,20 @@
-const Recipe = require('../../models/nutritionModels/recipeModel');
+import Recipe from '../../models/nutritionModels/recipeModel';
 
-exports.getRecipe = (request, response, next) => {
+export const getRecipe = (request, response, next) => {
   response.render('./nutrition/view-recipe', {
     caller: 'view-recipe',
     pageTitle: 'Información de receta',
   });
 };
 
-exports.getAddRecipe = (request, response, next) => {
+export const getAddRecipe = (request, response, next) => {
   response.render('./nutrition/add-recipe', {
     caller: 'add-recipe',
     pageTitle: 'Añadir receta',
   });
 };
 
-exports.addRecipe = (request) => {
+export const addRecipe = (request) => {
   const recipe = new Recipe(request.body);
   recipe.save();
   console.log(Recipe.fetchAll());

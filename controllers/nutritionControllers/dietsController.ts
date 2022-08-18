@@ -1,26 +1,26 @@
-const Diet = require('../../models/nutritionModels/dietModel');
+import Diet from '../../models/nutritionModels/dietModel';
 
-exports.getDiet = (request, response, next) => {
+export const getDiet = (request, response, next) => {
   response.render('./nutrition/view-diet', {
     caller: 'view-diet',
     pageTitle: 'Información de dieta',
   });
 };
 
-exports.getAddDiet = (request, response, next) => {
+export const getAddDiet = (request, response, next) => {
   response.render('./nutrition/add-diet', {
     caller: 'add-diet',
     pageTitle: 'Añadir dieta',
   });
 };
 
-exports.addDiet = (request) => {
+export const addDiet = (request) => {
   const diet = new Diet(request.body);
   diet.save();
   console.log(Diet.fetchAll());
   // response.redirect('/nutrition/diet')
 };
 
-exports.apiGetDiets = (request, response) => {
+export const apiGetDiets = (request, response) => {
   response.json(Diet.compatibleWithDietsStaticValues.diets);
 };
