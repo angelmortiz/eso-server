@@ -1,9 +1,13 @@
+import { ObjectId } from 'bson';
+import { IFood } from "../../util/interfaces/nutritionInterfaces";
 import { nutritionDb } from '../../util/database/connection';
 import FoodSchema from '../../util/database/schemas/foodSchema';
+import { ConditionIdAndName, DietnIdAndName } from '../../util/types/nutritionTypes';
+
 const FoodModel = nutritionDb.model('Food', FoodSchema);
 
-export default class FoodHandler {
-  id: string;
+export default class FoodHandler implements IFood {
+  id: ObjectId | string;
   name: string;
   classification: string;
   description: string;
@@ -12,10 +16,10 @@ export default class FoodHandler {
   nutritionFacts: object;
   mealType: string[];
   micronutrientDensity: string;
-  safeForConditions: any[];
-  notRecommendedForConditions: any[];
+  safeForConditions: ConditionIdAndName[];
+  notRecommendedForConditions: ConditionIdAndName[];
   recommendedForCyclePhases: string[];
-  compatibleWithDiets: any[];
+  compatibleWithDiets: DietnIdAndName[];
   linkToImage: string;
 
   constructor(inputValues) {

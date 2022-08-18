@@ -1,13 +1,16 @@
-const chronicConditions = [];
+import { ObjectId } from 'bson';
+import { IChronicCondition } from '../../util/interfaces/nutritionInterfaces';
 
-module.exports = class ChronicCondition {
-    id;
-    name;
-    symptoms;
-    causes;
-    treatments;
-    description;
-    tests;
+const chronicConditions: IChronicCondition[] = [];
+
+export default class ChronicCondition implements IChronicCondition {
+    id: ObjectId | string;
+    name: string;
+    description: string;
+    symptoms: string[];
+    causes: string[];
+    treatments: string[];
+    tests: string[];
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic

@@ -1,11 +1,15 @@
-const diets = [];
+import { ObjectId } from "bson";
+import { IDiet } from "../../util/interfaces/nutritionInterfaces";
+import { ConditionIdAndName } from "../../util/types/nutritionTypes";
 
-module.exports = class Diet {
-    id;
-    name;
-    officialName;
-    description;
-    safeForConditions;
+const diets: IDiet[] = [];
+
+export default class Diet implements IDiet {
+    id: ObjectId | string;
+    name: string;
+    officialName: string;
+    description: string;
+    safeForConditions: ConditionIdAndName;
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
