@@ -1,11 +1,9 @@
 const ObjectId = require('mongodb').ObjectId;
-const MenstrualCyclePhase = require('../../models/general/menstrualCyclePhase');
 const ChronicCondition = require('../../models/nutritionModels/chronicConditionModel');
 const Diet = require('../../models/nutritionModels/dietModel');
-const {FoodHandler, Food} = require('../../models/nutritionModels/foodModel');
-let _foodNames = [
-  {_id: "3erq32efq23ef23f", name: "Test Food"}
-];
+const MenstrualCyclePhase = require('../../models/general/menstrualCyclePhase');
+const FoodHandler = require('../../models/nutritionModels/foodModel').FoodHandler;
+let _foodNames = [];
 let _conditionNames = [];
 let _dietNames = [];
 
@@ -19,28 +17,19 @@ exports.redirectToViewSelectedFood = (req, res) => {
 }
 
 exports.getViewToSelectFood = (req, res) => {
-
-    // FoodHandler.fetchAllNames()
-    // .then((foodNames) => {
-    //   _foodNames = foodNames;
-    //   res.render('./nutrition/view-food', {
-    //     caller: 'view-food',
-    //     pageTitle: 'Selecciona la comida',
-    //     foodSelectOptions: FoodHandler.foodSelectOptions,
-    //     foodNames: foodNames,
-    //     selectedFoodInfo: null
-    //   });
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
-
-    res.render('./nutrition/view-food', {
-      caller: 'view-food',
-      pageTitle: 'Selecciona la comida',
-      foodSelectOptions: FoodHandler.foodSelectOptions,
-      foodNames: _foodNames,
-      selectedFoodInfo: null
+    FoodHandler.fetchAllNames()
+    .then((foodNames) => {
+      _foodNames = foodNames;
+      res.render('./nutrition/view-food', {
+        caller: 'view-food',
+        pageTitle: 'Selecciona la comida',
+        foodSelectOptions: FoodHandler.foodSelectOptions,
+        foodNames: foodNames,
+        selectedFoodInfo: null
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 
@@ -87,34 +76,19 @@ exports.getViewToAddFood = async (req, res) => {
 };
 
 exports.addFood = (req, res) => {
-  // let foodHandler = new FoodHandler(req.body);
-  // foodHandler = refactorValuesForDb(food);
-
-  const food = new Food({
-    name: 'Test',
-    description: 'Test',
-    classification: 'Test'
-  });
-
-  food.save()
-  .then((result) => {
-    console.log('Result =>>>', result);
-    res.redirect(`/nutrition/food/${result._id.toString()}`);
-  })
-  .catch((err) => {
-    console.log('Error while inserting document to db', err);
-  });
+  let foodHandler = new FoodHandler(req.body);
+  foodHandler = refactorValuesForDb(foodHandler);
+  foodHandler.save().then( id => res.redirect(`/nutrition/food/${id}`) );
 };
 
 exports.updateFood = (req, res) => {
   const foodId = req.params.foodId;
-
   let food = new FoodHandler(req.body);
   food.id = foodId;
   food = refactorValuesForDb(food);
   
   food.update()
-  .then((result) => {
+  .then(() => {
     res.redirect(`/nutrition/food/${foodId}`);
   })
   .catch((err) => {
