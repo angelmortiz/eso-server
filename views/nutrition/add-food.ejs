@@ -20,7 +20,7 @@
             <div class="select-dropdown">
                 <label for="select-food" class="select-dropdown__title">Comida:</label>
                 <form action="/nutrition/redirect-to-view-selected-food" method="POST">
-                    <select name="selected-Food" id="select-food-selection">
+                    <select name="selectedFood" id="select-food-selection">
                         <option value="">-- Elige --</option>
                         <% foodNames.forEach( food=> { %>
                             <option value="<%= food._id %>"
