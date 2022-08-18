@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../includes/head.ejs') %> 
+    <link rel="stylesheet" href="/css/activities/view-muscle.css">
+</head>
+<body>
+    <header class="main-header">
+        <%- include('../includes/navigation.ejs') %> 
+    </header>
+<main>
+    <div class="page-title__div">
+        <h2 class="page-title"><%= pageTitle %>:</h2>
+    </div>
+    <div class="view-muscle-template">
+        <ul class="view-muscle-list">
+            <li class="view-muscle-list__item">
+                <span class="view-muscle-list__name">ID:</span>
+                <span class="view-muscle-list__value">62d9ad342aeacf742c28839e</span>
+            </li>
+            <li class="view-muscle-list__item">
+                <span class="view-muscle-list__name">Nombre:</span>
+                <span class="view-muscle-list__value">Cuádriceps</span>
+            </li>
+            <li class="view-muscle-list__item">
+                <span class="view-muscle-list__name">Otro nombre:</span>
+                <span class="view-muscle-list__value">Quads</span>
+            </li>
+            <li class="view-muscle-list__item">
+                <span class="view-muscle-list__name">Tipod de músculo:</span>
+                <ul>
+                    <li>Grande</li>
+                    <li>Pequeño</li>
+                </ul>
+            </li>
+            <li class="view-muscle-list__item">
+                <span class="view-muscle-list__name">Ejercicios asociados:</span>
+                <ul>
+                    <li>Sentadillas</li>
+                    <li>Lounges</li>
+                </ul>
+            </li>
+            <li class="view-muscle-list__item">
+                <span class="view-muscle-list__name">Imagen:</span>
+                <span class="view-muscle-list__value">{Añadir imagen}</span>
+            </li>
+        </ul>
+    </div>
+</main>
+</body>
+</html>

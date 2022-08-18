@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../includes/head.ejs') %> 
+    <link rel="stylesheet" href="/css/nutrition/view-chronicCondition.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <%- include('../includes/navigation.ejs') %>
+    </header>
+    <main>
+        <div class="page-title__div">
+            <h2 class="page-title">
+                <%= pageTitle %>:
+            </h2>
+        </div>
+        <div class="view-chronicCondition-template">
+            <ul class="view-chronicCondition-list">
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">ID:</span>
+                    <span class="view-chronicCondition-list__value">62d9ad342aeacf742c28839e</span>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Nombre:</span>
+                    <span class="view-chronicCondition-list__value">Diabetes tipo 2</span>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Descripción:</span>
+                    <span class="view-chronicCondition-list__value">Esto es una descripción corta a manera de ejemplo</span>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Síntomas:</span>
+                    <ul>
+                        <li>Síntoma 1</li>
+                        <li>Síntoma 2</li>
+                    </ul>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Causas:</span>
+                    <ul>
+                        <li>Causa 1</li>
+                        <li>Causa 2</li>
+                    </ul>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Tratamientos:</span>
+                    <ul>
+                        <li>Tratamiento 1</li>
+                        <li>Tratamiento 2</li>
+                    </ul>
+                </li>
+                <li class="view-chronicCondition-list__item">
+                    <span class="view-chronicCondition-list__name">Pruebas:</span>
+                    <ul>
+                        <li>Prueba 1</li>
+                        <li>Prueba 2</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </main>
+</body>
+
+</html>

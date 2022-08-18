@@ -1,0 +1,21 @@
+<nav class="main-header__nav">
+    <ul class="main-header__item-list"> 
+        <!-- <li class="main-header__item"><a href="/">Inicio</a></li> -->
+        <li class="main-header__item"><a class="<%= caller === 'view-food' ? 'active' : ''%>" href="/nutrition/food">Ver Comida</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'view-recipe' ? 'active' : ''%>"href="/nutrition/recipe">Ver Receta</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'view-diet' ? 'active' : ''%>"href="/nutrition/diet">Ver Dieta</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'view-chronicCondition' ? 'active' : ''%>"href="/nutrition/chronicCondition">Ver Condición Crónica</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'view-exercise' ? 'active' : ''%>"href="/activities/exercise">Ver Ejercicio</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'view-muscle' ? 'active' : ''%>"href="/activities/muscle">Ver Músculo</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'view-equipment' ? 'active' : ''%>"href="/activities/equipment">Ver Equipo</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'view-physicalCondition' ? 'active' : ''%>"href="/activities/physicalCondition">Ver Condición Física</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'add-food' ? 'active' : ''%>"href="/nutrition/add-food">Añadir Comida</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'add-recipe' ? 'active' : ''%>"href="/nutrition/add-recipe">Añadir Receta</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'add-diet' ? 'active' : ''%>"href="/nutrition/add-diet">Añadir Dieta</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'add-chronicCondition' ? 'active' : ''%>"href="/nutrition/add-chronicCondition">Añadir Condición Crónica</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'add-exercise' ? 'active' : ''%>"href="/activities/add-exercise">Añadir Ejercicio</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'add-muscle' ? 'active' : ''%>"href="/activities/add-muscle">Añadir Músculo</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'add-equipment' ? 'active' : ''%>"href="/activities/add-equipment">Añadir Equipo</a></li>
+        <li class="main-header__item"><a class="<%= caller === 'add-physicalCondition' ? 'active' : ''%>"href="/activities/add-physicalCondition">Añadir Condición Física</a></li>
+    </ul>
+</nav>

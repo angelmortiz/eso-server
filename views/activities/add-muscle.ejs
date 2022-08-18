@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../includes/head.ejs') %> 
+    <link rel="stylesheet" href="/css/activities/add-muscle.css">
+</head>
+<body>
+    <header class="main-header">
+        <%- include('../includes/navigation.ejs') %> 
+    </header>
+<main>
+    <div class="page-title__div">
+        <h2 class="page-title"><%= pageTitle %>:</h2>
+    </div>
+    <form class="add-muscle-form" action="/activities/muscle" method="POST">
+        <div class="add-muscle-form__control">
+            <div class="add-muscle-form__item">
+                <label for="name" class="add-muscle-form__title">Nombre:</label>
+                <input type="text" name="name" id="muscle-name">
+            </div>
+            <div class="add-muscle-form__item">
+                <label for="alternativeName" class="add-muscle-form__title">Nombre alternativo:</label>
+                <input type="text" name="alternativeName" id="alternativeName">
+            </div>
+            <div class="add-muscle-form__item">
+                <label for="exercises" class="add-muscle-form__title">Ejercicios asociados:</label>
+                <select name="exercises" id="exercises-selection">
+                    <option value="sentadillas">Sentadillas</option>
+                    <option value="lounges">Lounges</option>
+                </select>
+            </div>
+            <div class="add-muscle-form__item">
+                <label for="type" class="add-muscle-form__title">Tipo de músclo:</label>
+                <select name="type" id="type-selection">
+                    <option value="grande">Grande</option>
+                    <option value="pequeño">Pequeño</option>
+                </select>
+            </div>
+            <div class="add-muscle-form__item">
+                <label for="linkToImage" class="add-muscle-form__title">Enlace para imagen:</label>
+                <input type="text" name="linkToImage" id="linkToImage">
+            </div>
+        </div>
+
+        <div class="add-muscle-form__btn-control">
+            <button class="add-muscle-form__btn" type="submit">Añadir</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

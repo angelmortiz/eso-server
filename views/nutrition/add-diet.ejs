@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../includes/head.ejs') %> 
+    <link rel="stylesheet" href="/css/nutrition/add-diet.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <%- include('../includes/navigation.ejs') %>
+    </header>
+    <main>
+        <div class="page-title__div">
+            <h2 class="page-title"><%= pageTitle %>:</h2>
+        </div>
+        <form class="add-diet-form" action="/nutrition/diet" method="POST">
+            <div class="add-diet-form__control">
+                <div class="add-diet-form__item">
+                    <label for="name" class="add-diet-form__title">Nombre:</label>
+                    <input type="text" name="name" id="name">
+                </div>
+                <div class="add-diet-form__item">
+                    <label for="officialName" class="add-diet-form__title">Nombre oficial:</label>
+                    <input type="text" name="officialName" id="officialName">
+                </div>
+                <div class="add-diet-form__item">
+                    <label for="description" class="add-diet-form__title">Descripción:</label>
+                    <input type="text" name="description" id="description">
+                </div>
+                <div class="add-diet-form__item">
+                    <label for="safeForConditions" class="add-diet-form__title">Seguro para condiciones:</label>
+                    <select name="safeForConditions" id="safeForConditions-selection">
+                        <option value="diabetestipo1">Diabetes tipo 1</option>
+                        <option value="diabetestipo2">Diabetes tipo 2</option>
+                        <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
+                    </select>
+                </div>
+            </div>
+            <div class="add-diet-form__btn-control">
+                <button class="add-diet-form__btn" type="submit">Add</button>
+            </div>
+        </form>
+    </main>
+</body>
+
+</html>

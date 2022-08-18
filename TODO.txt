@@ -1,0 +1,9 @@
+//NEXT
+
+//FUTURE
+//TODO: Add button to remove options from selects
+//TODO: Log errores into a file instead of logging into the console.
+//TODO: Re-add select fields if no options are found.
+
+//NICE TO HAVE
+//TODO: Implement a 'Duplicate' button in order to create a new item with similar characteristics
