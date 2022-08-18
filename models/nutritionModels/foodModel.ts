@@ -10,13 +10,13 @@ exports.FoodHandler = class FoodHandler {
   mainMacronutrient: string;
   secondaryMacronutrient: string;
   nutritionFacts: object;
-  mealType: Array<string>;
+  mealType: string[];
   micronutrientDensity: string;
-  safeForConditions: Array<object>;
-  notRecommendedForConditions;
-  recommendedForCyclePhases;
-  compatibleWithDiets;
-  linkToImage;
+  safeForConditions: any[];
+  notRecommendedForConditions: any[];
+  recommendedForCyclePhases: string[];
+  compatibleWithDiets: any[];
+  linkToImage: string;
 
   constructor(inputValues) {
     if (!inputValues) return; //if no values were provided, do not map
