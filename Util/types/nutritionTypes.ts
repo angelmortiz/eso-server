@@ -6,7 +6,6 @@ export type IdAndName = {
     name: string
 };
 
-
 /** Chronic Conditions */
 export type ConditionIdAndName = {
     conditionId: ObjectId | string,
@@ -18,4 +17,3 @@ export type DietnIdAndName = {
     dietId: ObjectId | string,
     dietName: string
 };
-

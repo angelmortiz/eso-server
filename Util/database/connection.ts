@@ -8,7 +8,6 @@ export const nutritionDb = mongoose.createConnection('mongodb+srv://esoserver:MD
     console.log('Error connecting to nutrition db: ', error);
   });
 
-
 export const activitiesDb = mongoose.createConnection('mongodb+srv://esoserver:MDBServerEso22@ensaludoptima.9c8id.mongodb.net/activities?retryWrites=true&w=majority')
   .on('connected', () => {
     console.log('Connected to activities database.');

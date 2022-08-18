@@ -1,8 +1,8 @@
 import { ObjectId } from 'bson';
 import { IFood } from "../../util/interfaces/nutritionInterfaces";
 import { nutritionDb } from '../../util/database/connection';
-import FoodSchema from '../../util/database/schemas/foodSchema';
 import { ConditionIdAndName, DietnIdAndName } from '../../util/types/nutritionTypes';
+import FoodSchema from '../../util/database/schemas/foodSchema';
 
 const FoodModel = nutritionDb.model('Food', FoodSchema);
 
@@ -31,7 +31,7 @@ export default class FoodHandler implements IFood {
     Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
   }
 
-  save(): Promise<string> {
+  save() {
     return new FoodModel(this)
     .save()
     .then((result) => {
@@ -40,7 +40,7 @@ export default class FoodHandler implements IFood {
     })
     .catch((error) => {
       console.log('There was an error trying to insert new document.', error);
-      return error.toString();
+      return error;
     });
   }
 
@@ -57,7 +57,7 @@ export default class FoodHandler implements IFood {
     });
   }
   
-  static fetchByName(foodName) {
+  static fetchByName(foodName: string) {
     return FoodModel
     .findOne({name: foodName})
     .then((product) => {
@@ -69,7 +69,7 @@ export default class FoodHandler implements IFood {
     });
   }
 
-  static fetchById(id) {
+  static fetchById(id: string | ObjectId) {
     return FoodModel
     .findById(id)
     .then((product) => {
@@ -106,7 +106,7 @@ export default class FoodHandler implements IFood {
     });
   }
 
-  static deleteById(id) {
+  static deleteById(id: string | ObjectId) {
     return FoodModel
     .findByIdAndDelete(id)
     .then((response) => {
