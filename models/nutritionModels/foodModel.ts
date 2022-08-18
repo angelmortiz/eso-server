@@ -1,8 +1,8 @@
-import nutritionDb from '../../util/database/connection';
+import { nutritionDb } from '../../util/database/connection';
 import FoodSchema from '../../util/database/schemas/foodSchema';
 const FoodModel = nutritionDb.model('Food', FoodSchema);
 
-exports.FoodHandler = class FoodHandler {
+export default class FoodHandler {
   id: string;
   name: string;
   classification: string;

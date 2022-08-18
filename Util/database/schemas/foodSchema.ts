@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 //TODO: Add references to other schemas once they're added
@@ -24,7 +24,7 @@ const dietSubSchema = new Schema({
   }
 }, {_id: false});
 
-module.exports.FoodSchema = new Schema({
+export default new Schema({
   name: {
     type: String,
     required: true

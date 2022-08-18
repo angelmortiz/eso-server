@@ -1,11 +1,13 @@
-import ObjectId from 'mongodb';
+import { ObjectId } from 'mongodb';
+import { IdAndName, ConditionIdAndName, DietnIdAndName } from '../../util/types/nutritionTypes';
 import ChronicCondition from '../../models/nutritionModels/chronicConditionModel';
 import Diet from '../../models/nutritionModels/dietModel';
 import MenstrualCyclePhase from '../../models/general/menstrualCyclePhase';
 import FoodHandler from '../../models/nutritionModels/foodModel';
-let _foodNames = [];
-let _conditionNames = [];
-let _dietNames = [];
+
+let _foodNames: IdAndName[] = [];
+let _conditionNames: IdAndName[] = [];
+let _dietNames: IdAndName[] = [];
 
 /** RENDERS */
 exports.redirectToViewSelectFood = (req, res) => {
@@ -34,11 +36,11 @@ exports.getViewToSelectFood = (req, res) => {
 };
 
 exports.getViewOfSelectedFood = async (req, res) => {
-  const selectedFoodId = req.params.foodId;
+  const selectedFoodId: string = req.params.foodId;
   
   //Fetches the foodNames from db if names don't exist or if the current foodId doesn't exist in array
   //Note: This logic is needed to fetch the new food info once a new food has been added to the db
-  const index = _foodNames?.findIndex(f => f._id.toString() == selectedFoodId);
+  const index: number = _foodNames?.findIndex(f => f._id.toString() == selectedFoodId);
   (index > -1) ? await fetchFoodNames(false) : await fetchFoodNames(true);
 
   FoodHandler.fetchById(selectedFoodId)
@@ -82,7 +84,7 @@ exports.addFood = (req, res) => {
 };
 
 exports.updateFood = (req, res) => {
-  const foodId = req.params.foodId;
+  const foodId: string = req.params.foodId;
   let food = new FoodHandler(req.body);
   food.id = foodId;
   food = refactorValuesForDb(food);
@@ -98,13 +100,13 @@ exports.updateFood = (req, res) => {
 
 /** APIS */
 exports.apiDeleteFood = (req, res) => {
-  const foodId = req.params.foodId;
+  const foodId: string = req.params.foodId;
 
   FoodHandler.deleteById(foodId)
   .then( deleteResponse => {
     console.log('deleteResponse', deleteResponse);
     //removes the food from foods dropdown
-    const index = _foodNames?.findIndex(f => f._id.toString() == foodId);
+    const index: number = _foodNames?.findIndex(f => f._id.toString() == foodId);
     if (index > -1){
       _foodNames.splice(index, 1);
     }
@@ -165,14 +167,14 @@ let refactorChronicConditions = (selectedConditions) => {
     _conditionNames = ChronicCondition.chronicConditionsStaticValues.chronicConditions;
   }
 
-  let refactoredConditions = [];
+  let refactoredConditions: ConditionIdAndName[] = [];
   selectedConditions.forEach(conditionId => 
     {
       if (!conditionId) return; //skips empty selections
 
-      const conditionObject = {
+      const conditionObject: ConditionIdAndName = {
         conditionId: new ObjectId(conditionId),
-        conditionName: _conditionNames.find(c => c._id === conditionId)?.name
+        conditionName: _conditionNames.find(c => c._id === conditionId)?.name || 'Nombre no disponible'
       };
 
       refactoredConditions.push(conditionObject);
@@ -194,14 +196,14 @@ let refactorCompatibleWithDiets = (selectedDietsCompatible) => {
     _dietNames = Diet.compatibleWithDietsStaticValues.diets;
   }
 
-  let refactoredDiets = [];
+  let refactoredDiets: DietnIdAndName[] = [];
   selectedDietsCompatible.forEach(dietId => 
     {
       if (!dietId) return; //skips empty selections
 
-      const dietObject = {
+      const dietObject: DietnIdAndName = {
         dietId: new ObjectId(dietId),
-        dietName: _dietNames.find(c => c._id === dietId)?.name
+        dietName: _dietNames.find(c => c._id === dietId)?.name || 'Nombre no disponible'
       };
 
       refactoredDiets.push(dietObject);
