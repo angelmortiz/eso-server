@@ -2,7 +2,7 @@ import { ObjectId } from 'bson';
 import { IFood } from "../../util/interfaces/nutritionInterfaces";
 import { nutritionDb } from '../../util/database/connection';
 import { ConditionIdAndName, DietnIdAndName } from '../../util/types/nutritionTypes';
-import FoodSchema from '../../util/database/schemas/foodSchema';
+import FoodSchema from '../../util/database/schemas/nutrition/foodSchema';
 
 const FoodModel = nutritionDb.model('Food', FoodSchema);
 
