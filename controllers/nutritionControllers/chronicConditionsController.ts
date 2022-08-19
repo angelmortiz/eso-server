@@ -14,10 +14,25 @@ export const redirectToViewSelectedChronicCondition = (req: Request, res: Respon
   res.redirect(`/nutrition/chronicCondition/${req.body.selectedChronicCondition}`);
 }
 
-export const getViewToSelectedChronicCondition = (req: Request, res: Response) => {
-  res.render('./nutrition/view-chronicCondition', {
-    caller: 'view-chronicCondition',
-    pageTitle: 'Información de condición crónica',
+export const getViewToSelectedChronicCondition = async (req: Request, res: Response) => {
+  const selectedConditionId: string = req.params.conditionId;
+
+  //Fetches the conditionNames from db if names don't exist or if the current conditionId doesn't exist in array
+  //Note: This logic is needed to fetch the new condition info once a new condition has been added to the db
+  const index: number = _conditionNames?.findIndex(f => f._id.toString() == selectedConditionId);
+  (index > -1) ? await fetchConditionNames(false) : await fetchConditionNames(true);
+
+  ChronicConditionHandler.fetchById(selectedConditionId)
+  .then((selectedConditionInfo) => {
+    res.render('./nutrition/view-chronicCondition', {
+      caller: 'view-chronicCondition',
+      pageTitle: 'Información de condición',
+      conditionNames: _conditionNames,
+      selectedConditionInfo: selectedConditionInfo
+    });
+  })
+  .catch((err) => {
+    console.log(err);
   });
 };
 

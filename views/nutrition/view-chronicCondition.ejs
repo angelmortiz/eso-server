@@ -3,7 +3,7 @@
 
 <head>
     <%- include('../includes/head.ejs') %> 
-    <link rel="stylesheet" href="/css/nutrition/view-chronicCondition.css">
+    <link rel="stylesheet" href="/css/nutrition/chronicCondition.css">
 </head>
 
 <body>
@@ -16,51 +16,100 @@
                 <%= pageTitle %>:
             </h2>
         </div>
-        <div class="view-chronicCondition-template">
-            <ul class="view-chronicCondition-list">
-                <li class="view-chronicCondition-list__item">
-                    <span class="view-chronicCondition-list__name">ID:</span>
-                    <span class="view-chronicCondition-list__value">62d9ad342aeacf742c28839e</span>
-                </li>
-                <li class="view-chronicCondition-list__item">
-                    <span class="view-chronicCondition-list__name">Nombre:</span>
-                    <span class="view-chronicCondition-list__value">Diabetes tipo 2</span>
-                </li>
-                <li class="view-chronicCondition-list__item">
-                    <span class="view-chronicCondition-list__name">Descripción:</span>
-                    <span class="view-chronicCondition-list__value">Esto es una descripción corta a manera de ejemplo</span>
-                </li>
-                <li class="view-chronicCondition-list__item">
-                    <span class="view-chronicCondition-list__name">Síntomas:</span>
-                    <ul>
-                        <li>Síntoma 1</li>
-                        <li>Síntoma 2</li>
-                    </ul>
-                </li>
-                <li class="view-chronicCondition-list__item">
-                    <span class="view-chronicCondition-list__name">Causas:</span>
-                    <ul>
-                        <li>Causa 1</li>
-                        <li>Causa 2</li>
-                    </ul>
-                </li>
-                <li class="view-chronicCondition-list__item">
-                    <span class="view-chronicCondition-list__name">Tratamientos:</span>
-                    <ul>
-                        <li>Tratamiento 1</li>
-                        <li>Tratamiento 2</li>
-                    </ul>
-                </li>
-                <li class="view-chronicCondition-list__item">
-                    <span class="view-chronicCondition-list__name">Pruebas:</span>
-                    <ul>
-                        <li>Prueba 1</li>
-                        <li>Prueba 2</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </main>
-</body>
+        <section class="selection-creation">
+            <div class="select-dropdown">
+                <label for="select-chronicCondition" class="select-dropdown__title">Condición crónica:</label>
+                <form action="/nutrition/redirect-to-view-selected-chronicCondition" method="POST">
+                    <select name="selectedChronicCondition" id="select-chronic-condition-selection">
+                        <option value="">-- Elige --</option>
+                        <% conditionNames.forEach( condition=> { %>
+                            <option value="<%= condition._id %>"
+                                <%=selectedConditionInfo?._id?.toString() == condition._id ? 'selected' : '' %>
+                                >
+                                <%= condition.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button class="select__btn" type="submit">Mostrar</button>
+                </form>
+            </div>
+            <form action="/nutrition/add-chronicCondition" method="GET">
+                <button class="new__btn" type="submit">Nueva</button>
+            </form>
+        </section>
+        <form class="form" action="/nutrition/chronicCondition" method="POST">
+            <div class="form__control">
+                <!-- NAME -->
+                <div class="form__item">
+                    <label for="name" class="form__title">Nombre:</label>
+                    <input type="text" name="name" id="name"
+                    value="<%= selectedConditionInfo.name %>">
+                </div>
+                <!-- DESCRIPTION -->
+                <div class="form__item">
+                    <label for="description" class="form__title">Descripción:</label>
+                    <input type="text" name="description" id="description" 
+                    value="<%= selectedConditionInfo.description %>">
+                </div>
+                <!-- SYMPTOMS -->
+                <div class="form__item-rows">
+                    <label for="symptoms" class="form__title">Síntomas:</label>
+                    <div class="form__input-div" id="symptoms-input">
+                        <!-- Loop through symptoms associated to this condition -->
+                        <% selectedConditionInfo?.symptoms?.forEach( (symptom) => { %> 
+                            <input type="text" name="symptoms" id="symptoms"
+                            value="<%= symptom %>">
+                        <% });  %> 
+                        <!-- [END-Loop] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-symptom">Añadir síntoma</button>
+                </div>
+                <!-- CAUSES -->
+                <div class="form__item-rows">
+                    <label for="causes" class="form__title">Causas:</label>
+                    <div class="form__input-div" id="causes-input">
+                        <!-- Loop through causes associated to this condition -->
+                        <% selectedConditionInfo?.causes?.forEach( (cause) => { %> 
+                            <input type="text" name="causes" id="causes"
+                            value="<%= cause %>">
+                        <% });  %> 
+                        <!-- [END-Loop] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-cause">Añadir causa</button>
+                </div>
+                <!-- TREATMENTS -->
+                <div class="form__item-rows">
+                    <label for="treatments" class="form__title">Tratamientos:</label>
+                    <div class="form__input-div" id="treatments-input">
+                        <!-- Loop through treatments associated to this condition -->
+                        <% selectedConditionInfo?.treatments?.forEach( (treatment) => { %> 
+                            <input type="text" name="treatments" id="treatments"
+                            value="<%= treatment %>">
+                        <% });  %> 
+                        <!-- [END-Loop] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-treatment">Añadir tratamiento</button>
+                </div>
+                <!-- TESTS -->
+                <div class="form__item-rows">
+                    <label for="tests" class="form__title">Pruebas:</label>
+                    <div class="form__input-div" id="tests-input">
+                        <!-- Loop through tests associated to this condition -->
+                        <% selectedConditionInfo?.tests?.forEach( (test) => { %> 
+                            <input type="text" name="tests" id="tests"
+                            value="<%= test %>">
+                        <% });  %> 
+                        <!-- [END-Loop] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-test">Añadir prueba</button>
+                </div>
+            </div>
+            </div>
 
-</html>
+            <div class="form-btns__control">
+                <button class="update-form__btn" type="submit">Actualizar</button>
+                <button class="delete-form__btn" id="btn-delete-chronicCondition">Borrar</button>
+            </div>
+        </form>
+    </main>
+<%- include('../includes/end.ejs') %>

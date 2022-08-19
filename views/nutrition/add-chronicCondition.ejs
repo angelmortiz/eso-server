@@ -39,14 +39,17 @@
         </section>
         <form class="form" action="/nutrition/chronicCondition" method="POST">
             <div class="form__control">
+                <!-- NAME -->
                 <div class="form__item">
                     <label for="name" class="form__title">Nombre:</label>
                     <input type="text" name="name" id="name">
                 </div>
+                <!-- DESCRIPTION -->
                 <div class="form__item">
                     <label for="description" class="form__title">Descripción:</label>
                     <input type="text" name="description" id="description">
                 </div>
+                <!-- SYMPTOMS -->
                 <div class="form__item-rows">
                     <label for="symptoms" class="form__title">Síntomas:</label>
                     <div class="form__input-div" id="symptoms-input">
@@ -54,6 +57,7 @@
                     </div>
                     <button class="form__add-btn" id="btn-add-new-symptom">Añadir síntoma</button>
                 </div>
+                <!-- CAUSES -->
                 <div class="form__item-rows">
                     <label for="causes" class="form__title">Causas:</label>
                     <div class="form__input-div" id="causes-input">
@@ -61,6 +65,7 @@
                     </div>
                     <button class="form__add-btn" id="btn-add-new-cause">Añadir causa</button>
                 </div>
+                <!-- TREATMENTS -->
                 <div class="form__item-rows">
                     <label for="treatments" class="form__title">Tratamientos:</label>
                     <div class="form__input-div" id="treatments-input">
@@ -68,6 +73,7 @@
                     </div>
                     <button class="form__add-btn" id="btn-add-new-treatment">Añadir tratamiento</button>
                 </div>
+                <!-- TESTS -->
                 <div class="form__item-rows">
                     <label for="tests" class="form__title">Pruebas:</label>
                     <div class="form__input-div" id="tests-input">
