@@ -220,5 +220,25 @@ btnSafeForDiets?.addEventListener('click', (event) => {
     event.preventDefault();
     addSelectToDiv(diets, getChronicConditions, "safeForConditions", safeForCondtionsDiv);
 });
+
+//***** Delete [Button] */
+//elements
+const btnDeleteDiet = document.getElementById('btn-delete-diet');
+const selectedDiet = document.getElementById('select-diet-selection');
+const selectedDietName = selectedDiet?.options[selectedDiet.selectedIndex].text;
+const selectedDietId = selectedDiet?.options[selectedDiet.selectedIndex].value;
+const dietInfo = {
+    database: 'nutrition',
+    type: 'diet',
+    typeDisplay: 'dieta',
+    name: selectedDietName,
+    id: selectedDietId
+};
+
+//listeners
+btnDeleteDiet?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteDocument(dietInfo);
+});
 /** [END] SAFE FOR CONDITIONS **/
 /*** [END] CHRONIC CONDITION ***/

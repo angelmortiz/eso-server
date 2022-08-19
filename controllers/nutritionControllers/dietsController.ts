@@ -5,7 +5,6 @@ import ChronicConditionModel from '../../models/nutritionModels/chronicCondition
 import DietHandler from '../../models/nutritionModels/dietModel';
 import Diet from '../../models/nutritionModels/dietModel';
 
-
 let _dietNames: IdAndName[] = [];
 let _conditionNames: IdAndName[] = [];
 
@@ -79,6 +78,26 @@ export const updateDiet = (req: Request, res: Response) => {
 /** APIS */
 export const apiGetDiets = (req: Request, res: Response) => {
   res.json(Diet.compatibleWithDietsStaticValues.diets);
+};
+
+export const apiDeleteDiet = (req: Request, res: Response) => {
+  const dietId: string = req.params.dietId;
+
+  DietHandler.deleteById(dietId)
+  .then( deleteResponse => {
+    //removes the diet from diets dropdown
+    const index: number = _dietNames?.findIndex(f => f._id.toString() == dietId);
+    if (index > -1){
+      _dietNames.splice(index, 1);
+    }
+
+    console.log(`'${deleteResponse.name}' diet deleted successfully.`);
+
+    res.redirect(`/nutrition/diet/`);
+  })
+  .catch(err => {
+    console.log('Error while deleting Diet: ', err);
+  });
 };
 
 /*** FUNCTIONS */

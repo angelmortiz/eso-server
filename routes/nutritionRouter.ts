@@ -39,6 +39,7 @@ router.post('/update-diet/:dietId', dietsController.updateDiet);
 router.post('/redirect-to-view-selected-diet', dietsController.redirectToViewSelectedDiet);
 //APIs
 router.get('/diets', dietsController.apiGetDiets);
+router.delete('/diet/:dietId', dietsController.apiDeleteDiet);
 
 /* CHRONIC CONDITION */
 //Renders
