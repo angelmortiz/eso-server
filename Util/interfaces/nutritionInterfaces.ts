@@ -43,7 +43,7 @@ export interface IDiet {
     name: string;
     officialName: string;
     description: string;
-    safeForConditions: ConditionIdAndName;
+    safeForConditions: ConditionIdAndName[] | null;
 }
 
 export interface IChronicCondition {

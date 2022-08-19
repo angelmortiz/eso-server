@@ -3,7 +3,7 @@
 
 <head>
     <%- include('../includes/head.ejs') %> 
-    <link rel="stylesheet" href="/css/nutrition/view-diet.css">
+    <link rel="stylesheet" href="/css/nutrition/diet.css">
 </head>
 
 <body>
@@ -12,40 +12,71 @@
     </header>
     <main>
         <div class="page-title__div">
-            <h2 class="page-title">
-                <%= pageTitle %>:
-            </h2>
+            <h2 class="page-title"><%= pageTitle %>:</h2>
         </div>
-        <div class="view-diet-template">
-            <ul class="view-diet-list">
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">ID:</span>
-                    <span class="view-diet-list__value">62d9ad342aeacf742c28839e</span>
-                </li>
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">Nombre:</span>
-                    <span class="view-diet-list__value">Keto</span>
-                </li>
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">Nombre oficial:</span>
-                    <span class="view-diet-list__value">Dieta Cetogénica</span>
-                </li>
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">Descripción:</span>
-                    <span class="view-diet-list__value">Esto es una descripción corta a manera de ejemplo</span>
-                </li>
-                <li class="view-diet-list__item">
-                    <span class="view-diet-list__name">Seguro para condiciones:</span>
-                    <ul>
-                        <li>Diabetes tipo 1</li>
-                        <li>Diabetes tipo 2</li>
-                        <li>Enfermedades autoinmunes</li>
-                        <li>Sobrepeso/Obesidad</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+        <section class="selection-creation">
+            <div class="select-dropdown">
+                <label for="select-diet" class="select-dropdown__title">Comida:</label>
+                <form action="/nutrition/redirect-to-view-selected-diet" method="POST">
+                    <select name="selectedDiet" id="select-diet-selection">
+                        <option value="">-- Elige --</option>
+                        <% dietNames.forEach( diet=> { %>
+                            <option value="<%= diet._id %>"
+                                <%=selectedDietInfo?._id?.toString() == diet._id ? 'selected' : '' %>
+                                >
+                                <%= diet.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button class="select__btn" type="submit">Mostrar</button>
+                </form>
+            </div>
+            <form action="/nutrition/add-diet" method="GET">
+                <button class="new__btn" type="submit">Nueva</button>
+            </form>
+        </section>
+        <form class="form" action="/nutrition/update-diet/<%- selectedDietInfo._id %>" method="POST">
+            <div class="form__control">
+                <!-- NAME -->
+                <div class="form__item">
+                    <label for="name" class="form__title">Nombre:</label>
+                    <input type="text" name="name" id="name"  value="<%= selectedDietInfo.name %>">
+                </div>
+                <!-- OFFICIAL NAME -->
+                <div class="form__item">
+                    <label for="officialName" class="form__title">Nombre oficial:</label>
+                    <input type="text" name="officialName" id="officialName" value="<%= selectedDietInfo.officialName %>">
+                </div>
+                <!-- DESCRIPTION -->
+                <div class="form__item">
+                    <label for="description" class="form__title">Descripción:</label>
+                    <input type="text" name="description" id="description"  value="<%= selectedDietInfo.description %>">
+                </div>
+                <!-- SAFE FOR CONDITIONS -->
+                <div class="form__item-rows">
+                    <label for="safeForConditions" class="form__title">Seguro para condiciones:</label>
+                    <div class="form__selects-div" id="safeForConditions-selects">
+                        <!-- [Loop1] Loop through chronic conditions associated to curret diet -->
+                        <% selectedDietInfo?.safeForConditions?.forEach( (condition) => { %> 
+                            <select name="safeForConditions">
+                                <!-- [Loop2] Loop through all the chronic conditions options -->
+                                <% chronicConditions?.forEach( cc => { %>
+                                    <option value="<%= cc._id %>"
+                                        <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                        ><%= cc.name %></option>
+                                <% }); %>
+                                <!-- [END-Loop2] -->
+                            </select>
+                        <% });  %> 
+                    </div>
+                    <!-- [END-Loop1] -->
+                    <button class="form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
+                </div>
+            </div>
+            <div class="form-btns__control">
+                <button class="update-form__btn" type="submit">Actualizar</button>
+                <button class="delete-form__btn" id="btn-delete-diet">Borrar</button>
+            </div>
+        </form>
     </main>
-</body>
-
-</html>
+<%- include('../includes/end.ejs') %>

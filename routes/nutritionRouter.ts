@@ -3,7 +3,7 @@ import { Router } from 'express';
 const router = Router();
 
 //Controllers imports
-import * as foodController from '../controllers/nutritionControllers/foodsController';
+import * as foodsController from '../controllers/nutritionControllers/foodsController';
 import * as recipesController from '../controllers/nutritionControllers/recipesController';
 import * as dietsController from '../controllers/nutritionControllers/dietsController';
 import * as chronicConditionsController from '../controllers/nutritionControllers/chronicConditionsController';
@@ -11,16 +11,16 @@ import * as menstrualCyclePhasesController from '../controllers/general/menstrua
 
 /* FOOD */
 //Render Views
-router.get('/', foodController.redirectToViewAddFood); //defeault render for '/nutrition'
-router.get('/food', foodController.redirectToViewAddFood);
-router.get('/food/:foodId', foodController.getViewOfSelectedFood);
-router.get('/add-food', foodController.getViewToAddFood);
+router.get('/', foodsController.redirectToViewAddFood); //defeault render for '/nutrition'
+router.get('/food', foodsController.redirectToViewAddFood);
+router.get('/food/:foodId', foodsController.getViewOfSelectedFood);
+router.get('/add-food', foodsController.getViewToAddFood);
 //Actions
-router.post('/add-food', foodController.addFood);
-router.post('/update-food/:foodId', foodController.updateFood);
-router.post('/redirect-to-view-selected-food', foodController.redirectToViewSelectedFood);
+router.post('/add-food', foodsController.addFood);
+router.post('/update-food/:foodId', foodsController.updateFood);
+router.post('/redirect-to-view-selected-food', foodsController.redirectToViewSelectedFood);
 //APIs
-router.delete('/food/:foodId', foodController.apiDeleteFood);
+router.delete('/food/:foodId', foodsController.apiDeleteFood);
 
 
 /* RECIPE */
@@ -30,9 +30,13 @@ router.post('/recipe', recipesController.addRecipe);
 
 /* DIET */
 //Renders
-router.get('/diet', dietsController.getDiet);
+router.get('/diet', dietsController.getViewToAddDiet);
+router.get('/diet/:dietId', dietsController.getViewOfSelectedDiet);
 router.get('/add-diet', dietsController.getViewToAddDiet);
+//ACTIONS
 router.post('/diet', dietsController.addDiet);
+router.post('/update-diet/:dietId', dietsController.updateDiet);
+router.post('/redirect-to-view-selected-diet', dietsController.redirectToViewSelectedDiet);
 //APIs
 router.get('/diets', dietsController.apiGetDiets);
 

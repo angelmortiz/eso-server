@@ -11,7 +11,7 @@ export default class Diet implements IDiet {
     name: string;
     officialName: string;
     description: string;
-    safeForConditions: ConditionIdAndName;
+    safeForConditions: ConditionIdAndName[] | null;
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic

@@ -45,6 +45,14 @@ let deleteDocument = async (documentInfo) => {
     
     await sendDeleteCommand(documentInfo.database, documentInfo.type, documentInfo.id);
 };
+
+//********* GET CONDITIONS */
+let chronicConditions;
+let getChronicConditions = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/nutrition/chronicConditions`);
+    chronicConditions = await response.json();
+    return chronicConditions
+};
 //*** [END] GLOBAL
 
 /*** FOOD ***/
@@ -53,13 +61,6 @@ let deleteDocument = async (documentInfo) => {
 //elements
 const btnSafeForConditions = document.getElementById('btn-add-new-safe-condition');
 const safeForCondtionsDiv = document.getElementById('safeForConditions-selects');
-
-let chronicConditions;
-let getChronicConditions = async () => {
-    const response = await fetch(`${SERVER_ADDRESS}/nutrition/chronicConditions`);
-    chronicConditions = await response.json();
-    return chronicConditions
-};
 
 //listeners
 btnSafeForConditions?.addEventListener('click', (event) => { 
@@ -205,4 +206,19 @@ btnDeleteChronicCondition?.addEventListener('click', (event) => {
     event.preventDefault();
     deleteDocument(chronicConditionInfo);
 });
+/*** [END] CHRONIC CONDITION ***/
+
+/*** DIET ***/
+/**** Select Creators */
+/* SAFE FOR CONDITIONS */
+//elements
+const btnSafeForDiets = document.getElementById('btn-add-new-safe-diet');
+const safeForDietsDiv = document.getElementById('safeForDiets-selects');
+
+//listeners
+btnSafeForDiets?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addSelectToDiv(diets, getChronicConditions, "safeForConditions", safeForCondtionsDiv);
+});
+/** [END] SAFE FOR CONDITIONS **/
 /*** [END] CHRONIC CONDITION ***/
