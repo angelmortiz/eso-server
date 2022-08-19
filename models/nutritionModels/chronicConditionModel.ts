@@ -1,9 +1,11 @@
 import { ObjectId } from 'bson';
+import { nutritionDb } from '../../util/database/connection';
 import { IChronicCondition } from '../../util/interfaces/nutritionInterfaces';
+import ChronicConditionSchema from '../../util/database/schemas/nutrition/chronicConditionSchema';
 
-const chronicConditions: IChronicCondition[] = [];
+const ChronicConditionModel = nutritionDb.model('ChronicCondition', ChronicConditionSchema);
 
-export default class ChronicCondition implements IChronicCondition {
+export default class ChronicConditionHandler implements IChronicCondition {
     id: ObjectId | string;
     name: string;
     description: string;
@@ -16,31 +18,84 @@ export default class ChronicCondition implements IChronicCondition {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
         this.mapValues(inputValues);
     }
-
-    save() {
-        chronicConditions.push(this);
-    }
-
+    
     mapValues(inputValues){
         Object.keys(inputValues).map(key => this[key] = inputValues[key]);
     }
 
-    static fetchByName(name) {
-        return chronicConditions.find(f => f.name === name);
+    save() {
+        return new ChronicConditionModel(this)
+        .save()
+        .then((response) => {
+            console.log('New document inserted successfully.');
+            return response._id.toString();
+        })
+        .catch((error) => {
+            console.log('There was an error trying to insert new document.', error);
+            return error;
+        });
     }
 
-    static fetchById(id) {
-        return chronicConditions.find(f => f.id === id);
+    static fetchByName(name: string) {
+        return ChronicConditionModel
+        .findOne({name: name})
+        .then((response) => {
+        return response;
+        })
+        .catch((error) => {
+        console.log(error);
+        return error;
+        });
+    }
+
+    static fetchById(id: string | ObjectId) {
+        return ChronicConditionModel
+        .findById(id)
+        .then((response) => {
+        return response;
+        })
+        .catch((error) => {
+        console.log(error);
+        return error;
+        });
     }
 
     static fetchAll() {
-        return chronicConditions;
+        return ChronicConditionModel
+        .find()
+        .then((responses) => {
+        return responses;
+        })
+        .catch((error) => {
+        console.log(error);
+        return error;
+        });
     }
 
     //extracts id and name properties and creates a new object with {id, name}
     static fetchAllNames()  {
-        return chronicConditions.map(f => ({id: f.id, name: f.name}));
+        return ChronicConditionModel
+        .find({}, 'name')
+        .then((responses) => {
+          return responses;
+        })
+        .catch((error) => {
+          console.log(error);
+          return error;
+        });
     }
+
+    static deleteById(id: string | ObjectId) {
+        return ChronicConditionModel
+        .findByIdAndDelete(id)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          console.log(error);
+          return error;
+        });
+      }
 
     static chronicConditionsStaticValues = {
         //TODO: DELETE ME AND FETCH FROM DB

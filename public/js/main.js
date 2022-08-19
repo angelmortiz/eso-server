@@ -2,6 +2,7 @@
 const SERVER_ADDRESS = "http://localhost:3000/api";
 
 //********* Add New [Buttons] */
+//SELECT
 let addSelectToDiv = async (selectOptions, getOptionsFunc, selectName, divNode) => {
     //gets options from server
     if (!selectOptions) { 
@@ -19,6 +20,23 @@ let addSelectToDiv = async (selectOptions, getOptionsFunc, selectName, divNode) 
         selectNode.appendChild(option);
     });
 }
+
+//********* DELETE ACTIONS */
+let showDeleteConfirmation = (typeDisplay, name) => {
+    return confirm(`¿Seguro que deseas borrar el/la ${typeDisplay} '${name}'?`);
+}
+
+let sendDeleteCommand = async (database, type, id) => {
+     const response = await fetch(`${SERVER_ADDRESS}/${database}/${type}/${id}`, {method: 'DELETE'});
+     window.location.href = response.url;
+};
+
+let deleteDocument = async (documentInfo) => {
+    const isConfirmed = showDeleteConfirmation(documentInfo.typeDisplay, documentInfo.name);
+    if (!isConfirmed) return;
+    
+    await sendDeleteCommand(documentInfo.database, documentInfo.type, documentInfo.id);
+};
 //*** [END] GLOBAL
 
 /** SAFE FOR CONDITIONS **/
@@ -97,28 +115,41 @@ btnMenstrualCyclePhase?.addEventListener('click', (event) => {
 //elements
 const btnDeleteFood = document.getElementById('btn-delete-food');
 const selectedFood = document.getElementById('select-food-selection');
-const selectedFoodName = selectedFood.options[selectedFood.selectedIndex].text;
-const selectedFoodId = selectedFood.options[selectedFood.selectedIndex].value;
-
-let showDeleteConfirmation = (name) => {
-    return confirm(`¿Seguro que deseas borrar la comida '${name}'?`);
-}
-
-let sendDeleteCommand = async () => {
-     const response = await fetch(`${SERVER_ADDRESS}/nutrition/food/${selectedFoodId}`, {method: 'DELETE'});
-     window.location.href = response.url;
-};
-
-let deleteFood = async () => {
-    const isDelete = showDeleteConfirmation(selectedFoodName);
-    if (!isDelete) return;
-    
-    await sendDeleteCommand();
+const selectedFoodName = selectedFood?.options[selectedFood.selectedIndex].text;
+const selectedFoodId = selectedFood?.options[selectedFood.selectedIndex].value;
+const foodInfo = {
+    database: 'nutrition',
+    type: 'food',
+    typeDisplay: 'comida',
+    name: selectedFoodName,
+    id: selectedFoodId
 };
 
 //listeners
 btnDeleteFood?.addEventListener('click', (event) => { 
     event.preventDefault();
-    deleteFood();
+    deleteDocument(foodInfo);
+});
+/** [END] FOOD **/
+
+/** CHRONIC CONDITION **/
+//********* Delete [Button] */
+//elements
+const btnDeleteChronicCondition = document.getElementById('btn-delete-chronicCondition');
+const selectedChronicCondition = document.getElementById('select-chronicCondition-selection');
+const selectedChronicConditionName = selectedChronicCondition?.options[selectedChronicCondition.selectedIndex].text;
+const selectedChronicConditionId = selectedChronicCondition?.options[selectedChronicCondition.selectedIndex].value;
+const chronicConditionInfo = {
+    database: 'nutrition',
+    type: 'chronicCondition',
+    typeDisplay: 'condición crónica',
+    name: selectedChronicConditionName,
+    id: selectedChronicConditionId
+};
+
+//listeners
+btnDeleteChronicCondition?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteDocument(chronicConditionInfo);
 });
 /** [END] FOOD **/

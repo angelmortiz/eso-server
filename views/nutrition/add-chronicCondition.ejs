@@ -3,7 +3,7 @@
 
 <head>
     <%- include('../includes/head.ejs') %> 
-    <link rel="stylesheet" href="/css/nutrition/add-chronicCondition.css">
+    <link rel="stylesheet" href="/css/nutrition/chronicCondition.css">
 </head>
 
 <body>
@@ -12,55 +12,75 @@
     </header>
     <main>
         <div class="page-title__div">
-            <h2 class="page-title"><%= pageTitle %>:</h2>
+            <h2 class="page-title">
+                <%= pageTitle %>:
+            </h2>
         </div>
-        <form class="add-chronicCondition-form" action="/nutrition/chronicCondition" method="POST">
-            <div class="add-chronicCondition-form__control">
-                <div class="add-chronicCondition-form__item">
-                    <label for="name" class="add-chronicCondition-form__title">Nombre:</label>
+        <section class="selection-creation">
+            <div class="select-dropdown">
+                <label for="select-chronicCondition" class="select-dropdown__title">Condición crónica:</label>
+                <form action="/nutrition/redirect-to-view-selected-chronicCondition" method="POST">
+                    <select name="selectedChronicCondition" id="select-chronic-condition-selection">
+                        <option value="">-- Elige --</option>
+                        <% conditionNames.forEach( condition=> { %>
+                            <option value="<%= condition._id %>"
+                                <%=selectedConditionInfo?._id?.toString() == condition._id ? 'selected' : '' %>
+                                >
+                                <%= condition.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button class="select__btn" type="submit">Mostrar</button>
+                </form>
+            </div>
+            <form action="/nutrition/add-chronicCondition" method="GET">
+                <button class="new__btn" type="submit">Nueva</button>
+            </form>
+        </section>
+        <form class="form" action="/nutrition/chronicCondition" method="POST">
+            <div class="form__control">
+                <div class="form__item">
+                    <label for="name" class="form__title">Nombre:</label>
                     <input type="text" name="name" id="name">
                 </div>
-                <div class="add-chronicCondition-form__item">
-                    <label for="description" class="add-chronicCondition-form__title">Descripción:</label>
+                <div class="form__item">
+                    <label for="description" class="form__title">Descripción:</label>
                     <input type="text" name="description" id="description">
                 </div>
-                
-                <div class="add-chronicCondition-form__item">
-                    <label for="symptoms" class="add-chronicCondition-form__title">Síntomas:</label>
-                    <select name="symptoms" id="symptoms-selection">
-                        <option value="sim1">Dolor de espalda</option>
-                        <option value="sim2">Dolor en las rodillas</option>
-                    </select>
+                <div class="form__item-rows">
+                    <label for="symptoms" class="form__title">Síntomas:</label>
+                    <div class="form__input-div" id="symptoms-input">
+                        <input type="text" name="symptoms" id="symptoms">
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-symptom">Añadir síntoma</button>
                 </div>
-                <div class="add-chronicCondition-form__item">
-                    <label for="causes" class="add-chronicCondition-form__title">Causas:</label>
-                    <select name="causes" id="causes-selection">
-                        <option value="sim1">Mala postura</option>
-                        <option value="sim2">Inflexibilidad</option>
-                    </select>
+                <div class="form__item-rows">
+                    <label for="causes" class="form__title">Causas:</label>
+                    <div class="form__input-div" id="causes-input">
+                        <input type="text" name="causes" id="causes">
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-cause">Añadir causa</button>
                 </div>
-                <div class="add-chronicCondition-form__item">
-                    <label for="treatments" class="add-chronicCondition-form__title">Tratamientos:</label>
-                    <select name="treatments" id="treatments-selection">
-                        <option value="sim1">Estiramientos</option>
-                        <option value="sim2">Ejercicios de movilidad</option>
-                    </select>
+                <div class="form__item-rows">
+                    <label for="treatments" class="form__title">Tratamientos:</label>
+                    <div class="form__input-div" id="treatments-input">
+                        <input type="text" name="treatments" id="treatments">
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-treatment">Añadir tratamiento</button>
                 </div>
-                <div class="add-chronicCondition-form__item">
-                    <label for="tests" class="add-chronicCondition-form__title">Pruebas:</label>
-                    <select name="tests" id="tests-selection">
-                        <option value="pub1">Prueba 1</option>
-                        <option value="pub2">Prueba 2</option>
-                    </select>
+                <div class="form__item-rows">
+                    <label for="tests" class="form__title">Pruebas:</label>
+                    <div class="form__input-div" id="tests-input">
+                        <input type="text" name="tests" id="tests">
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-test">Añadir pruebas</button>
                 </div>
             </div>
             </div>
 
-            <div class="add-chronicCondition-form__btn-control">
-                <button class="add-chronicCondition-form__btn" type="submit">Add</button>
+            <div class="form-btns__control">
+                <button class="form__btn"  type="submit" id="add-chronicCondition-form-btn">Añadir</button>
             </div>
         </form>
     </main>
-</body>
-
-</html>
+<%- include('../includes/end.ejs') %>

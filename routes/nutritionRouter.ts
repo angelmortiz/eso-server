@@ -38,9 +38,13 @@ router.get('/diets', dietsController.apiGetDiets);
 
 /* CHRONIC CONDITION */
 //Renders
-router.get('/chronicCondition', chronicConditionsController.getChronicConditions);
-router.get('/add-chronicCondition', chronicConditionsController.getAddChronicConditions);
+router.get('/chronicCondition', chronicConditionsController.getViewToAddChronicCondition);
+router.get('/chronicCondition/:conditionId', chronicConditionsController.getViewToSelectedChronicCondition);
+router.get('/add-chronicCondition', chronicConditionsController.getViewToAddChronicCondition);
+//Actions
 router.post('/chronicCondition', chronicConditionsController.addChronicCondition);
+//router.post('/update-chronicCondition/:chronicConditionId', chronicConditionsController.updateChronicCondition);
+router.post('/redirect-to-view-selected-chronicCondition', chronicConditionsController.redirectToViewSelectedChronicCondition);
 //APIs
 router.get('/chronicConditions', chronicConditionsController.apiGetChronicConditions);
 

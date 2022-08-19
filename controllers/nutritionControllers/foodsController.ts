@@ -108,6 +108,7 @@ let fetchFoodNames = async (forceFetch = false) => {
   //Fetches the foodNames from db only when foodNames is not available or when forced
   //Note: This is forced to fetch when a new value has been added to the database
   if (forceFetch || !_foodNames || _foodNames.length === 0) {
+    console.log('Run');
     await FoodHandler.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
   }
 };

@@ -57,11 +57,11 @@ export default class FoodHandler implements IFood {
     });
   }
   
-  static fetchByName(foodName: string) {
+  static fetchByName(name: string) {
     return FoodModel
-    .findOne({name: foodName})
-    .then((product) => {
-      return product;
+    .findOne({name: name})
+    .then((response) => {
+      return response;
     })
     .catch((error) => {
       console.log(error);
@@ -72,8 +72,8 @@ export default class FoodHandler implements IFood {
   static fetchById(id: string | ObjectId) {
     return FoodModel
     .findById(id)
-    .then((product) => {
-      return product;
+    .then((response) => {
+      return response;
     })
     .catch((error) => {
       console.log(error);
@@ -84,8 +84,8 @@ export default class FoodHandler implements IFood {
   static fetchAll() {
     return FoodModel
     .find()
-    .then((products) => {
-      return products;
+    .then((responses) => {
+      return responses;
     })
     .catch((error) => {
       console.log(error);
@@ -97,8 +97,8 @@ export default class FoodHandler implements IFood {
   static fetchAllNames() {
     return FoodModel
     .find({}, 'name')
-    .then((products) => {
-      return products;
+    .then((responses) => {
+      return responses;
     })
     .catch((error) => {
       console.log(error);

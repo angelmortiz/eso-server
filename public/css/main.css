@@ -10,7 +10,7 @@ main {
     justify-content: center;
 }
 
-select {
+select, input {
     background-color: white;
 }
 
@@ -147,7 +147,8 @@ select {
 }
 
 .form__item select,
-.form__item-rows select {
+.form__item-rows select,
+.form__item-rows input {
     border: 1px solid #007E86;
     font: inherit;
     border-radius: 5px;
@@ -159,14 +160,14 @@ select {
     margin: 0 0 1rem 0;
 }
 
-.form__item-rows label {
-    margin: 0 0 0.5rem 0;
-}
-.form__item-rows select {
+.form__item-rows label,
+.form__item-rows select,
+.form__item-rows input {
     margin: 0 0 0.5rem 0;
 }
 
-.form__selects-div {
+.form__selects-div,
+.form__input-div {
     display: grid;
 }
 
