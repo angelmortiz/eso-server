@@ -43,7 +43,7 @@ router.get('/chronicCondition/:conditionId', chronicConditionsController.getView
 router.get('/add-chronicCondition', chronicConditionsController.getViewToAddChronicCondition);
 //Actions
 router.post('/chronicCondition', chronicConditionsController.addChronicCondition);
-//router.post('/update-chronicCondition/:chronicConditionId', chronicConditionsController.updateChronicCondition);
+router.post('/update-chronicCondition/:chronicConditionId', chronicConditionsController.updateChronicCondition);
 router.post('/redirect-to-view-selected-chronicCondition', chronicConditionsController.redirectToViewSelectedChronicCondition);
 //APIs
 router.get('/chronicConditions', chronicConditionsController.apiGetChronicConditions);

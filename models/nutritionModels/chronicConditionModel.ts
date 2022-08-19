@@ -36,6 +36,19 @@ export default class ChronicConditionHandler implements IChronicCondition {
         });
     }
 
+    update() {
+      return ChronicConditionModel
+      .updateOne({_id: this.id}, this)
+      .then((result) => {
+        console.log('Document updated successfully.', result);
+        return result;
+      })
+      .catch((error) => {
+        console.log('There was an error trying to update the document.', error);
+        return error;
+      });
+    }
+
     static fetchByName(name: string) {
         return ChronicConditionModel
         .findOne({name: name})

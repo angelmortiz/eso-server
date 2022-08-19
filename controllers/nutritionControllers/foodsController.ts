@@ -104,16 +104,15 @@ export const apiDeleteFood = (req: Request, res: Response) => {
 };
 
 /*** FUNCTIONS */
-let fetchFoodNames = async (forceFetch = false) => {
+const fetchFoodNames = async (forceFetch = false) => {
   //Fetches the foodNames from db only when foodNames is not available or when forced
   //Note: This is forced to fetch when a new value has been added to the database
   if (forceFetch || !_foodNames || _foodNames.length === 0) {
-    console.log('Run');
     await FoodHandler.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
   }
 };
 
-let refactorValuesForDb = (food: FoodHandler) => {
+const refactorValuesForDb = (food: FoodHandler) => {
   food = refactorMealTypeValues(food);
   food.safeForConditions = refactorChronicConditions(food.safeForConditions);
   food.notRecommendedForConditions = refactorChronicConditions(food.notRecommendedForConditions);
@@ -122,7 +121,7 @@ let refactorValuesForDb = (food: FoodHandler) => {
   return food;
 };
 
-let refactorMealTypeValues = (food) => {
+const refactorMealTypeValues = (food) => {
   food.mealType = [];
 
   if (food.breakfast) {
@@ -141,7 +140,7 @@ let refactorMealTypeValues = (food) => {
   return food;
 };
 
-let refactorChronicConditions = (selectedConditions) => {
+const refactorChronicConditions = (selectedConditions) => {
   if (!selectedConditions){ return null; }
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -170,7 +169,7 @@ let refactorChronicConditions = (selectedConditions) => {
   return refactoredConditions;
 };
 
-let refactorCompatibleWithDiets = (selectedDietsCompatible) => {
+const refactorCompatibleWithDiets = (selectedDietsCompatible) => {
   if (!selectedDietsCompatible) {return null;}
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -200,7 +199,7 @@ let refactorCompatibleWithDiets = (selectedDietsCompatible) => {
 
 };
 
-let refactorCyclePhases = (selectedPhases) => {
+const refactorCyclePhases = (selectedPhases) => {
   if (!selectedPhases) { return null; }
 
   //Handles cases when the user only chooses one option and form returns a string

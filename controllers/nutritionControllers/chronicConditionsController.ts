@@ -59,16 +59,40 @@ export const apiGetChronicConditions = (req: Request, res: Response) => {
   res.json(ChronicCondition.chronicConditionsStaticValues.chronicConditions);
 };
 
+export const updateChronicCondition = (req: Request, res: Response) => {
+  const chronicConditionId: string = req.params.chronicConditionId;
+  let chronicCondition = new ChronicConditionHandler(req.body);
+  chronicCondition.id = chronicConditionId;
+  chronicCondition = refactorValuesForDb(chronicCondition);
+
+  chronicCondition.update()
+  .then(() => {
+    res.redirect(`/nutrition/chronicCondition/${chronicConditionId}`);
+  })
+  .catch((err) => {
+    console.log('Error while inserting document to db', err);
+  });
+};
+
 /*** FUNCTIONS */
 let fetchConditionNames = async (forceFetch = false) => {
   //Fetches the conditionNames from db only when conditionNames is not available or when forced
   //Note: This is forced to fetch when a new value has been added to the database
   if (forceFetch || !_conditionNames || _conditionNames.length === 0) {
     // await ChronicConditionHandler.fetchAllNames().then((conditionNames) => { _conditionNames = conditionNames});
-    await ChronicConditionHandler.fetchAllNames().then((conditionNames) => { 
-      
-      console.log(`conditionNames`, conditionNames);
-      _conditionNames = conditionNames;
-    });
+    await ChronicConditionHandler.fetchAllNames().then((conditionNames) => { _conditionNames = conditionNames });
   }
 };
+
+const refactorValuesForDb = (condition: ChronicConditionHandler): ChronicConditionHandler => {
+  condition.symptoms = removeEmptyValues(condition.symptoms);
+  condition.causes = removeEmptyValues(condition.causes);
+  condition.treatments = removeEmptyValues(condition.treatments);
+  condition.tests = removeEmptyValues(condition.tests);
+  return condition;
+};
+
+const removeEmptyValues = (values: string[]): string[] => {
+    //removes all empty options if necessary.
+    return values.filter(v => v);
+}
