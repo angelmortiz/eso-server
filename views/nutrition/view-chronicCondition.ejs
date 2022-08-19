@@ -20,7 +20,7 @@
             <div class="select-dropdown">
                 <label for="select-chronicCondition" class="select-dropdown__title">Condición crónica:</label>
                 <form action="/nutrition/redirect-to-view-selected-chronicCondition" method="POST">
-                    <select name="selectedChronicCondition" id="select-chronic-condition-selection">
+                    <select name="selectedChronicCondition" id="select-chronicCondition-selection">
                         <option value="">-- Elige --</option>
                         <% conditionNames.forEach( condition=> { %>
                             <option value="<%= condition._id %>"

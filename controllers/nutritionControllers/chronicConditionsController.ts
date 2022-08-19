@@ -55,10 +55,6 @@ export const addChronicCondition = (req: Request, res: Response) => {
   chronicConditionHandler.save().then( id => res.redirect(`/nutrition/chronicCondition/${id}`) );
 };
 
-export const apiGetChronicConditions = (req: Request, res: Response) => {
-  res.json(ChronicCondition.chronicConditionsStaticValues.chronicConditions);
-};
-
 export const updateChronicCondition = (req: Request, res: Response) => {
   const chronicConditionId: string = req.params.chronicConditionId;
   let chronicCondition = new ChronicConditionHandler(req.body);
@@ -71,6 +67,31 @@ export const updateChronicCondition = (req: Request, res: Response) => {
   })
   .catch((err) => {
     console.log('Error while inserting document to db', err);
+  });
+};
+
+/** APIS */
+export const apiGetChronicConditions = (req: Request, res: Response) => {
+  res.json(ChronicCondition.chronicConditionsStaticValues.chronicConditions);
+};
+
+export const apiDeleteChronicCondition = (req: Request, res: Response) => {
+  const chronicConditionId: string = req.params.chronicConditionId;
+
+  ChronicConditionHandler.deleteById(chronicConditionId)
+  .then( deleteResponse => {
+    //removes the chronicCondition from chronicConditions dropdown
+    const index: number = _conditionNames?.findIndex(f => f._id.toString() == chronicConditionId);
+    if (index > -1){
+      _conditionNames.splice(index, 1);
+    }
+
+    console.log(`'${deleteResponse.name}' chronic condition deleted successfully.`);
+
+    res.redirect(`/nutrition/chronicCondition/`);
+  })
+  .catch(err => {
+    console.log('Error while deleting ChronicCondition: ', err);
   });
 };
 

@@ -47,6 +47,7 @@ router.post('/update-chronicCondition/:chronicConditionId', chronicConditionsCon
 router.post('/redirect-to-view-selected-chronicCondition', chronicConditionsController.redirectToViewSelectedChronicCondition);
 //APIs
 router.get('/chronicConditions', chronicConditionsController.apiGetChronicConditions);
+router.delete('/chronicCondition/:chronicConditionId', chronicConditionsController.apiDeleteChronicCondition);
 
 /* MENSTRUAL CYCLE PHASES */
 //APIs
