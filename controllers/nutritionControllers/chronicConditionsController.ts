@@ -49,9 +49,7 @@ export const getViewToAddChronicCondition = async (req: Request, res: Response) 
 };
 
 export const addChronicCondition = (req: Request, res: Response) => {
-  let chronicConditionHandler = new ChronicConditionHandler(req.body);
-
-  console.log('chronicConditionHandler', chronicConditionHandler);
+  const chronicConditionHandler = new ChronicConditionHandler(req.body);
   chronicConditionHandler.save().then( id => res.redirect(`/nutrition/chronicCondition/${id}`) );
 };
 
@@ -96,7 +94,7 @@ export const apiDeleteChronicCondition = (req: Request, res: Response) => {
 };
 
 /*** FUNCTIONS */
-let fetchConditionNames = async (forceFetch = false) => {
+const fetchConditionNames = async (forceFetch = false) => {
   //Fetches the conditionNames from db only when conditionNames is not available or when forced
   //Note: This is forced to fetch when a new value has been added to the database
   if (forceFetch || !_conditionNames || _conditionNames.length === 0) {
@@ -114,6 +112,14 @@ const refactorValuesForDb = (condition: ChronicConditionHandler): ChronicConditi
 };
 
 const removeEmptyValues = (values: string[]): string[] => {
-    //removes all empty options if necessary.
-    return values.filter(v => v);
+  if (!values) return [];
+
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(values) === 'string')
+  {
+    values = [values];
+  }
+
+  //removes all empty options if necessary.
+  return values.filter(v => v);
 }
