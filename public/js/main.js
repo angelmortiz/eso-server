@@ -21,6 +21,14 @@ let addSelectToDiv = async (selectOptions, getOptionsFunc, selectName, divNode) 
     });
 }
 
+//INPUT
+let addInputToDiv = async (inputName, divNode) => {
+    //creates new input element and adds it to the DOM
+    const inputNode = document.createElement("input");
+    inputNode.name = inputName;
+    divNode.appendChild(inputNode);
+}
+
 //********* DELETE ACTIONS */
 let showDeleteConfirmation = (typeDisplay, name) => {
     return confirm(`¿Seguro que deseas borrar el/la ${typeDisplay} '${name}'?`);
@@ -39,7 +47,9 @@ let deleteDocument = async (documentInfo) => {
 };
 //*** [END] GLOBAL
 
-/** SAFE FOR CONDITIONS **/
+/*** FOOD ***/
+/**** Select Creators */
+/* SAFE FOR CONDITIONS */
 //elements
 const btnSafeForConditions = document.getElementById('btn-add-new-safe-condition');
 const safeForCondtionsDiv = document.getElementById('safeForConditions-selects');
@@ -58,7 +68,7 @@ btnSafeForConditions?.addEventListener('click', (event) => {
 });
 /** [END] SAFE FOR CONDITIONS **/
 
-/** NOT RECOMMENDED FOR CONDITIONS **/
+/* NOT RECOMMENDED FOR CONDITIONS */
 //elements
 const btnNotRecommendedForConditions = document.getElementById('btn-add-new-not-recommended-condition');
 const notRecommendedForCondtionsDiv = document.getElementById('notRecommendedForConditions-selects');
@@ -70,7 +80,7 @@ btnNotRecommendedForConditions?.addEventListener('click', (event) => {
 });
 /** [END] NOT RECOMMENDED CONDITIONS **/
 
-/** DIET COMPATIBLE **/
+/* DIET COMPATIBLE */
 //elements
 const btnCompatibleWithDiets = document.getElementById('btn-add-new-diet');
 const compatibleWithDietsDiv = document.getElementById('compatibleWithDiets-selects');
@@ -90,7 +100,7 @@ btnCompatibleWithDiets?.addEventListener('click', (event) => {
 });
 /** [END] DIET COMPATIBLE **/
 
-/** MENSTRUAL PHASES **/
+/* MENSTRUAL PHASES */
 //elements
 const btnMenstrualCyclePhase = document.getElementById('btn-add-new-phase');
 const menstrualCyclePhaseDiv = document.getElementById('menstrualCyclePhases-selects');
@@ -108,9 +118,7 @@ btnMenstrualCyclePhase?.addEventListener('click', (event) => {
     event.preventDefault();
     addSelectToDiv(phases, getPhases, "recommendedForCyclePhases", menstrualCyclePhaseDiv);
 });
-/** [END] MENSTRUAL PHASES **/
 
-/** FOOD **/
 //********* Delete [Button] */
 //elements
 const btnDeleteFood = document.getElementById('btn-delete-food');
@@ -130,10 +138,55 @@ btnDeleteFood?.addEventListener('click', (event) => {
     event.preventDefault();
     deleteDocument(foodInfo);
 });
-/** [END] FOOD **/
+/*** [END] FOOD ***/
 
-/** CHRONIC CONDITION **/
-//********* Delete [Button] */
+/*** CHRONIC CONDITION ***/
+/**** Input Creators */
+/** SYMPTOMS */
+//elements
+const btnAddNewSymptom = document.getElementById('btn-add-new-symptom');
+const symptomDiv = document.getElementById('symptoms-input');
+
+//listeners
+btnAddNewSymptom?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addInputToDiv("symptoms", symptomDiv);
+});
+
+/** CAUSES */
+//elements
+const btnAddNewCauses = document.getElementById('btn-add-new-cause');
+const causesDiv = document.getElementById('causes-input');
+
+//listeners
+btnAddNewCauses?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addInputToDiv("causes", causesDiv);
+});
+
+/** TREATMENTS */
+//elements
+const btnAddNewTreatments = document.getElementById('btn-add-new-treatment');
+const treatmentsDiv = document.getElementById('treatments-input');
+
+//listeners
+btnAddNewTreatments?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addInputToDiv("treatments", treatmentsDiv);
+});
+
+/** TESTS */
+//elements
+const btnAddNewTests = document.getElementById('btn-add-new-test');
+const testsDiv = document.getElementById('tests-input');
+
+//listeners
+btnAddNewTests?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addInputToDiv("tests", testsDiv);
+});
+
+//***** Delete [Button] */
 //elements
 const btnDeleteChronicCondition = document.getElementById('btn-delete-chronicCondition');
 const selectedChronicCondition = document.getElementById('select-chronicCondition-selection');
@@ -152,4 +205,4 @@ btnDeleteChronicCondition?.addEventListener('click', (event) => {
     event.preventDefault();
     deleteDocument(chronicConditionInfo);
 });
-/** [END] FOOD **/
+/*** [END] CHRONIC CONDITION ***/
