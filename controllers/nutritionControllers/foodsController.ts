@@ -61,6 +61,7 @@ export const getViewToAddFood = async (req: Request, res: Response) => {
   });
 };
 
+/** ACTIONS */
 export const addFood = (req: Request, res: Response) => {
   let foodHandler = new FoodHandler(req.body);
   foodHandler = refactorValuesForDb(foodHandler);

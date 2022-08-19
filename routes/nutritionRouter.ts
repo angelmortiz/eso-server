@@ -31,7 +31,7 @@ router.post('/recipe', recipesController.addRecipe);
 /* DIET */
 //Renders
 router.get('/diet', dietsController.getDiet);
-router.get('/add-diet', dietsController.getAddDiet);
+router.get('/add-diet', dietsController.getViewToAddDiet);
 router.post('/diet', dietsController.addDiet);
 //APIs
 router.get('/diets', dietsController.apiGetDiets);

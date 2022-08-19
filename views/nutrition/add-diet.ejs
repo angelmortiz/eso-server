@@ -3,7 +3,7 @@
 
 <head>
     <%- include('../includes/head.ejs') %> 
-    <link rel="stylesheet" href="/css/nutrition/add-diet.css">
+    <link rel="stylesheet" href="/css/nutrition/diet.css">
 </head>
 
 <body>
@@ -14,31 +14,61 @@
         <div class="page-title__div">
             <h2 class="page-title"><%= pageTitle %>:</h2>
         </div>
-        <form class="add-diet-form" action="/nutrition/diet" method="POST">
-            <div class="add-diet-form__control">
-                <div class="add-diet-form__item">
-                    <label for="name" class="add-diet-form__title">Nombre:</label>
+        <section class="selection-creation">
+            <div class="select-dropdown">
+                <label for="select-diet" class="select-dropdown__title">Comida:</label>
+                <form action="/nutrition/redirect-to-view-selected-diet" method="POST">
+                    <select name="selectedDiet" id="select-diet-selection">
+                        <option value="">-- Elige --</option>
+                        <% dietNames.forEach( diet=> { %>
+                            <option value="<%= diet._id %>"
+                                <%=selectedDietInfo?._id?.toString() == diet._id ? 'selected' : '' %>
+                                >
+                                <%= diet.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button class="select__btn" type="submit">Mostrar</button>
+                </form>
+            </div>
+            <form action="/nutrition/add-diet" method="GET">
+                <button class="new__btn" type="submit">Nueva</button>
+            </form>
+        </section>
+        <form class="form" action="/nutrition/diet" method="POST">
+            <div class="form__control">
+                <!-- NAME -->
+                <div class="form__item">
+                    <label for="name" class="form__title">Nombre:</label>
                     <input type="text" name="name" id="name">
                 </div>
-                <div class="add-diet-form__item">
-                    <label for="officialName" class="add-diet-form__title">Nombre oficial:</label>
+                <!-- OFFICIAL NAME -->
+                <div class="form__item">
+                    <label for="officialName" class="form__title">Nombre oficial:</label>
                     <input type="text" name="officialName" id="officialName">
                 </div>
-                <div class="add-diet-form__item">
-                    <label for="description" class="add-diet-form__title">Descripción:</label>
+                <!-- DESCRIPTION -->
+                <div class="form__item">
+                    <label for="description" class="form__title">Descripción:</label>
                     <input type="text" name="description" id="description">
                 </div>
-                <div class="add-diet-form__item">
-                    <label for="safeForConditions" class="add-diet-form__title">Seguro para condiciones:</label>
-                    <select name="safeForConditions" id="safeForConditions-selection">
-                        <option value="diabetestipo1">Diabetes tipo 1</option>
-                        <option value="diabetestipo2">Diabetes tipo 2</option>
-                        <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
-                    </select>
+                <!-- SAFE FOR CONDITIONS -->
+                <div class="form__item-rows">
+                    <label for="safeForConditions" class="form__title">Seguro para condiciones:</label>
+                    <div class="form__selects-div" id="safeForConditions-selects">
+                        <select name="safeForConditions">
+                            <!-- [Loop1] Loop for all the chronic conditions options -->
+                            <% chronicConditions?.forEach( cc => { %>
+                                <option value="<%= cc._id %>"><%= cc.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
                 </div>
             </div>
-            <div class="add-diet-form__btn-control">
-                <button class="add-diet-form__btn" type="submit">Add</button>
+            <div class="form-btns__control">
+                <button class="form__btn"  type="submit" id="add-diet-form-btn">Añadir</button>
             </div>
         </form>
     </main>

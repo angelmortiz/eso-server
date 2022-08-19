@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
+import { IdAndName } from '../../util/types/nutritionTypes';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import ChronicCondition from '../../models/nutritionModels/chronicConditionModel';
-import { IdAndName } from '../../util/types/nutritionTypes';
 
 let _conditionNames: IdAndName[] = [];
 
@@ -48,6 +48,7 @@ export const getViewToAddChronicCondition = async (req: Request, res: Response) 
   });
 };
 
+/** ACTIONS */
 export const addChronicCondition = (req: Request, res: Response) => {
   const chronicConditionHandler = new ChronicConditionHandler(req.body);
   chronicConditionHandler.save().then( id => res.redirect(`/nutrition/chronicCondition/${id}`) );
