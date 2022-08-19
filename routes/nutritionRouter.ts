@@ -11,8 +11,8 @@ import * as menstrualCyclePhasesController from '../controllers/general/menstrua
 
 /* FOOD */
 //Render Views
-router.get('/', foodController.redirectToViewSelectFood); //defeault render for '/nutrition'
-router.get('/food', foodController.getViewToSelectFood);
+router.get('/', foodController.redirectToViewAddFood); //defeault render for '/nutrition'
+router.get('/food', foodController.redirectToViewAddFood);
 router.get('/food/:foodId', foodController.getViewOfSelectedFood);
 router.get('/add-food', foodController.getViewToAddFood);
 //Actions

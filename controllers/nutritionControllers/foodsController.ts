@@ -11,30 +11,13 @@ let _conditionNames: IdAndName[] = [];
 let _dietNames: IdAndName[] = [];
 
 /** RENDERS */
-export const redirectToViewSelectFood = (req: Request, res: Response) => {
-  res.redirect(`/nutrition/food`);
+export const redirectToViewAddFood = (req: Request, res: Response) => {
+  res.redirect(`/nutrition/add-food`);
 }
 
 export const redirectToViewSelectedFood = (req: Request, res: Response) => {
   res.redirect(`/nutrition/food/${req.body.selectedFood}`);
 }
-
-export const getViewToSelectFood = (req: Request, res: Response) => {
-    FoodHandler.fetchAllNames()
-    .then((foodNames) => {
-      _foodNames = foodNames;
-      res.render('./nutrition/view-food', {
-        caller: 'view-food',
-        pageTitle: 'Selecciona la comida',
-        foodSelectOptions: FoodHandler.foodSelectOptions,
-        foodNames: foodNames,
-        selectedFoodInfo: null
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
 
 export const getViewOfSelectedFood = async (req: Request, res: Response) => {
   const selectedFoodId: string = req.params.foodId;
