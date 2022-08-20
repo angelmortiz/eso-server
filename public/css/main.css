@@ -10,8 +10,12 @@ main {
     justify-content: center;
 }
 
-select, input {
+select, input, textarea {
     background-color: white;
+}
+
+textarea {
+    resize: none;
 }
 
 /* HEADER */
@@ -148,7 +152,8 @@ select, input {
 
 .form__item select,
 .form__item-rows select,
-.form__item-rows input {
+.form__item-rows input,
+.form__item-rows textarea {
     border: 1px solid #007E86;
     font: inherit;
     border-radius: 5px;
@@ -162,7 +167,8 @@ select, input {
 
 .form__item-rows label,
 .form__item-rows select,
-.form__item-rows input {
+.form__item-rows input,
+.form__item-rows textarea {
     margin: 0 0 0.5rem 0;
 }
 

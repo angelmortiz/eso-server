@@ -14,7 +14,7 @@ export default class Recipe implements IRecipe {
     ingredients: string[];
     instructions: string[];
     source: string;
-    tools: string[];
+    utensils: string[];
     nutritionFacts: string[];
     safeForConditions: ConditionIdAndName[];
     notRecommendedForConditions: ConditionIdAndName[];

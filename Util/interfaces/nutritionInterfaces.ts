@@ -28,7 +28,7 @@ export interface IRecipe {
     ingredients: string[];
     instructions: string[];
     source: string;
-    tools: string[];
+    utensils: string[];
     nutritionFacts: string[];
     safeForConditions: ConditionIdAndName[] | null;
     notRecommendedForConditions: ConditionIdAndName[] | null;
