@@ -24,10 +24,18 @@ router.get('/equipment', equipmentsController.getEquipment);
 router.get('/add-equipment', equipmentsController.getAddEquipment);
 router.post('/equipment', equipmentsController.addEquipment);
 
-/* Physical Condition */
-router.get('/physicalCondition', physicalConditionsController.getPhysicalCondition);
-router.get('/add-physicalCondition', physicalConditionsController.getAddPhysicalCondition);
+/* PHYSICAL CONDITION */
+//Renders
+router.get('/physicalCondition', physicalConditionsController.getViewToAddPhysicalCondition);
+router.get('/physicalCondition/:conditionId', physicalConditionsController.getViewToSelectedPhysicalCondition);
+router.get('/add-physicalCondition', physicalConditionsController.getViewToAddPhysicalCondition);
+//Actions
 router.post('/physicalCondition', physicalConditionsController.addPhysicalCondition);
+router.post('/update-physicalCondition/:physicalConditionId', physicalConditionsController.updatePhysicalCondition);
+router.post('/redirect-to-view-selected-physicalCondition', physicalConditionsController.redirectToViewSelectedPhysicalCondition);
+//APIs
+router.get('/physicalConditions', physicalConditionsController.apiGetPhysicalConditions);
+router.delete('/physicalCondition/:physicalConditionId', physicalConditionsController.apiDeletePhysicalCondition);
 
 //exports
 export default router;
