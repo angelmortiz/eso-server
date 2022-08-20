@@ -24,9 +24,16 @@ router.delete('/food/:foodId', foodsController.apiDeleteFood);
 
 
 /* RECIPE */
-router.get('/recipe', recipesController.getRecipe);
+//Render Views
+router.get('/recipe', recipesController.redirectToViewAddRecipe);
+// router.get('/recipe/:recipeId', recipesController.getViewOfSelectedRecipe);
 router.get('/add-recipe', recipesController.getViewToAddRecipe);
-router.post('/recipe', recipesController.addRecipe);
+//Actions
+router.post('/add-recipe', recipesController.addRecipe);
+// router.post('/update-recipe/:recipeId', recipesController.updateRecipe);
+router.post('/redirect-to-view-selected-recipe', recipesController.redirectToViewSelectedRecipe);
+//APIs
+// router.delete('/recipe/:recipeId', recipesController.apiDeleteRecipe);
 
 /* DIET */
 //Renders

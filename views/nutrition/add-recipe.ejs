@@ -18,11 +18,11 @@
             <div class="select-dropdown">
                 <label for="select-recipe" class="select-dropdown__title">Comida:</label>
                 <form action="/nutrition/redirect-to-view-selected-recipe" method="POST">
-                    <select name="selectedFood" id="select-recipe-selection">
+                    <select name="selectedRecipe" id="select-recipe-selection">
                         <option value="">-- Elige --</option>
                         <% recipeNames.forEach( recipe=> { %>
                             <option value="<%= recipe._id %>"
-                                <%=selectedFoodInfo?._id?.toString() == recipe._id ? 'selected' : '' %>
+                                <%=selectedRecipeInfo?._id?.toString() == recipe._id ? 'selected' : '' %>
                                 >
                                 <%= recipe.name %>
                             </option>
@@ -69,11 +69,11 @@
                 <!-- MEAL TYPE -->
                 <div class="form__item">
                     <label class="form__title">Tipo de comida:</label>
-                    <input type="checkbox" name="mealType-breakfast" id="mealType-selection">
+                    <input type="checkbox" name="breakfast" id="mealType-selection">
                     <label for="mealType-breakfast" class="form__title">Desayuno</label>
-                    <input type="checkbox" name="mealType-lunch" id="mealType-selection">
+                    <input type="checkbox" name="lunch" id="mealType-selection">
                     <label for="mealType-lunch" class="form__title">Almuerzo</label>
-                    <input type="checkbox" name="mealType-dinner" id="mealType-selection">
+                    <input type="checkbox" name="dinner" id="mealType-selection">
                     <label for="mealType-dinner" class="form__title">Cena</label>
                 </div>
                 <!-- INGREDIENTS -->

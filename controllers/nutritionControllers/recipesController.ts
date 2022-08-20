@@ -1,6 +1,6 @@
 import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
-import { IdAndName } from '../../util/types/nutritionTypes';
+import { ConditionIdAndName, DietnIdAndName, FoodIdAndName, IdAndName } from '../../util/types/nutritionTypes';
 import RecipeHandler from '../../models/nutritionModels/recipeModel';
 import FoodHandler from '../../models/nutritionModels/foodModel';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
@@ -12,17 +12,19 @@ let _foodNames: IdAndName[] = [];
 let _conditionNames: IdAndName[] = [];
 let _dietNames: IdAndName[] = [];
 
+/** RENDERS */
+export const redirectToViewAddRecipe = (req: Request, res: Response) => {
+  res.redirect(`/nutrition/add-recipe`);
+}
+
+export const redirectToViewSelectedRecipe = (req: Request, res: Response) => {
+  res.redirect(`/nutrition/recipe/${req.body.selectedRecipe}`);
+}
+
 export const getRecipe = (req: Request, res: Response) => {
   res.render('./nutrition/view-recipe', {
     caller: 'view-recipe',
     pageTitle: 'Información de receta',
-  });
-};
-
-export const getAddRecipe = (req: Request, res: Response) => {
-  res.render('./nutrition/add-recipe', {
-    caller: 'add-recipe',
-    pageTitle: 'Añadir receta',
   });
 };
 
@@ -43,11 +45,10 @@ export const getViewToAddRecipe = async (req: Request, res: Response) => {
 };
 
 /** ACTIONS */
-export const addRecipe = (request) => {
-  const recipe = new RecipeHandler(request.body);
-  recipe.save();
-  console.log(RecipeHandler.fetchAll());
-  // res.redirect('/nutrition/recipe')
+export const addRecipe = (req: Request, res: Response) => {
+  let recipeHandler = new RecipeHandler(req.body);
+  recipeHandler = refactorValuesForDb(recipeHandler);
+  recipeHandler.save().then( id => res.redirect(`/nutrition/recipe/${id}`) );
 };
 
 /*** FUNCTIONS */
@@ -57,4 +58,134 @@ const fetchRecipeNames = async (forceFetch = false) => {
   if (forceFetch || !_recipeNames || _recipeNames.length === 0) {
     await RecipeHandler.fetchAllNames().then((recipeNames) => { _recipeNames = recipeNames});
   }
+};
+
+const refactorValuesForDb = (recipe: RecipeHandler) => {
+  recipe = refactorMealTypeValues(recipe);
+  recipe.ingredients = refactorIngredients(recipe.ingredients);
+  recipe.safeForConditions = refactorChronicConditions(recipe.safeForConditions);
+  recipe.notRecommendedForConditions = refactorChronicConditions(recipe.notRecommendedForConditions);
+  recipe.compatibleWithDiets = refactorCompatibleWithDiets(recipe.compatibleWithDiets);
+  recipe.recommendedForCyclePhases = refactorCyclePhases(recipe.recommendedForCyclePhases);
+  return recipe;
+};
+
+const refactorIngredients = (ingredients)  => {
+  if (!ingredients){ return null; }
+
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(ingredients) === 'string') {
+    ingredients = [ingredients]; 
+  }
+  //Fetches all the foods to pair with their names
+  if (!_foodNames || _foodNames.length === 0) {
+    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+    _foodNames = FoodHandler.foodStaticValues.foods;
+  }
+
+  let refactoredFoods: FoodIdAndName[] = [];
+  ingredients.forEach(foodId => 
+    {
+      if (!foodId) return; //skips empty selections
+
+      const foodObject: FoodIdAndName = {
+        foodId: new ObjectId(foodId),
+        foodName: _foodNames.find(c => c._id === foodId)?.name || 'Nombre no disponible'
+      };
+
+      refactoredFoods.push(foodObject);
+    });
+  
+  return refactoredFoods;
+}
+
+const refactorMealTypeValues = (recipe) => {
+  recipe.mealType = [];
+
+  if (recipe.breakfast) {
+    recipe.mealType.push('Desayuno');
+    delete recipe.breakfast;
+  }
+  if (recipe.lunch) {
+    recipe.mealType.push('Almuerzo');
+    delete recipe.lunch;
+  }
+  if (recipe.dinner) {
+    recipe.mealType.push('Cena');
+    delete recipe.dinner;
+  }
+
+  return recipe;
+};
+
+const refactorChronicConditions = (selectedConditions) => {
+  if (!selectedConditions){ return null; }
+
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(selectedConditions) === 'string') {
+    selectedConditions = [selectedConditions]; 
+  }
+  //Fetches all the chronic conditions to pair with their names
+  if (!_conditionNames || _conditionNames.length === 0) {
+    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+    _conditionNames = ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions;
+  }
+
+  let refactoredConditions: ConditionIdAndName[] = [];
+  selectedConditions.forEach(conditionId => 
+    {
+      if (!conditionId) return; //skips empty selections
+
+      const conditionObject: ConditionIdAndName = {
+        conditionId: new ObjectId(conditionId),
+        conditionName: _conditionNames.find(c => c._id === conditionId)?.name || 'Nombre no disponible'
+      };
+
+      refactoredConditions.push(conditionObject);
+    });
+  
+  return refactoredConditions;
+};
+
+const refactorCompatibleWithDiets = (selectedDietsCompatible) => {
+  if (!selectedDietsCompatible) {return null;}
+
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(selectedDietsCompatible) === 'string') {
+    selectedDietsCompatible = [selectedDietsCompatible]; 
+  }
+  //Fetches all the diets to pair with their names
+  if (!_dietNames || _dietNames.length === 0) {
+    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+    _dietNames = DietHandler.compatibleWithDietsStaticValues.diets;
+  }
+
+  let refactoredDiets: DietnIdAndName[] = [];
+  selectedDietsCompatible.forEach(dietId => 
+    {
+      if (!dietId) return; //skips empty selections
+
+      const dietObject: DietnIdAndName = {
+        dietId: new ObjectId(dietId),
+        dietName: _dietNames.find(c => c._id === dietId)?.name || 'Nombre no disponible'
+      };
+
+      refactoredDiets.push(dietObject);
+    });
+  
+  return refactoredDiets;
+
+};
+
+const refactorCyclePhases = (selectedPhases) => {
+  if (!selectedPhases) { return null; }
+
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(selectedPhases) === 'string')
+  {
+    selectedPhases = [selectedPhases];
+  }
+  
+  //removes all empty options if necessary.
+  return selectedPhases.filter(p => p);
 };
