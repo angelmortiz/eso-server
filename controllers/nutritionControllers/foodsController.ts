@@ -1,6 +1,6 @@
 import { ObjectId } from 'bson';
 import {Request, Response} from 'express';
-import { IdAndName, ConditionIdAndName, DietnIdAndName } from '../../util/types/types';
+import { IdAndName, ConditionIdAndName, DietIdAndName } from '../../util/types/types';
 import FoodHandler from '../../models/nutritionModels/foodModel';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
@@ -187,12 +187,12 @@ const refactorCompatibleWithDiets = (selectedDietsCompatible) => {
     _dietNames = DietHandler.compatibleWithDietsStaticValues.diets;
   }
 
-  let refactoredDiets: DietnIdAndName[] = [];
+  let refactoredDiets: DietIdAndName[] = [];
   selectedDietsCompatible.forEach(dietId => 
     {
       if (!dietId) return; //skips empty selections
 
-      const dietObject: DietnIdAndName = {
+      const dietObject: DietIdAndName = {
         dietId: new ObjectId(dietId),
         dietName: _dietNames.find(c => c._id === dietId)?.name || 'Nombre no disponible'
       };

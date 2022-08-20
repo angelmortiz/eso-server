@@ -30,7 +30,7 @@ export interface IEquipment {
     name: string;
     alternativeName: string;
     description: string;
-    exercises: any[];
+    exercises: any[] | null;
     linkToImage: string;
 }
 

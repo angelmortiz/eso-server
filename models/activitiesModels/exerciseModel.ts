@@ -48,4 +48,13 @@ export default class Exercise implements IExercise{
     static fetchAllNames()  {
         return exercises.map(f => ({id: f.id, name: f.name}));
     }
+
+    static exercisesStaticValues = {
+        //TODO: DELETE ME AND FETCH FROM DB
+        exercises: [
+          {_id: "", name: "-- Elige --"},
+          {_id: "62e3fb672aeacf742c288451", name: "Sentadillas"},
+          {_id: "62e3fb672aeacf742c288452", name: "Deadlifts"}
+        ]
+    }
 };

@@ -1,7 +1,7 @@
 import { ObjectId } from 'bson';
 import { IFood } from "../../util/interfaces/nutritionInterfaces";
 import { nutritionDb } from '../../util/database/connection';
-import { ConditionIdAndName, DietnIdAndName } from '../../util/types/types';
+import { ConditionIdAndName, DietIdAndName } from '../../util/types/types';
 import FoodSchema from '../../util/database/schemas/nutrition/foodSchema';
 
 const FoodModel = nutritionDb.model('Food', FoodSchema);
@@ -19,7 +19,7 @@ export default class FoodHandler implements IFood {
   safeForConditions: ConditionIdAndName[] | null;
   notRecommendedForConditions: ConditionIdAndName[] | null;
   recommendedForCyclePhases: string[] | null;
-  compatibleWithDiets: DietnIdAndName[] | null;
+  compatibleWithDiets: DietIdAndName[] | null;
   linkToImage: string;
 
   constructor(inputValues) {

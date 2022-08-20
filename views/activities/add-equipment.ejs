@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <%- include('../includes/head.ejs') %> 
-    <link rel="stylesheet" href="/css/activities/add-equipment.css">
+    <link rel="stylesheet" href="/css/activities/equipment.css">
 </head>
 <body>
     <header class="main-header">
@@ -12,37 +12,46 @@
     <div class="page-title__div">
         <h2 class="page-title"><%= pageTitle %>:</h2>
     </div>
-    <form class="add-equipment-form" action="/activities/equipment" method="POST">
-        <div class="add-equipment-form__control">
-            <div class="add-equipment-form__item">
-                <label for="name" class="add-equipment-form__title">Nombre:</label>
+    <form class="form" action="/activities/equipment" method="POST">
+        <div class="form__control">
+            <!-- NAME -->
+            <div class="form__item">
+                <label for="name" class="form__title">Nombre:</label>
                 <input type="text" name="name" id="muscle-name">
             </div>
-            <div class="add-equipment-form__item">
-                <label for="alternativeName" class="add-equipment-form__title">Nombre alternativo:</label>
+            <!-- ALTERNATIVE NAME -->
+            <div class="form__item">
+                <label for="alternativeName" class="form__title">Nombre alternativo:</label>
                 <input type="text" name="alternativeName" id="alternativeName">
             </div>
-            <div class="add-equipment-form__item">
-                <label for="description" class="add-equipment-form__title">Descripción:</label>
+            <!-- DESCRIPTION -->
+            <div class="form__item">
+                <label for="description" class="form__title">Descripción:</label>
                 <input type="text" name="description" id="description">
             </div>
-            <div class="add-equipment-form__item">
-                <label for="exercises" class="add-equipment-form__title">Ejercicios asociados:</label>
-                <select name="exercises" id="exercises-selection">
-                    <option value="sentadillas">Sentadillas</option>
-                    <option value="lounges">Lounges</option>
-                </select>
+            <!-- EXERCISES -->
+            <div class="form__item-rows">
+                <label for="exercises" class="form__title">Ejercicios:</label>
+                <div class="form__selects-div" id="exercises-selects">
+                    <select name="exercises">
+                        <!-- [Loop1] Loop through all the exercises options -->
+                        <% exercises?.forEach( eq => { %>
+                            <option value="<%= eq._id %>"><%= eq.name %></option>
+                        <% }); %>
+                        <!-- [END-Loop1] -->
+                    </select>
+                </div>
+                <button class="form__add-btn" id="btn-add-new-exercise">Añadir ejercicio</button>
             </div>
-            <div class="add-equipment-form__item">
-                <label for="linkToImage" class="add-equipment-form__title">Enlace para imagen:</label>
+            <!-- LINK TO IMAGE -->
+            <div class="form__item">
+                <label for="linkToImage" class="form__title">Enlace para imagen:</label>
                 <input type="text" name="linkToImage" id="linkToImage">
             </div>
         </div>
-
-        <div class="add-equipment-form__btn-control">
-            <button class="add-equipment-form__btn" type="submit">Añadir</button>
+        <div class="form-btns__control">
+            <button class="form__btn"  type="submit" id="add-equipment-form-btn">Añadir</button>
         </div>
     </form>
 </main>
-</body>
-</html>
+<%- include('../includes/end.ejs') %>

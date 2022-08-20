@@ -84,12 +84,12 @@ btnSafeForConditions?.addEventListener('click', (event) => {
 /* NOT RECOMMENDED FOR CONDITIONS */
 //elements
 const btnNotRecommendedForConditions = document.getElementById('btn-add-new-not-recommended-condition');
-const notRecommendedForCondtionsDiv = document.getElementById('notRecommendedForConditions-selects');
+const notRecommendedForConditionsDiv = document.getElementById('notRecommendedForConditions-selects');
 
 //listeners
 btnNotRecommendedForConditions?.addEventListener('click', (event) => { 
     event.preventDefault();
-    addSelectToDiv(chronicConditions, getChronicConditions, "notRecommendedForConditions", notRecommendedForCondtionsDiv);
+    addSelectToDiv(chronicConditions, getChronicConditions, "notRecommendedForConditions", notRecommendedForConditionsDiv);
 });
 /** [END] NOT RECOMMENDED CONDITIONS **/
 
@@ -114,10 +114,6 @@ btnCompatibleWithDiets?.addEventListener('click', (event) => {
 /** [END] DIET COMPATIBLE **/
 
 /* MENSTRUAL PHASES */
-//elements
-const btnMenstrualCyclePhase = document.getElementById('btn-add-new-phase');
-const menstrualCyclePhaseDiv = document.getElementById('menstrualCyclePhases-selects');
-
 //vars
 let phases;
 let getPhases = async () => {
@@ -125,13 +121,17 @@ let getPhases = async () => {
     phases = await response.json();
     return phases;
 };
-/** [END] PHASES */
+
+//elements
+const btnMenstrualCyclePhase = document.getElementById('btn-add-new-phase');
+const menstrualCyclePhaseDiv = document.getElementById('menstrualCyclePhases-selects');
 
 //listeners
 btnMenstrualCyclePhase?.addEventListener('click', (event) => { 
     event.preventDefault();
     addSelectToDiv(phases, getPhases, "recommendedForCyclePhases", menstrualCyclePhaseDiv);
 });
+/** [END] PHASES */
 
 /* SYMPTOMS */
 //elements
@@ -349,3 +349,43 @@ btnDeletePhysicalCondition?.addEventListener('click', (event) => {
 });
 //#endregion
 /*** [END] PHYSICAL CONDITION ***/
+
+/*** EQUIPMENT ***/
+//#region
+let equipments;
+let getEquipments = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/activites/equipment`);
+    equipments = await response.json();
+    return equipments;
+};
+//elements
+const btnEquipments = document.getElementById('btn-add-new-equipment');
+const equipmentsDiv = document.getElementById('equipments-selects');
+
+//listeners
+btnEquipments?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addSelectToDiv(equipments, getEquipments, "equipments", equipmentsDiv);
+});
+
+//** Delete [Button] **/
+//elements
+const btnDeleteEquipment = document.getElementById('btn-delete-equipment');
+const selectedEquipment = document.getElementById('select-equipment-selection');
+const selectedEquipmentName = selectedEquipment?.options[selectedEquipment.selectedIndex].text;
+const selectedEquipmentId = selectedEquipment?.options[selectedEquipment.selectedIndex].value;
+const equipmentInfo = {
+    database: 'activities',
+    type: 'equipment',
+    typeDisplay: 'equipo',
+    name: selectedEquipmentName,
+    id: selectedEquipmentId
+};
+
+//listeners
+btnDeleteEquipment?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteDocument(equipmentInfo);
+});
+//#endregion
+/*** [END] EQUIPMENT ***/

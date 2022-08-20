@@ -110,7 +110,7 @@ export default class PhysicalConditionHandler implements IPhysicalCondition {
         });
       }
 
-      static physicalConditionsStaticValues = {
+    static physicalConditionsStaticValues = {
         //TODO: DELETE ME AND FETCH FROM DB
         physicalConditions: [
           {_id: "", name: "-- Elige --"},

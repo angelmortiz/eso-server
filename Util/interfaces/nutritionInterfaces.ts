@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson';
-import { ConditionIdAndName, DietnIdAndName, FoodIdAndName } from '../types/nutritionTypes';
+import { ConditionIdAndName, DietIdAndName, FoodIdAndName } from '../types/nutritionTypes';
 
 export interface IFood {
     id: ObjectId | string;
@@ -14,7 +14,7 @@ export interface IFood {
     safeForConditions: ConditionIdAndName[] | null;
     notRecommendedForConditions: ConditionIdAndName[] | null;
     recommendedForCyclePhases: string[] | null;
-    compatibleWithDiets: DietnIdAndName[] | null;
+    compatibleWithDiets: DietIdAndName[] | null;
     linkToImage: string;
 }
 
@@ -33,7 +33,7 @@ export interface IRecipe {
     safeForConditions: ConditionIdAndName[] | null;
     notRecommendedForConditions: ConditionIdAndName[] | null;
     recommendedForCyclePhases: string[] | null;
-    compatibleWithDiets: DietnIdAndName[] | null;
+    compatibleWithDiets: DietIdAndName[] | null;
     linkToImage: string;
     linkToVideo: string;
 }

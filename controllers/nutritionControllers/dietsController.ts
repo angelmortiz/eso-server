@@ -1,9 +1,8 @@
 import {Request, Response} from 'express';
 import { ObjectId } from 'mongodb';
 import { ConditionIdAndName, IdAndName } from '../../util/types/types';
-import ChronicConditionModel from '../../models/nutritionModels/chronicConditionModel';
+import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
-import Diet from '../../models/nutritionModels/dietModel';
 
 let _dietNames: IdAndName[] = [];
 let _conditionNames: IdAndName[] = [];
@@ -32,7 +31,7 @@ export const getViewOfSelectedDiet = async (req: Request, res: Response) => {
       pageTitle: 'Información de dieta',
       dietNames: _dietNames,
       selectedDietInfo: selectedDietInfo,
-      chronicConditions: ChronicConditionModel.chronicConditionsStaticValues.chronicConditions
+      chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions
     });
   })
   .catch((err) => {
@@ -49,7 +48,7 @@ export const getViewToAddDiet = async (req: Request, res: Response) => {
     pageTitle: 'Añadir dieta',
     dietNames: _dietNames,
     selectedDietInfo: null,
-    chronicConditions: ChronicConditionModel.chronicConditionsStaticValues.chronicConditions,
+    chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
   });
 };
 
@@ -77,7 +76,7 @@ export const updateDiet = (req: Request, res: Response) => {
 
 /** APIS */
 export const apiGetDiets = (req: Request, res: Response) => {
-  res.json(Diet.compatibleWithDietsStaticValues.diets);
+  res.json(DietHandler.compatibleWithDietsStaticValues.diets);
 };
 
 export const apiDeleteDiet = (req: Request, res: Response) => {
@@ -125,7 +124,7 @@ const refactorChronicConditions = (selectedConditions) => {
   //Fetches all the chronic conditions to pair with their names
   if (!_conditionNames || _conditionNames.length === 0) {
     //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _conditionNames = ChronicConditionModel.chronicConditionsStaticValues.chronicConditions;
+    _conditionNames = ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions;
   }
 
   let refactoredConditions: ConditionIdAndName[] = [];

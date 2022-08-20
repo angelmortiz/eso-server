@@ -20,9 +20,17 @@ router.get('/add-muscle', musclesController.getAddMuscle);
 router.post('/muscle', musclesController.addMuscle);
 
 /* EQUIPMENT */
-router.get('/equipment', equipmentsController.getEquipment);
-router.get('/add-equipment', equipmentsController.getAddEquipment);
+//Renders
+router.get('/equipment', equipmentsController.getViewToAddEquipment);
+router.get('/equipment/:conditionId', equipmentsController.getViewToSelectedEquipment);
+router.get('/add-equipment', equipmentsController.getViewToAddEquipment);
+//Actions
 router.post('/equipment', equipmentsController.addEquipment);
+router.post('/update-equipment/:equipmentId', equipmentsController.updateEquipment);
+router.post('/redirect-to-view-selected-equipment', equipmentsController.redirectToViewSelectedEquipment);
+//APIs
+router.get('/equipments', equipmentsController.apiGetEquipments);
+router.delete('/equipment/:equipmentId', equipmentsController.apiDeleteEquipment);
 
 /* PHYSICAL CONDITION */
 //Renders

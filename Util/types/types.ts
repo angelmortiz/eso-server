@@ -19,7 +19,13 @@ export type ConditionIdAndName = {
 };
 
 /** Diets */
-export type DietnIdAndName = {
+export type DietIdAndName = {
     dietId: ObjectId | string,
     dietName: string
+};
+
+/** Exercises */
+export type ExerciseIdAndName = {
+    exerciseId: ObjectId | string,
+    exerciseName: string
 };
