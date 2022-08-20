@@ -20,8 +20,8 @@ router.post('/add-food', foodsController.addFood);
 router.post('/update-food/:foodId', foodsController.updateFood);
 router.post('/redirect-to-view-selected-food', foodsController.redirectToViewSelectedFood);
 //APIs
+router.get('/foods', foodsController.apiGetFoods);
 router.delete('/food/:foodId', foodsController.apiDeleteFood);
-
 
 /* RECIPE */
 //Render Views

@@ -84,6 +84,10 @@ export const updateFood = (req: Request, res: Response) => {
 };
 
 /** APIS */
+export const apiGetFoods = (req: Request, res: Response) => {
+  res.json(FoodHandler.foodStaticValues.foods);
+};
+
 export const apiDeleteFood = (req: Request, res: Response) => {
   const foodId: string = req.params.foodId;
 

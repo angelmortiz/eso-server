@@ -30,6 +30,15 @@ let addInputToDiv = async (inputName, divNode) => {
     divNode.appendChild(inputNode);
 }
 
+//TEXTAREA
+let addTextAreaToDiv = async (txtAreaName, divNode) => {
+    //creates new textarea element and adds it to the DOM
+    const textAreaNode = document.createElement("textarea");
+    textAreaNode.name = txtAreaName;
+    textAreaNode.rows = 2;
+    divNode.appendChild(textAreaNode);
+}
+
 //** DELETE ACTIONS **/
 let showDeleteConfirmation = (typeDisplay, name) => {
     return confirm(`¿Seguro que deseas borrar el/la ${typeDisplay} '${name}'?`);
@@ -47,7 +56,7 @@ let deleteDocument = async (documentInfo) => {
     await sendDeleteCommand(documentInfo.database, documentInfo.type, documentInfo.id);
 };
 
-//**GET CONDITIONS **/
+//** GET CONDITIONS **/
 let chronicConditions;
 let getChronicConditions = async () => {
     const response = await fetch(`${SERVER_ADDRESS}/nutrition/chronicConditions`);
@@ -157,11 +166,11 @@ btnDeleteFood?.addEventListener('click', (event) => {
 /** Input Creators **/
 /* SYMPTOMS */
 //elements
-const btnAddNewSymptom = document.getElementById('btn-add-new-symptom');
+const btnAddSymptom = document.getElementById('btn-add-new-symptom');
 const symptomDiv = document.getElementById('symptoms-input');
 
 //listeners
-btnAddNewSymptom?.addEventListener('click', (event) => { 
+btnAddSymptom?.addEventListener('click', (event) => { 
     event.preventDefault();
     addInputToDiv("symptoms", symptomDiv);
 });
@@ -247,6 +256,50 @@ btnDeleteDiet?.addEventListener('click', (event) => {
 
 /*** RECIPE ***/
 //#region
+//** GET FOODS **/
+let foods;
+let getFoods = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/nutrition/foods`);
+    foods = await response.json();
+    return foods
+};
+
+/** Select Creators **/
+/* INGREDIENTS */
+//elements
+const btnAddIngredient = document.getElementById('btn-add-new-ingredient');
+const ingredientsDiv = document.getElementById('ingredients-selects');
+
+//listeners
+btnAddIngredient?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addSelectToDiv(foods, getFoods, "ingredients", ingredientsDiv);
+});
+
+/* INSTRUCTIONS */
+//elements
+const btnAddInstruction = document.getElementById('btn-add-new-instruction');
+const instructionDiv = document.getElementById('instructions-textarea');
+
+//listeners
+btnAddInstruction?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addTextAreaToDiv("instructions", instructionDiv);
+});
+
+/** UTENSILS */
+//elements
+const btnAddUtensils = document.getElementById('btn-add-new-utensil');
+const utensilsDiv = document.getElementById('utensils-input');
+
+//listeners
+btnAddUtensils?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addInputToDiv("utensils", utensilsDiv);
+});
+
+/** [END] Select Creators **/
+
 //***** Delete [Button] */
 //elements
 const btnDeleteRecipe = document.getElementById('btn-delete-recipe');
