@@ -1,5 +1,6 @@
-import MenstrualCyclePhase from '../../models/general/menstrualCyclePhase';
+import {Request, Response} from 'express';
+import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
 
-export const apiGetPhases = (request, response) => {
-    response.json(MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases);
+export const apiGetPhases = (req: Request, res: Response) => {
+    res.json(MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases);
 };

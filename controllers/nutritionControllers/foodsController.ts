@@ -1,10 +1,10 @@
 import { ObjectId } from 'bson';
 import {Request, Response} from 'express';
 import { IdAndName, ConditionIdAndName, DietnIdAndName } from '../../util/types/nutritionTypes';
-import ChronicConditionModel from '../../models/nutritionModels/chronicConditionModel';
-import Diet from '../../models/nutritionModels/dietModel';
-import MenstrualCyclePhase from '../../models/general/menstrualCyclePhase';
 import FoodHandler from '../../models/nutritionModels/foodModel';
+import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
+import DietHandler from '../../models/nutritionModels/dietModel';
+import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
 
 let _foodNames: IdAndName[] = [];
 let _conditionNames: IdAndName[] = [];
@@ -35,9 +35,9 @@ export const getViewOfSelectedFood = async (req: Request, res: Response) => {
       foodNames: _foodNames,
       foodSelectOptions: FoodHandler.foodSelectOptions,
       selectedFoodInfo: selectedFoodInfo,
-      chronicConditions: ChronicConditionModel.chronicConditionsStaticValues.chronicConditions,
-      diets: Diet.compatibleWithDietsStaticValues.diets,
-      menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases
+      chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
+      diets: DietHandler.compatibleWithDietsStaticValues.diets,
+      menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
     });
   })
   .catch((err) => {
@@ -55,9 +55,9 @@ export const getViewToAddFood = async (req: Request, res: Response) => {
     foodNames: _foodNames,
     foodSelectOptions: FoodHandler.foodSelectOptions,
     selectedFoodInfo: null,
-    chronicConditions: ChronicConditionModel.chronicConditionsStaticValues.chronicConditions,
-    diets: Diet.compatibleWithDietsStaticValues.diets,
-    menstrualCyclePhases: MenstrualCyclePhase.menstrualCyclePhasesStaticValues.menstrualCyclePhases
+    chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
+    diets: DietHandler.compatibleWithDietsStaticValues.diets,
+    menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
   });
 };
 
@@ -151,7 +151,7 @@ const refactorChronicConditions = (selectedConditions) => {
   //Fetches all the chronic conditions to pair with their names
   if (!_conditionNames || _conditionNames.length === 0) {
     //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _conditionNames = ChronicConditionModel.chronicConditionsStaticValues.chronicConditions;
+    _conditionNames = ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions;
   }
 
   let refactoredConditions: ConditionIdAndName[] = [];
@@ -180,7 +180,7 @@ const refactorCompatibleWithDiets = (selectedDietsCompatible) => {
   //Fetches all the diets to pair with their names
   if (!_dietNames || _dietNames.length === 0) {
     //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _dietNames = Diet.compatibleWithDietsStaticValues.diets;
+    _dietNames = DietHandler.compatibleWithDietsStaticValues.diets;
   }
 
   let refactoredDiets: DietnIdAndName[] = [];

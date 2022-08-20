@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson';
-import { ConditionIdAndName, DietnIdAndName } from '../types/nutritionTypes';
+import { ConditionIdAndName, DietnIdAndName, FoodIdAndName } from '../types/nutritionTypes';
 
 export interface IFood {
     id: ObjectId | string;
@@ -24,10 +24,10 @@ export interface IRecipe {
     description: string;
     preparationTime: number;
     complexity: string;
-    mealType: string[];
-    ingredients: string[];
-    instructions: string[];
     source: string;
+    mealType: string[];
+    ingredients: FoodIdAndName[] | null;
+    instructions: string[];
     utensils: string[];
     nutritionFacts: string[];
     safeForConditions: ConditionIdAndName[] | null;

@@ -173,7 +173,8 @@ textarea {
 }
 
 .form__selects-div,
-.form__input-div {
+.form__input-div,
+.form__textarea-div {
     display: grid;
 }
 

@@ -14,7 +14,28 @@
         <div class="page-title__div">
             <h2 class="page-title"><%= pageTitle %>:</h2>
         </div>
-        <form class="form" action="/nutrition/recipe" method="POST">
+        <section class="selection-creation">
+            <div class="select-dropdown">
+                <label for="select-recipe" class="select-dropdown__title">Comida:</label>
+                <form action="/nutrition/redirect-to-view-selected-recipe" method="POST">
+                    <select name="selectedFood" id="select-recipe-selection">
+                        <option value="">-- Elige --</option>
+                        <% recipeNames.forEach( recipe=> { %>
+                            <option value="<%= recipe._id %>"
+                                <%=selectedFoodInfo?._id?.toString() == recipe._id ? 'selected' : '' %>
+                                >
+                                <%= recipe.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button class="select__btn" type="submit">Mostrar</button>
+                </form>
+            </div>
+            <form action="/nutrition/add-recipe" method="GET">
+                <button class="new__btn" type="submit">Nueva</button>
+            </form>
+        </section>
+        <form class="form" action="/nutrition/add-recipe" method="POST">
             <div class="form__control">
                 <!-- NAME -->
                 <div class="form__item">
@@ -55,60 +76,91 @@
                     <input type="checkbox" name="mealType-dinner" id="mealType-selection">
                     <label for="mealType-dinner" class="form__title">Cena</label>
                 </div>
-                
                 <!-- INGREDIENTS -->
                 <div class="form__item-rows">
                     <label for="ingredients" class="form__title">Ingredientes:</label>
-                    <select name="ingredients" id="ingredients-selection">
-                        <option value="pollo">Pollo</option>
-                        <option value="sal">Sal</option>
-                        <option value="pimienta">Pimienta</option>
-                    </select>
+                    <div class="form__selects-div" id="ingredients-selects">
+                        <select name="ingredients">
+                            <!-- [Loop1] Loop for all the ingredients options -->
+                            <% ingredients?.forEach( ing => { %>
+                                <option value="<%= ing._id %>"><%= ing.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-ingredient">Añadir ingrediente</button>
                 </div>
                 <!-- INSTRUCTIONS -->
                 <div class="form__item-rows">
                     <label for="instructions" class="form__title">Instrucciones:</label>
-                    <textarea name="instructions" id="instructions" rows="3"></textarea>
+                    <div class="form__textarea-div" id="instructions-textarea">
+                        <textarea name="instructions" id="instructions" rows="3"></textarea>
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-instruction">Añadir instrucción</button>
                 </div>
                 <!-- UTENSILS -->
                 <div class="form__item-rows">
                     <label for="utensils" class="form__title">Utensilios:</label>
-                    <input type="text" name="utensils" id="utensils">
+                    <div class="form__input-div" id="utensils-input">
+                        <input type="text" name="utensils" id="utensils">
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-utensil">Añadir utensilio</button>
                 </div>
                 <!-- SAFE FOR CONDITIONS -->
                 <div class="form__item-rows">
                     <label for="safeForConditions" class="form__title">Seguro para condiciones:</label>
-                    <select name="safeForConditions" id="safeForConditions-selection">
-                        <option value="diabetestipo1">Diabetes tipo 1</option>
-                        <option value="diabetestipo2">Diabetes tipo 2</option>
-                        <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
-                    </select>
+                    <div class="form__selects-div" id="safeForConditions-selects">
+                        <select name="safeForConditions">
+                            <!-- [Loop1] Loop for all the chronic conditions options -->
+                            <% chronicConditions?.forEach( cc => { %>
+                                <option value="<%= cc._id %>"><%= cc.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
                 </div>
                 <!-- NOT RECOMMENDED FOR CONDITIONS -->
                 <div class="form__item-rows">
                     <label for="notRecommendedForConditions" class="form__title">No recomendado para condiciones:</label>
-                    <select name="notRecommendedForConditions" id="notRecommendedForConditions-selection">
-                        <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
-                    </select>
+                    <div class="form__selects-div" id="notRecommendedForConditions-selects">
+                        <select name="notRecommendedForConditions">
+                            <!-- [Loop1] Loop for all the chronic conditions options -->
+                            <% chronicConditions?.forEach( cc => { %>
+                                <option value="<%= cc._id %>"><%= cc.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-not-recommended-condition">Añadir condición</button>
                 </div>
-                <!-- COMPATIBLE WITH DIETS -->
+                <!-- DIET COMPATIBLE -->
                 <div class="form__item-rows">
                     <label for="compatibleWithDiets" class="form__title">Compatible con dietas:</label>
-                    <select name="compatibleWithDiets" id="compatibleWithDiets-selection">
-                        <option value="keto">Keto</option>
-                        <option value="paleo">Paleo</option>
-                        <option value="vegana">Vegana</option>
-                    </select>
+                    <div class="form__selects-div" id="compatibleWithDiets-selects">
+                        <select name="compatibleWithDiets">
+                        <!-- [Loop1] Loop for all the diets options -->
+                        <% diets?.forEach( d => { %>
+                            <option value="<%= d._id %>"><%= d.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-diet">Añadir dieta</button>
                 </div>
-                <!-- RECOMMENDED FOR PHASES -->
+                <!-- RECOMMENDED FOR CYCLE PHASES -->
                 <div class="form__item-rows">
                     <label for="recommendedForCyclePhases" class="form__title">Recomendado para fases:</label>
-                    <select name="recommendedForCyclePhases" id="recommendedForCyclePhases-selection">
-                        <option value="periodo">Periodo</option>
-                        <option value="folicular">Folicular</option>
-                        <option value="ovulacion">Ovulación</option>
-                        <option value="secretora">Secretora</option>
-                    </select>
+                    <div class="form__selects-div" id="menstrualCyclePhases-selects">
+                        <select name="recommendedForCyclePhases">
+                        <!-- [Loop1] Loop for all the phases options -->
+                            <% menstrualCyclePhases?.forEach( mcp=> { %>
+                                <option value="<%= mcp._id %>"><%= mcp.name %></option>
+                            <% }); %>
+                        <!-- [END-Loop1] -->
+                        </select>
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-phase">Añadir fase</button>
                 </div>
                 <!-- LINK TO IMAGE -->
                 <div class="form__item">
@@ -122,7 +174,7 @@
                 </div>
             </div>
             <div class="form-btns__control">
-                <button class="form__btn"  type="submit" id="add-food-form-btn">Añadir</button>
+                <button class="form__btn"  type="submit" id="add-recipe-form-btn">Añadir</button>
             </div>
         </form>
     </main>

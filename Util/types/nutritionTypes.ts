@@ -1,9 +1,15 @@
 import { ObjectId } from 'bson';
 
-/** Food */
+/** General */
 export type IdAndName = {
     _id: ObjectId | string,
     name: string
+};
+
+/** Food */
+export type FoodIdAndName = {
+    foodId: ObjectId | string,
+    foodName: string
 };
 
 /** Chronic Conditions */

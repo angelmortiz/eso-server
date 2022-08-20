@@ -1,4 +1,4 @@
-module.exports = class MenstrualCyclePhase {
+export default class MenstrualCyclePhase {
     name;
     
     static menstrualCyclePhasesStaticValues = {
