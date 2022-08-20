@@ -30,10 +30,10 @@ router.get('/recipe/:recipeId', recipesController.getViewOfSelectedRecipe);
 router.get('/add-recipe', recipesController.getViewToAddRecipe);
 //Actions
 router.post('/add-recipe', recipesController.addRecipe);
-// router.post('/update-recipe/:recipeId', recipesController.updateRecipe);
+router.post('/update-recipe/:recipeId', recipesController.updateRecipe);
 router.post('/redirect-to-view-selected-recipe', recipesController.redirectToViewSelectedRecipe);
 //APIs
-// router.delete('/recipe/:recipeId', recipesController.apiDeleteRecipe);
+router.delete('/recipe/:recipeId', recipesController.apiDeleteRecipe);
 
 /* DIET */
 //Renders

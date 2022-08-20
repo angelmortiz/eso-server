@@ -71,6 +71,42 @@ export const addRecipe = (req: Request, res: Response) => {
   recipeHandler.save().then( id => res.redirect(`/nutrition/recipe/${id}`) );
 };
 
+export const updateRecipe = (req: Request, res: Response) => {
+  const recipeId: string = req.params.recipeId;
+  let recipe = new RecipeHandler(req.body);
+  recipe.id = recipeId;
+  recipe = refactorValuesForDb(recipe);
+  
+  recipe.update()
+  .then(() => {
+    res.redirect(`/nutrition/recipe/${recipeId}`);
+  })
+  .catch((err) => {
+    console.log('Error while inserting document to db', err);
+  });
+};
+
+/** APIS */
+export const apiDeleteRecipe = (req: Request, res: Response) => {
+  const recipeId: string = req.params.recipeId;
+
+  RecipeHandler.deleteById(recipeId)
+  .then( deleteResponse => {
+    //removes the recipe from recipes dropdown
+    const index: number = _recipeNames?.findIndex(f => f._id.toString() == recipeId);
+    if (index > -1){
+      _recipeNames.splice(index, 1);
+    }
+
+    console.log(`'${deleteResponse.name}' recipe deleted successfully.`);
+
+    res.redirect(`/nutrition/recipe/`);
+  })
+  .catch(err => {
+    console.log('Error while deleting Recipe: ', err);
+  });
+};
+
 /*** FUNCTIONS */
 const fetchRecipeNames = async (forceFetch = false) => {
   //Fetches the recipeNames from db only when recipeNames is not available or when forced

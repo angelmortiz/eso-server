@@ -1,7 +1,8 @@
-//***GLOBAL
+/*** GLOBAL FUNCTIONS AND VARIABLES ***/
+//#region
 const SERVER_ADDRESS = "http://localhost:3000/api";
 
-//********* Add New [Buttons] */
+//** Add New [Buttons] **/
 //SELECT
 let addSelectToDiv = async (selectOptions, getOptionsFunc, selectName, divNode) => {
     //gets options from server
@@ -29,7 +30,7 @@ let addInputToDiv = async (inputName, divNode) => {
     divNode.appendChild(inputNode);
 }
 
-//********* DELETE ACTIONS */
+//** DELETE ACTIONS **/
 let showDeleteConfirmation = (typeDisplay, name) => {
     return confirm(`¿Seguro que deseas borrar el/la ${typeDisplay} '${name}'?`);
 }
@@ -46,17 +47,19 @@ let deleteDocument = async (documentInfo) => {
     await sendDeleteCommand(documentInfo.database, documentInfo.type, documentInfo.id);
 };
 
-//********* GET CONDITIONS */
+//**GET CONDITIONS **/
 let chronicConditions;
 let getChronicConditions = async () => {
     const response = await fetch(`${SERVER_ADDRESS}/nutrition/chronicConditions`);
     chronicConditions = await response.json();
     return chronicConditions
 };
-//*** [END] GLOBAL
+//#endregion
+/*** [END]GLOBAL FUNCTIONS AND VARIABLES ***/
 
-/*** FOOD ***/
-/**** Select Creators */
+/*** [REUSABLE] ADDING SELECTS TO DOM ***/
+//#region
+/** Select Creators **/
 /* SAFE FOR CONDITIONS */
 //elements
 const btnSafeForConditions = document.getElementById('btn-add-new-safe-condition');
@@ -119,8 +122,14 @@ btnMenstrualCyclePhase?.addEventListener('click', (event) => {
     event.preventDefault();
     addSelectToDiv(phases, getPhases, "recommendedForCyclePhases", menstrualCyclePhaseDiv);
 });
+/** [END] Select Creators **/
+//#endregion
+/*** [END] [REUSABLE] ADDING SELECTS TO DOM ***/
 
-//********* Delete [Button] */
+
+/*** FOOD ***/
+//#region
+//** Delete [Button] **/
 //elements
 const btnDeleteFood = document.getElementById('btn-delete-food');
 const selectedFood = document.getElementById('select-food-selection');
@@ -138,12 +147,15 @@ const foodInfo = {
 btnDeleteFood?.addEventListener('click', (event) => { 
     event.preventDefault();
     deleteDocument(foodInfo);
-});
+})
+//** [END] Delete [Button] **/
+//#endregion
 /*** [END] FOOD ***/
 
 /*** CHRONIC CONDITION ***/
-/**** Input Creators */
-/** SYMPTOMS */
+//#region
+/** Input Creators **/
+/* SYMPTOMS */
 //elements
 const btnAddNewSymptom = document.getElementById('btn-add-new-symptom');
 const symptomDiv = document.getElementById('symptoms-input');
@@ -187,7 +199,7 @@ btnAddNewTests?.addEventListener('click', (event) => {
     addInputToDiv("tests", testsDiv);
 });
 
-//***** Delete [Button] */
+//** Delete [Button] **/
 //elements
 const btnDeleteChronicCondition = document.getElementById('btn-delete-chronicCondition');
 const selectedChronicCondition = document.getElementById('select-chronicCondition-selection');
@@ -206,21 +218,11 @@ btnDeleteChronicCondition?.addEventListener('click', (event) => {
     event.preventDefault();
     deleteDocument(chronicConditionInfo);
 });
+//#endregion
 /*** [END] CHRONIC CONDITION ***/
 
 /*** DIET ***/
-/**** Select Creators */
-/* SAFE FOR CONDITIONS */
-//elements
-const btnSafeForDiets = document.getElementById('btn-add-new-safe-diet');
-const safeForDietsDiv = document.getElementById('safeForDiets-selects');
-
-//listeners
-btnSafeForDiets?.addEventListener('click', (event) => { 
-    event.preventDefault();
-    addSelectToDiv(diets, getChronicConditions, "safeForConditions", safeForCondtionsDiv);
-});
-
+//#region
 //***** Delete [Button] */
 //elements
 const btnDeleteDiet = document.getElementById('btn-delete-diet');
@@ -240,5 +242,29 @@ btnDeleteDiet?.addEventListener('click', (event) => {
     event.preventDefault();
     deleteDocument(dietInfo);
 });
-/** [END] SAFE FOR CONDITIONS **/
+//#endregion
 /*** [END] CHRONIC CONDITION ***/
+
+/*** RECIPE ***/
+//#region
+//***** Delete [Button] */
+//elements
+const btnDeleteRecipe = document.getElementById('btn-delete-recipe');
+const selectedRecipe = document.getElementById('select-recipe-selection');
+const selectedRecipeName = selectedRecipe?.options[selectedRecipe.selectedIndex].text;
+const selectedRecipeId = selectedRecipe?.options[selectedRecipe.selectedIndex].value;
+const recipeInfo = {
+    database: 'nutrition',
+    type: 'recipe',
+    typeDisplay: 'receta',
+    name: selectedRecipeName,
+    id: selectedRecipeId
+};
+
+//listeners
+btnDeleteRecipe?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteDocument(recipeInfo);
+});
+//#endregion
+/*** [END] RECIPE ***/
