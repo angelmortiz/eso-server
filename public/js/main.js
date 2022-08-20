@@ -184,7 +184,6 @@ btnAddNewTests?.addEventListener('click', (event) => {
 //#endregion
 /*** [END] [REUSABLE] ADDING SELECTS TO DOM ***/
 
-
 /*** FOOD ***/
 //#region
 //** Delete [Button] **/
@@ -352,20 +351,23 @@ btnDeletePhysicalCondition?.addEventListener('click', (event) => {
 
 /*** EQUIPMENT ***/
 //#region
-let equipments;
-let getEquipments = async () => {
-    const response = await fetch(`${SERVER_ADDRESS}/activites/equipment`);
-    equipments = await response.json();
-    return equipments;
+let exercises;
+let getExercises = async () => {
+    console.log('Here');
+    const response = await fetch(`${SERVER_ADDRESS}/activities/exercises`);
+    exercises = await response.json();
+
+    console.log(exercises);
+    return exercises;
 };
 //elements
-const btnEquipments = document.getElementById('btn-add-new-equipment');
-const equipmentsDiv = document.getElementById('equipments-selects');
+const btnExercises = document.getElementById('btn-add-new-exercise');
+const exercisesDiv = document.getElementById('exercises-selects');
 
 //listeners
-btnEquipments?.addEventListener('click', (event) => { 
+btnExercises?.addEventListener('click', (event) => { 
     event.preventDefault();
-    addSelectToDiv(equipments, getEquipments, "equipments", equipmentsDiv);
+    addSelectToDiv(exercises, getExercises, "exercises", exercisesDiv);
 });
 
 //** Delete [Button] **/

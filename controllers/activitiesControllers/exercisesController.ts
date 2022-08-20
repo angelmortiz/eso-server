@@ -1,4 +1,5 @@
-import Exercise from '../../models/activitiesModels/exerciseModel';
+import {Request, Response} from 'express';
+import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 
 export const getExercise = (request, response) => {
     response.render('./activities/view-exercise', {
@@ -15,8 +16,13 @@ export const getAddExercise = (request, response) => {
 };
 
 export const addExercise = (request) => {
-    const exercise = new Exercise(request.body);
+    const exercise = new ExerciseHandler(request.body);
     exercise.save();
-    console.log(Exercise.fetchAll());
+    console.log(ExerciseHandler.fetchAll());
     // response.redirect('/activities/exercise');
+};
+
+/** APIS */
+export const apiGetExercises = (req: Request, res: Response) => {
+    res.json(ExerciseHandler.exercisesStaticValues.exercises);
 };

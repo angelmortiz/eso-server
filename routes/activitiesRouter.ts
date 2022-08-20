@@ -13,6 +13,8 @@ router.get('/', exercisesController.getExercise); //defeault render for activiti
 router.get('/exercise', exercisesController.getExercise);
 router.get('/add-exercise', exercisesController.getAddExercise);
 router.post('/exercise', exercisesController.addExercise);
+router.get('/exercises', exercisesController.apiGetExercises);
+
 
 /* MUSCLE */
 router.get('/muscle', musclesController.getMuscle);
@@ -22,7 +24,7 @@ router.post('/muscle', musclesController.addMuscle);
 /* EQUIPMENT */
 //Renders
 router.get('/equipment', equipmentsController.getViewToAddEquipment);
-router.get('/equipment/:conditionId', equipmentsController.getViewToSelectedEquipment);
+router.get('/equipment/:equipmentId', equipmentsController.getViewToSelectedEquipment);
 router.get('/add-equipment', equipmentsController.getViewToAddEquipment);
 //Actions
 router.post('/equipment', equipmentsController.addEquipment);

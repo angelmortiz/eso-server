@@ -30,7 +30,8 @@ export const getViewToSelectedEquipment = async (req: Request, res: Response) =>
       caller: 'view-equipment',
       pageTitle: 'Información de equipo',
       equipmentNames: _equipmentNames,
-      selectedEquipmentInfo: selectedEquipmentInfo
+      selectedEquipmentInfo: selectedEquipmentInfo,
+      exercises: ExerciseHandler.exercisesStaticValues.exercises
     });
   })
   .catch((err) => {

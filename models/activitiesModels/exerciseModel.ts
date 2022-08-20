@@ -4,7 +4,7 @@ import { ConditionIdAndName } from "../../util/types/types";
 
 const exercises: IExercise[] = [];
 
-export default class Exercise implements IExercise{
+export default class Exercise implements IExercise {
     id: ObjectId | string;
     name: string;
     alternativeName: string;

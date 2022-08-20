@@ -12,6 +12,27 @@
     <div class="page-title__div">
         <h2 class="page-title"><%= pageTitle %>:</h2>
     </div>
+    <section class="selection-creation">
+        <div class="select-dropdown">
+            <label for="select-equipment" class="select-dropdown__title">Equipo:</label>
+            <form action="/activities/redirect-to-view-selected-equipment" method="POST">
+                <select name="selectedEquipment" id="select-equipment-selection">
+                    <option value="">-- Elige --</option>
+                    <% equipmentNames.forEach( equipment=> { %>
+                        <option value="<%= equipment._id %>"
+                            <%=selectedEquipmentInfo?._id?.toString() == equipment._id ? 'selected' : '' %>
+                            >
+                            <%= equipment.name %>
+                        </option>
+                        <% }); %>
+                </select>
+                <button class="select__btn" type="submit">Mostrar</button>
+            </form>
+        </div>
+        <form action="/activities/add-equipment" method="GET">
+            <button class="new__btn" type="submit">Nueva</button>
+        </form>
+    </section>
     <form class="form" action="/activities/equipment" method="POST">
         <div class="form__control">
             <!-- NAME -->
