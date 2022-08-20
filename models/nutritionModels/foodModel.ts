@@ -129,7 +129,7 @@ export default class FoodHandler implements IFood {
     foods: [
       {_id: "", name: "-- Elige --"},
       {_id: "62fd50c7e64d23cd5690b26e", name: "Pechuga de pollo"},
-      {_id: "62febe8b78e89b97e9fcb250", name: "DPechuga de pollo 2"}
+      {_id: "62febe8b78e89b97e9fcb250", name: "Pechuga de pollo 2"}
     ]
 }
 };

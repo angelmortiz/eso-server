@@ -26,7 +26,7 @@ router.delete('/food/:foodId', foodsController.apiDeleteFood);
 /* RECIPE */
 //Render Views
 router.get('/recipe', recipesController.redirectToViewAddRecipe);
-// router.get('/recipe/:recipeId', recipesController.getViewOfSelectedRecipe);
+router.get('/recipe/:recipeId', recipesController.getViewOfSelectedRecipe);
 router.get('/add-recipe', recipesController.getViewToAddRecipe);
 //Actions
 router.post('/add-recipe', recipesController.addRecipe);

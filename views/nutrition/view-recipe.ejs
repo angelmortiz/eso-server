@@ -12,109 +12,220 @@
     </header>
     <main>
         <div class="page-title__div">
-            <h2 class="page-title">
-                <%= pageTitle %>:
-            </h2>
+            <h2 class="page-title"><%= pageTitle %>:</h2>
         </div>
-        <div class="view-recipe-template">
-            <ul class="view-recipe-list">
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">ID:</span>
-                    <span class="view-recipe-list__value">62d9ad342aeacf742c28839e</span>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Nombre:</span>
-                    <span class="view-recipe-list__value">Pechuga de pollo</span>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Descripción:</span>
-                    <span class="view-recipe-list__value">Esto es una descripción corta a manera de ejemplo</span>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Fuente:</span>
-                    <span class="view-recipe-list__value">www.source.com</span>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Tiempo de preparación:</span>
-                    <span class="view-recipe-list__value">45 minutos</span>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Complejidad:</span>
-                    <span class="view-recipe-list__value">Fácil</span>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Tipo de comida:</span>
-                    <ul>
-                        <li>Almuerzo</li>
-                        <li>Cena</li>
-                    </ul>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Ingredientes:</span>
-                    <ul>
-                        <li>Pollo</li>
-                        <li>Sal</li>
-                        <li>Pimienta</li>
-                    </ul>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Instrucciones:</span>
-                    <ul>
-                        <li>Instrucción 1</li>
-                        <li>Instrucción 2</li>
-                        <li>Instrucción 3</li>
-                    </ul>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Herramientas:</span>
-                    <ul>
-                        <li>Herramienta 1</li>
-                        <li>Herramienta 2</li>
-                        <li>Herramienta 3</li>
-                    </ul>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Información nutricional:</span>
-                    <span class="view-recipe-list__value">{Objeto}</span>
-                </li>
-
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Seguro para condiciones:</span>
-                    <ul>
-                        <li>Diabetes tipo 1</li>
-                        <li>Diabetes tipo 2</li>
-                        <li>Enfermedades autoinmunes</li>
-                        <li>Sobrepeso/Obesidad</li>
-                    </ul>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">No recomendado para condiciones:</span>
-                    <ul>
-                    </ul>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Compatible con dietas:</span>
-                    <ul>
-                        <li>Keto</li>
-                        <li>Paleo</li>
-                    </ul>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Recomendado para fases menstruales:</span>
-                    <ul>
-                        <li>Lútea</li>
-                        <li>Sangrado</li>
-                    </ul>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Imagen:</span>
-                    <span class="view-recipe-list__value">{Añadir imagen}</span>
-                </li>
-                <li class="view-recipe-list__item">
-                    <span class="view-recipe-list__name">Video:</span>
-                    <span class="view-recipe-list__value">{Añadir video}</span>
-                </li>
-            </ul>
-        </div>
+        <section class="selection-creation">
+            <div class="select-dropdown">
+                <label for="select-recipe" class="select-dropdown__title">Comida:</label>
+                <form action="/nutrition/redirect-to-view-selected-recipe" method="POST">
+                    <select name="selectedRecipe" id="select-recipe-selection">
+                        <option value="">-- Elige --</option>
+                        <% recipeNames.forEach( recipe=> { %>
+                            <option value="<%= recipe._id %>"
+                                <%=selectedRecipeInfo?._id?.toString() == recipe._id ? 'selected' : '' %>
+                                >
+                                <%= recipe.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                    <button class="select__btn" type="submit">Mostrar</button>
+                </form>
+            </div>
+            <form action="/nutrition/add-recipe" method="GET">
+                <button class="new__btn" type="submit">Nueva</button>
+            </form>
+        </section>
+        <form class="form" action="/nutrition/update-recipe/<%- selectedRecipeInfo._id %>" method="POST">
+            <div class="form__control">
+                <!-- NAME -->
+                <div class="form__item">
+                    <label for="name" class="form__title">Nombre:</label>
+                    <input type="text" name="name" id="recipe-name" value="<%= selectedRecipeInfo.name %>">
+                </div>
+                <!-- DESCRIPTION -->
+                <div class="form__item">
+                    <label for="description" class="form__title">Descripción:</label>
+                    <input type="text" name="description" id="description" value="<%= selectedRecipeInfo.description %>">
+                </div>
+                <!-- SOURCE -->
+                <div class="form__item">
+                    <label for="source" class="form__title">Fuente:</label>
+                    <input type="text" name="source" id="source" value="<%= selectedRecipeInfo.source %>">
+                </div>
+                <!-- PREPARATION TIME -->
+                <div class="form__item">
+                    <label for="preparationTime" class="form__title">Tiempo de preparación:</label>
+                    <input type="number" name="preparationTime" id="preparationTime" value="<%= selectedRecipeInfo.preparationTime %>">
+                </div>
+                <!-- COMPLEXITY -->
+                <div class="form__item">
+                    <label for="complexity" class="form__title">Complejidad:</label>
+                    <!-- [Loop1] Loop through complexities associated to curret recipe -->
+                    <select name="complexity" id="complexity-selection">
+                        <option value="">-- Elige --</option>
+                        <% recipeSelectOptions.complexity.forEach( complexity => { %>
+                            <option value="<%= complexity %>"
+                                <%=selectedRecipeInfo.complexity == complexity ? 'selected' : '' %>
+                                ><%= complexity %></option>
+                        <% }); %>
+                    <!-- [END-Loop1] -->
+                    </select>
+                </div>
+                <!-- MEAL TYPE -->
+                <div class="form__item">
+                    <label class="form__title">Tipo de comida:</label>
+                    <input type="checkbox" name="breakfast" id="mealType-selection" 
+                        <%=selectedRecipeInfo.mealType?.includes('Desayuno') ? 'checked' : '' %>
+                    >
+                    <label for="mealType-breakfast" class="form__title">Desayuno</label>
+                    <input type="checkbox" name="lunch" id="mealType-selection"
+                        <%=selectedRecipeInfo.mealType?.includes('Almuerzo') ? 'checked' : '' %>
+                    >
+                    <label for="mealType-lunch" class="form__title">Almuerzo</label>
+                    <input type="checkbox" name="dinner" id="mealType-selection"
+                        <%=selectedRecipeInfo.mealType?.includes('Cena') ? 'checked' : '' %>
+                    >
+                    <label for="mealType-dinner" class="form__title">Cena</label>
+                </div>
+                <!-- INGREDIENTS -->
+                <div class="form__item-rows">
+                    <label for="ingredients" class="form__title">Ingredientes:</label>
+                    <div class="form__selects-div" id="ingredients-selects">
+                        <!-- [Loop1] Loop through chronic ingredientss associated to curret recipe -->
+                        <% selectedRecipeInfo?.ingredients?.forEach( (ingredient) => { %> 
+                            <select name="ingredients">
+                                <!-- [Loop2] Loop through all the chronic ingredientss options -->
+                                <% ingredients?.forEach( ing => { %>
+                                    <option value="<%= ing._id %>"
+                                        <%=ingredient.foodId == ing._id ? 'selected' : '' %>
+                                        ><%= ing.name %></option>
+                                <% }); %>
+                                <!-- [END-Loop2] -->
+                            </select>
+                        <% });  %>
+                        <!-- [END-Loop2] --> 
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-ingredient">Añadir ingrediente</button>
+                </div>
+                <!-- INSTRUCTIONS -->
+                <div class="form__item-rows">
+                    <label for="instructions" class="form__title">Instrucciones:</label>
+                    <div class="form__textarea-div" id="instructions-textarea">
+                        <!-- Loop through instructions associated to this recipe -->
+                        <% selectedRecipeInfo?.instructions?.forEach( (instruction) => { %> 
+                            <textarea name="instructions" id="instructions" rows="2"><%= instruction %></textarea>
+                        <% });  %> 
+                        <!-- [END-Loop] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-instruction">Añadir instrucción</button>
+                </div>
+                <!-- UTENSILS -->
+                <div class="form__item-rows">
+                    <label for="utensils" class="form__title">Utensilios:</label>
+                    <div class="form__input-div" id="utensils-input">
+                        <!-- Loop through utensiles associated to this condition -->
+                        <% selectedRecipeInfo?.utensils?.forEach( (utensil) => { %> 
+                            <input type="text" name="utensils" id="utensils"
+                            value="<%= utensil %>">
+                        <% });  %> 
+                        <!-- [END-Loop] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-utensil">Añadir utensilio</button>
+                </div>
+                 <!-- SAFE FOR CONDITIONS -->
+                 <div class="form__item-rows">
+                    <label for="safeForConditions" class="form__title">Seguro para condiciones:</label>
+                    <div class="form__selects-div" id="safeForConditions-selects">
+                        <!-- [Loop1] Loop through chronic conditions associated to curret recipe -->
+                        <% selectedRecipeInfo?.safeForConditions?.forEach( (condition) => { %> 
+                            <select name="safeForConditions">
+                                <!-- [Loop2] Loop through all the chronic conditions options -->
+                                <% chronicConditions?.forEach( cc => { %>
+                                    <option value="<%= cc._id %>"
+                                        <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                        ><%= cc.name %></option>
+                                <% }); %>
+                                <!-- [END-Loop2] -->
+                            </select>
+                        <% });  %> 
+                        <!-- [END-Loop1] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
+                </div>
+                <!-- NOT RECOMMENDED FOR CONDITIONS -->
+                <div class="form__item-rows">
+                    <label for="notRecommendedForConditions" class="form__title">No recomendado para condiciones:</label>
+                    <div class="form__selects-div" id="notRecommendedForConditions-selects">
+                        <!-- [Loop1] Loop through chronic conditions associated to curret recipe -->
+                        <% selectedRecipeInfo?.notRecommendedForConditions?.forEach( (condition) => { %> 
+                            <select name="notRecommendedForConditions">
+                                <!-- [Loop2] Loop through all the chronic conditions options -->
+                                <% chronicConditions?.forEach( cc => { %>
+                                    <option value="<%= cc._id %>"
+                                        <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                        ><%= cc.name %></option>
+                                <% }); %>
+                                <!-- [END-Loop2] -->
+                            </select>
+                        <% });  %> 
+                        <!-- [END-Loop1] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-not-recommended-condition">Añadir condición</button>
+                </div>
+                <!-- DIET COMPATIBLE -->
+                <div class="form__item-rows">
+                    <label for="compatibleWithDiets" class="form__title">Compatible con dietas:</label>
+                    <div class="form__selects-div" id="compatibleWithDiets-selects">
+                        <!-- [Loop1] Loop through diets associated to curret recipe -->
+                        <% selectedRecipeInfo?.compatibleWithDiets?.forEach( (diet) => { %> 
+                            <select name="compatibleWithDiets">
+                            <!-- [Loop2] Loop through all the diets options -->
+                            <% diets?.forEach( d => { %>
+                                <option value="<%= d._id %>"
+                                    <%=diet.dietId == d._id ? 'selected' : '' %>
+                                    ><%= d.name %></option>
+                                <% }); %>
+                                <!-- [END-Loop2] -->
+                            </select>
+                        <% });  %> 
+                        <!-- [END-Loop1] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-diet">Añadir dieta</button>
+                </div>
+                <!-- RECOMMENDED FOR CYCLE PHASES -->
+                <div class="form__item-rows">
+                    <label for="recommendedForCyclePhases" class="form__title">Recomendado para fases:</label>
+                    <div class="form__selects-div" id="menstrualCyclePhases-selects">
+                        <!-- [Loop1] Loop through diets associated to curret recipe -->
+                        <% selectedRecipeInfo?.recommendedForCyclePhases?.forEach( (phase) => { %> 
+                            <select name="recommendedForCyclePhases">
+                                <% menstrualCyclePhases?.forEach( mcp=> { %>
+                                    <option value="<%= mcp._id %>"
+                                        <%=phase == mcp._id ? 'selected' : '' %>
+                                        ><%= mcp.name %></option>
+                                <% }); %>
+                            <!-- [END-Loop2] -->
+                            </select>
+                        <% });  %> 
+                        <!-- [END-Loop1] -->
+                    </div>
+                    <button class="form__add-btn" id="btn-add-new-phase">Añadir fase</button>
+                </div>
+                <!-- LINK TO IMAGE -->
+                <div class="form__item">
+                    <label for="linkToImage" class="form__title">Enlace para imagen:</label>
+                    <input type="text" name="linkToImage" id="linkToImage"  value="<%= selectedRecipeInfo.linkToImage %>">
+                </div>
+                <!-- LINK TO VIDEO -->
+                <div class="form__item">
+                    <label for="linkToVideo" class="form__title">Enlace para video:</label>
+                    <input type="text" name="linkToVideo" id="linkToVideo" value="<%= selectedRecipeInfo.linkToVideo %>">
+                </div>
+            </div>
+            <div class="form-btns__control">
+                <button class="update-form__btn" type="submit">Actualizar</button>
+                <button class="delete-form__btn" id="btn-delete-recipe">Borrar</button>
+            </div>
+        </form>
     </main>
 <%- include('../includes/end.ejs') %>

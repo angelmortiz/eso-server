@@ -111,11 +111,13 @@
                             micronutrientes:</label>
                         <select name="micronutrientDensity" id="micronutrientDensity-selection">
                             <option value="">-- Elige --</option>
+                            <!-- [Loop1] Loop through nutrient density associated to curret food -->
                             <% foodSelectOptions.micronutrientDensity.forEach( md=> { %>
                                 <option value="<%= md %>"
                                     <%=selectedFoodInfo.micronutrientDensity == md ? 'selected' : '' %>
                                     ><%= md %></option>
                             <% }); %>
+                            <!-- [END-Loop1] -->
                         </select>
                     </div>
                     <!-- SAFE FOR CONDITIONS -->
@@ -134,8 +136,8 @@
                                     <!-- [END-Loop2] -->
                                 </select>
                             <% });  %> 
+                            <!-- [END-Loop1] -->
                         </div>
-                        <!-- [END-Loop1] -->
                         <button class="form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
                     </div>
                     <!-- NOT RECOMMENDED FOR CONDITIONS -->

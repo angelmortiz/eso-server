@@ -21,10 +21,30 @@ export const redirectToViewSelectedRecipe = (req: Request, res: Response) => {
   res.redirect(`/nutrition/recipe/${req.body.selectedRecipe}`);
 }
 
-export const getRecipe = (req: Request, res: Response) => {
-  res.render('./nutrition/view-recipe', {
-    caller: 'view-recipe',
-    pageTitle: 'Información de receta',
+export const getViewOfSelectedRecipe = async (req: Request, res: Response) => {
+  const selectedRecipeId: string = req.params.recipeId;
+  
+  //Fetches the recipeNames from db if names don't exist or if the current recipeId doesn't exist in array
+  //Note: This logic is needed to fetch the new recipe info once a new recipe has been added to the db
+  const index: number = _recipeNames?.findIndex(f => f._id.toString() == selectedRecipeId);
+  (index > -1) ? await fetchRecipeNames(false) : await fetchRecipeNames(true);
+
+  RecipeHandler.fetchById(selectedRecipeId)
+  .then((selectedRecipeInfo) => {
+    res.render('./nutrition/view-recipe', {
+      caller: 'view-recipe',
+      pageTitle: 'Información de receta',
+      recipeNames: _recipeNames,
+      selectedRecipeInfo: selectedRecipeInfo,
+      recipeSelectOptions: RecipeHandler.recipeSelectOptions,
+      ingredients: FoodHandler.foodStaticValues.foods,
+      chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
+      diets: DietHandler.compatibleWithDietsStaticValues.diets,
+      menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
+    });
+  })
+  .catch((err) => {
+    console.log(err);
   });
 };
 
