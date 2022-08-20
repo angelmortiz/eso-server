@@ -125,12 +125,61 @@ let getPhases = async () => {
     phases = await response.json();
     return phases;
 };
+/** [END] PHASES */
 
 //listeners
 btnMenstrualCyclePhase?.addEventListener('click', (event) => { 
     event.preventDefault();
     addSelectToDiv(phases, getPhases, "recommendedForCyclePhases", menstrualCyclePhaseDiv);
 });
+
+/* SYMPTOMS */
+//elements
+const btnAddSymptom = document.getElementById('btn-add-new-symptom');
+const symptomDiv = document.getElementById('symptoms-input');
+
+//listeners
+btnAddSymptom?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addInputToDiv("symptoms", symptomDiv);
+});
+/** [END] SYMPTOMS */
+
+/** CAUSES */
+//elements
+const btnAddNewCauses = document.getElementById('btn-add-new-cause');
+const causesDiv = document.getElementById('causes-input');
+
+//listeners
+btnAddNewCauses?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addInputToDiv("causes", causesDiv);
+});
+/** [END] CAUSES */
+
+/** TREATMENTS */
+//elements
+const btnAddNewTreatments = document.getElementById('btn-add-new-treatment');
+const treatmentsDiv = document.getElementById('treatments-input');
+
+//listeners
+btnAddNewTreatments?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addInputToDiv("treatments", treatmentsDiv);
+});
+/** [END] TREATMENTS */
+
+/** TESTS */
+//elements
+const btnAddNewTests = document.getElementById('btn-add-new-test');
+const testsDiv = document.getElementById('tests-input');
+
+//listeners
+btnAddNewTests?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addInputToDiv("tests", testsDiv);
+});
+/** [END] TESTS */
 /** [END] Select Creators **/
 //#endregion
 /*** [END] [REUSABLE] ADDING SELECTS TO DOM ***/
@@ -163,51 +212,6 @@ btnDeleteFood?.addEventListener('click', (event) => {
 
 /*** CHRONIC CONDITION ***/
 //#region
-/** Input Creators **/
-/* SYMPTOMS */
-//elements
-const btnAddSymptom = document.getElementById('btn-add-new-symptom');
-const symptomDiv = document.getElementById('symptoms-input');
-
-//listeners
-btnAddSymptom?.addEventListener('click', (event) => { 
-    event.preventDefault();
-    addInputToDiv("symptoms", symptomDiv);
-});
-
-/** CAUSES */
-//elements
-const btnAddNewCauses = document.getElementById('btn-add-new-cause');
-const causesDiv = document.getElementById('causes-input');
-
-//listeners
-btnAddNewCauses?.addEventListener('click', (event) => { 
-    event.preventDefault();
-    addInputToDiv("causes", causesDiv);
-});
-
-/** TREATMENTS */
-//elements
-const btnAddNewTreatments = document.getElementById('btn-add-new-treatment');
-const treatmentsDiv = document.getElementById('treatments-input');
-
-//listeners
-btnAddNewTreatments?.addEventListener('click', (event) => { 
-    event.preventDefault();
-    addInputToDiv("treatments", treatmentsDiv);
-});
-
-/** TESTS */
-//elements
-const btnAddNewTests = document.getElementById('btn-add-new-test');
-const testsDiv = document.getElementById('tests-input');
-
-//listeners
-btnAddNewTests?.addEventListener('click', (event) => { 
-    event.preventDefault();
-    addInputToDiv("tests", testsDiv);
-});
-
 //** Delete [Button] **/
 //elements
 const btnDeleteChronicCondition = document.getElementById('btn-delete-chronicCondition');
@@ -321,3 +325,27 @@ btnDeleteRecipe?.addEventListener('click', (event) => {
 });
 //#endregion
 /*** [END] RECIPE ***/
+
+/*** PHYSICAL CONDITION ***/
+//#region
+//** Delete [Button] **/
+//elements
+const btnDeletePhysicalCondition = document.getElementById('btn-delete-physicalCondition');
+const selectedPhysicalCondition = document.getElementById('select-physicalCondition-selection');
+const selectedPhysicalConditionName = selectedPhysicalCondition?.options[selectedPhysicalCondition.selectedIndex].text;
+const selectedPhysicalConditionId = selectedPhysicalCondition?.options[selectedPhysicalCondition.selectedIndex].value;
+const physicalConditionInfo = {
+    database: 'activities',
+    type: 'physicalCondition',
+    typeDisplay: 'condición crónica',
+    name: selectedPhysicalConditionName,
+    id: selectedPhysicalConditionId
+};
+
+//listeners
+btnDeletePhysicalCondition?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteDocument(physicalConditionInfo);
+});
+//#endregion
+/*** [END] PHYSICAL CONDITION ***/

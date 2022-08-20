@@ -25,7 +25,7 @@ export const getViewToSelectedChronicCondition = async (req: Request, res: Respo
   .then((selectedConditionInfo) => {
     res.render('./nutrition/view-chronicCondition', {
       caller: 'view-chronicCondition',
-      pageTitle: 'Información de condición',
+      pageTitle: 'Información de condición crónica',
       conditionNames: _conditionNames,
       selectedConditionInfo: selectedConditionInfo
     });

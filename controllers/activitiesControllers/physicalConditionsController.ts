@@ -25,7 +25,7 @@ export const getViewToSelectedPhysicalCondition = async (req: Request, res: Resp
   .then((selectedConditionInfo) => {
     res.render('./activities/view-physicalCondition', {
       caller: 'view-physicalCondition',
-      pageTitle: 'Información de condición',
+      pageTitle: 'Información de condición física',
       conditionNames: _conditionNames,
       selectedConditionInfo: selectedConditionInfo
     });
@@ -84,7 +84,7 @@ export const apiDeletePhysicalCondition = (req: Request, res: Response) => {
       _conditionNames.splice(index, 1);
     }
 
-    console.log(`'${deleteResponse.name}' chronic condition deleted successfully.`);
+    console.log(`'${deleteResponse.name}' physical condition deleted successfully.`);
 
     res.redirect(`/activities/physicalCondition/`);
   })
