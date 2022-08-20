@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import { ObjectId } from 'mongodb';
-import { ConditionIdAndName, IdAndName } from '../../util/types/nutritionTypes';
+import { ConditionIdAndName, IdAndName } from '../../util/types/types';
 import ChronicConditionModel from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
 import Diet from '../../models/nutritionModels/dietModel';

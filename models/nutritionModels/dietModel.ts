@@ -1,7 +1,7 @@
 import { ObjectId } from "bson";
 import { nutritionDb } from "../../util/database/connection";
 import { IDiet } from "../../util/interfaces/nutritionInterfaces";
-import { ConditionIdAndName } from "../../util/types/nutritionTypes";
+import { ConditionIdAndName } from "../../util/types/types";
 import DietSchema from '../../util/database/schemas/nutrition/dietSchema';
 
 const DietModel = nutritionDb.model('Diet', DietSchema);

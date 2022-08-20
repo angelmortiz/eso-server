@@ -1,4 +1,6 @@
-import PhysicalCondition from '../../models/activitiesModels/physicalConditionModel';
+import {Request, Response} from 'express';
+import { IdAndName } from '../../util/types/types';
+import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
 
 export const getPhysicalCondition = (request, response, next) => {
   response.render('./activities/view-physicalCondition', {
@@ -15,8 +17,8 @@ export const getAddPhysicalCondition = (request, response, next) => {
 };
 
 export const addPhysicalCondition = (request) => {
-  const physicalCondition = new PhysicalCondition(request.body);
+  const physicalCondition = new PhysicalConditionHandler(request.body);
   physicalCondition.save();
-  console.log(PhysicalCondition.fetchAll());
+  console.log(PhysicalConditionHandler.fetchAll());
   // response.redirect('/activities/physicalCondition');
 };

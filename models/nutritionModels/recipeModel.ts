@@ -1,7 +1,7 @@
 import { ObjectId } from "bson";
 import { IRecipe } from "../../util/interfaces/nutritionInterfaces";
 import { nutritionDb } from '../../util/database/connection';
-import { ConditionIdAndName, DietnIdAndName, FoodIdAndName } from '../../util/types/nutritionTypes';
+import { ConditionIdAndName, DietnIdAndName, FoodIdAndName } from '../../util/types/types';
 import RecipeSchema from '../../util/database/schemas/nutrition/recipeSchema';
 
 const RecipeModel = nutritionDb.model('Recipe', RecipeSchema);

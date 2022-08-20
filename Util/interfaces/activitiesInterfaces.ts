@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson';
-import { ConditionIdAndName } from '../types/nutritionTypes';
+import { ConditionIdAndName } from '../types/types';
 
 export interface IExercise {
     id: ObjectId | string;

@@ -1,6 +1,6 @@
 import { ObjectId } from "bson";
 import { IExercise } from "../../util/interfaces/activitiesInterfaces";
-import { ConditionIdAndName } from "../../util/types/nutritionTypes";
+import { ConditionIdAndName } from "../../util/types/types";
 
 const exercises: IExercise[] = [];
 

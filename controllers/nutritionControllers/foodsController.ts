@@ -1,6 +1,6 @@
 import { ObjectId } from 'bson';
 import {Request, Response} from 'express';
-import { IdAndName, ConditionIdAndName, DietnIdAndName } from '../../util/types/nutritionTypes';
+import { IdAndName, ConditionIdAndName, DietnIdAndName } from '../../util/types/types';
 import FoodHandler from '../../models/nutritionModels/foodModel';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';

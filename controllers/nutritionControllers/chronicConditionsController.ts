@@ -1,7 +1,6 @@
 import {Request, Response} from 'express';
-import { IdAndName } from '../../util/types/nutritionTypes';
+import { IdAndName } from '../../util/types/types';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
-import ChronicCondition from '../../models/nutritionModels/chronicConditionModel';
 
 let _conditionNames: IdAndName[] = [];
 
@@ -71,7 +70,7 @@ export const updateChronicCondition = (req: Request, res: Response) => {
 
 /** APIS */
 export const apiGetChronicConditions = (req: Request, res: Response) => {
-  res.json(ChronicCondition.chronicConditionsStaticValues.chronicConditions);
+  res.json(ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions);
 };
 
 export const apiDeleteChronicCondition = (req: Request, res: Response) => {
