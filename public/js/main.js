@@ -353,11 +353,8 @@ btnDeletePhysicalCondition?.addEventListener('click', (event) => {
 //#region
 let exercises;
 let getExercises = async () => {
-    console.log('Here');
     const response = await fetch(`${SERVER_ADDRESS}/activities/exercises`);
     exercises = await response.json();
-
-    console.log(exercises);
     return exercises;
 };
 //elements
