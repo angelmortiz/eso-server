@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <%- include('../includes/head.ejs') %> 
-    <link rel="stylesheet" href="/css/activities/view-muscle.css">
+    <link rel="stylesheet" href="/css/activities/muscle.css">
 </head>
 <body>
     <header class="main-header">
@@ -12,40 +12,84 @@
     <div class="page-title__div">
         <h2 class="page-title"><%= pageTitle %>:</h2>
     </div>
-    <div class="view-muscle-template">
-        <ul class="view-muscle-list">
-            <li class="view-muscle-list__item">
-                <span class="view-muscle-list__name">ID:</span>
-                <span class="view-muscle-list__value">62d9ad342aeacf742c28839e</span>
-            </li>
-            <li class="view-muscle-list__item">
-                <span class="view-muscle-list__name">Nombre:</span>
-                <span class="view-muscle-list__value">Cuádriceps</span>
-            </li>
-            <li class="view-muscle-list__item">
-                <span class="view-muscle-list__name">Otro nombre:</span>
-                <span class="view-muscle-list__value">Quads</span>
-            </li>
-            <li class="view-muscle-list__item">
-                <span class="view-muscle-list__name">Tipod de músculo:</span>
-                <ul>
-                    <li>Grande</li>
-                    <li>Pequeño</li>
-                </ul>
-            </li>
-            <li class="view-muscle-list__item">
-                <span class="view-muscle-list__name">Ejercicios asociados:</span>
-                <ul>
-                    <li>Sentadillas</li>
-                    <li>Lounges</li>
-                </ul>
-            </li>
-            <li class="view-muscle-list__item">
-                <span class="view-muscle-list__name">Imagen:</span>
-                <span class="view-muscle-list__value">{Añadir imagen}</span>
-            </li>
-        </ul>
-    </div>
+    <section class="selection-creation">
+        <div class="select-dropdown">
+            <label for="select-muscle" class="select-dropdown__title">Equipo:</label>
+            <form action="/activities/redirect-to-view-selected-muscle" method="POST">
+                <select name="selectedMuscle" id="select-muscle-selection">
+                    <option value="">-- Elige --</option>
+                    <% muscleNames.forEach( muscle=> { %>
+                        <option value="<%= muscle._id %>"
+                            <%=selectedMuscleInfo?._id?.toString() == muscle._id ? 'selected' : '' %>
+                            >
+                            <%= muscle.name %>
+                        </option>
+                        <% }); %>
+                </select>
+                <button class="select__btn" type="submit">Mostrar</button>
+            </form>
+        </div>
+        <form action="/activities/add-muscle" method="GET">
+            <button class="new__btn" type="submit">Nueva</button>
+        </form>
+    </section>
+    <form class="form" action="/activities/update-muscle/<%- selectedMuscleInfo._id %>" method="POST">
+        <div class="form__control">
+             <!-- NAME -->
+             <div class="form__item">
+                <label for="name" class="form__title">Nombre:</label>
+                <input type="text" name="name" id="muscle-name"
+                value="<%= selectedMuscleInfo.name %>">
+            </div>
+            <!-- ALTERNATIVE NAME -->
+            <div class="form__item">
+                <label for="alternativeName" class="form__title">Nombre alternativo:</label>
+                <input type="text" name="alternativeName" id="alternativeName"
+                value="<%= selectedMuscleInfo.alternativeName %>">
+            </div>
+            <!-- TYPE -->
+            <div class="form__item">
+                <label for="type" class="form__title">Tipo de músculo:</label>
+                <select name="type" id="type-selection">
+                    <option value="">-- Elige --</option>
+                    <option value="Grande"
+                    <%=selectedMuscleInfo.type === 'Grande' ? 'selected' : '' %>
+                        >Grande</option>
+                    <option value="Pequeño"
+                    <%=selectedMuscleInfo.type === 'Pequeño' ? 'selected' : '' %>
+                        >Pequeño</option>
+                </select>
+            </div>
+            <!-- EXERCISES -->
+            <div class="form__item-rows">
+                <label for="exercises" class="form__title">Ejercicios:</label>
+                <div class="form__selects-div" id="exercises-selects">
+                     <!-- [Loop1] Loop through exercises associated to curret muscle -->
+                     <% selectedMuscleInfo?.exercises?.forEach( (exercise) => { %> 
+                        <select name="exercises">
+                            <!-- [Loop2] Loop through all the exercises options -->
+                            <% exercises?.forEach( ex => { %>
+                                <option value="<%= ex._id %>"
+                                    <%=exercise.exerciseId == ex._id ? 'selected' : '' %>
+                                    ><%= ex.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop2] -->
+                        </select>
+                    <% });  %> 
+                </div>
+                <button class="form__add-btn" id="btn-add-new-exercise">Añadir ejercicio</button>
+            </div>
+            <!-- LINK TO IMAGE -->
+            <div class="form__item">
+                <label for="linkToImage" class="form__title">Enlace para imagen:</label>
+                <input type="text" name="linkToImage" id="linkToImage"
+                value="<%= selectedMuscleInfo.linkToImage %>">
+            </div>
+        </div>
+        <div class="form-btns__control">
+            <button class="update-form__btn" type="submit">Actualizar</button>
+            <button class="delete-form__btn" id="btn-delete-muscle">Borrar</button>
+        </div>
+    </form>
 </main>
-</body>
-</html>
+<%- include('../includes/end.ejs') %>

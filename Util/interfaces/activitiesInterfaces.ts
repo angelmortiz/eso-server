@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson';
-import { ConditionIdAndName } from '../types/types';
+import { ConditionIdAndName, ExerciseIdAndName } from '../types/types';
 
 export interface IExercise {
     id: ObjectId | string;
@@ -22,6 +22,7 @@ export interface IMuscle {
     name: string;
     alternativeName: string;
     type: string;
+    exercises: ExerciseIdAndName[] | null;
     linkToImage: string;
 }
 
@@ -30,7 +31,7 @@ export interface IEquipment {
     name: string;
     alternativeName: string;
     description: string;
-    exercises: any[] | null;
+    exercises: ExerciseIdAndName[] | null;
     linkToImage: string;
 }
 

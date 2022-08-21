@@ -1,6 +1,7 @@
 import { ObjectId } from 'bson';
 import { activitiesDb } from '../../util/database/connection';
 import { IEquipment } from '../../util/interfaces/activitiesInterfaces';
+import { ExerciseIdAndName } from '../../util/types/types';
 import EquipmentSchema from '../../util/database/schemas/activities/equipmentSchema';
 
 const EquipmentModel = activitiesDb.model('Equipment', EquipmentSchema);
@@ -10,7 +11,7 @@ export default class Equipment implements IEquipment {
     name: string;
     alternativeName: string;
     description: string;
-    exercises: any[] | null;
+    exercises: ExerciseIdAndName[] | null;
     linkToImage: string;
 
     constructor(inputValues) {

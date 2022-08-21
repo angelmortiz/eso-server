@@ -15,11 +15,18 @@ router.get('/add-exercise', exercisesController.getAddExercise);
 router.post('/exercise', exercisesController.addExercise);
 router.get('/exercises', exercisesController.apiGetExercises);
 
-
 /* MUSCLE */
-router.get('/muscle', musclesController.getMuscle);
-router.get('/add-muscle', musclesController.getAddMuscle);
+//Renders
+router.get('/muscle', musclesController.getViewToAddMuscle);
+router.get('/muscle/:muscleId', musclesController.getViewToSelectedMuscle);
+router.get('/add-muscle', musclesController.getViewToAddMuscle);
+//Actions
 router.post('/muscle', musclesController.addMuscle);
+router.post('/update-muscle/:muscleId', musclesController.updateMuscle);
+router.post('/redirect-to-view-selected-muscle', musclesController.redirectToViewSelectedMuscle);
+//APIs
+router.get('/muscles', musclesController.apiGetMuscles);
+router.delete('/muscle/:muscleId', musclesController.apiDeleteMuscle);
 
 /* EQUIPMENT */
 //Renders

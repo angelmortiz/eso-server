@@ -1,9 +1,54 @@
-/*** GLOBAL FUNCTIONS AND VARIABLES ***/
+/*** GLOBAL VARIABLES ***/
 //#region
 const SERVER_ADDRESS = "http://localhost:3000/api";
+//#endregion
+/*** [END]GLOBAL VARIABLES ***/
 
+/*** INFO GETTERS ***/
+//#region
+/** GETTERS **/
+let foods;
+let getFoods = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/nutrition/foods`);
+    foods = await response.json();
+    return foods
+};
+
+let diets;
+let getDiets = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/nutrition/diets`);
+    diets = await response.json();
+    return diets;
+};
+
+let chronicConditions;
+let getChronicConditions = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/nutrition/chronicConditions`);
+    chronicConditions = await response.json();
+    return chronicConditions
+};
+
+let phases;
+let getPhases = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/nutrition/menstrualCyclePhases`);
+    phases = await response.json();
+    return phases;
+};
+
+let exercises;
+let getExercises = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/activities/exercises`);
+    exercises = await response.json();
+    return exercises;
+};
+/** [END] GETTERS **/
+//#endregion
+/*** [END] INFO GETTERS ***/
+
+/*** ADDING ELEMENTS TO DOM ***/
+//#region
 //** Add New [Buttons] **/
-//SELECT
+//SELECTS
 let addSelectToDiv = async (selectOptions, getOptionsFunc, selectName, divNode) => {
     //gets options from server
     if (!selectOptions) { 
@@ -22,7 +67,7 @@ let addSelectToDiv = async (selectOptions, getOptionsFunc, selectName, divNode) 
     });
 }
 
-//INPUT
+//INPUTS
 let addInputToDiv = async (inputName, divNode) => {
     //creates new input element and adds it to the DOM
     const inputNode = document.createElement("input");
@@ -30,7 +75,7 @@ let addInputToDiv = async (inputName, divNode) => {
     divNode.appendChild(inputNode);
 }
 
-//TEXTAREA
+//TEXTAREAS
 let addTextAreaToDiv = async (txtAreaName, divNode) => {
     //creates new textarea element and adds it to the DOM
     const textAreaNode = document.createElement("textarea");
@@ -38,36 +83,8 @@ let addTextAreaToDiv = async (txtAreaName, divNode) => {
     textAreaNode.rows = 2;
     divNode.appendChild(textAreaNode);
 }
+//** [END] Add New [Buttons] **/
 
-//** DELETE ACTIONS **/
-let showDeleteConfirmation = (typeDisplay, name) => {
-    return confirm(`¿Seguro que deseas borrar el/la ${typeDisplay} '${name}'?`);
-}
-
-let sendDeleteCommand = async (database, type, id) => {
-     const response = await fetch(`${SERVER_ADDRESS}/${database}/${type}/${id}`, {method: 'DELETE'});
-     window.location.href = response.url;
-};
-
-let deleteDocument = async (documentInfo) => {
-    const isConfirmed = showDeleteConfirmation(documentInfo.typeDisplay, documentInfo.name);
-    if (!isConfirmed) return;
-    
-    await sendDeleteCommand(documentInfo.database, documentInfo.type, documentInfo.id);
-};
-
-//** GET CONDITIONS **/
-let chronicConditions;
-let getChronicConditions = async () => {
-    const response = await fetch(`${SERVER_ADDRESS}/nutrition/chronicConditions`);
-    chronicConditions = await response.json();
-    return chronicConditions
-};
-//#endregion
-/*** [END]GLOBAL FUNCTIONS AND VARIABLES ***/
-
-/*** [REUSABLE] ADDING SELECTS TO DOM ***/
-//#region
 /** Select Creators **/
 /* SAFE FOR CONDITIONS */
 //elements
@@ -98,14 +115,6 @@ btnNotRecommendedForConditions?.addEventListener('click', (event) => {
 const btnCompatibleWithDiets = document.getElementById('btn-add-new-diet');
 const compatibleWithDietsDiv = document.getElementById('compatibleWithDiets-selects');
 
-//vars
-let diets;
-let getDiets = async () => {
-    const response = await fetch(`${SERVER_ADDRESS}/nutrition/diets`);
-    diets = await response.json();
-    return diets;
-};
-
 //listeners
 btnCompatibleWithDiets?.addEventListener('click', (event) => { 
     event.preventDefault();
@@ -114,14 +123,6 @@ btnCompatibleWithDiets?.addEventListener('click', (event) => {
 /** [END] DIET COMPATIBLE **/
 
 /* MENSTRUAL PHASES */
-//vars
-let phases;
-let getPhases = async () => {
-    const response = await fetch(`${SERVER_ADDRESS}/nutrition/menstrualCyclePhases`);
-    phases = await response.json();
-    return phases;
-};
-
 //elements
 const btnMenstrualCyclePhase = document.getElementById('btn-add-new-phase');
 const menstrualCyclePhaseDiv = document.getElementById('menstrualCyclePhases-selects');
@@ -181,8 +182,33 @@ btnAddNewTests?.addEventListener('click', (event) => {
 });
 /** [END] TESTS */
 /** [END] Select Creators **/
+
 //#endregion
-/*** [END] [REUSABLE] ADDING SELECTS TO DOM ***/
+/*** [END] ADDING ELEMENTS TO DOM ***/
+
+/*** DELETE ACTION ***/
+//#region
+let showDeleteConfirmation = (typeDisplay, name) => {
+    return confirm(`¿Seguro que deseas borrar el/la ${typeDisplay} '${name}'?`);
+}
+
+let sendDeleteCommand = async (database, type, id) => {
+     const response = await fetch(`${SERVER_ADDRESS}/${database}/${type}/${id}`, {method: 'DELETE'});
+     window.location.href = response.url;
+};
+
+let deleteDocument = async (documentInfo) => {
+    const isConfirmed = showDeleteConfirmation(documentInfo.typeDisplay, documentInfo.name);
+    if (!isConfirmed) return;
+    
+    await sendDeleteCommand(documentInfo.database, documentInfo.type, documentInfo.id);
+};
+//#endregion
+/*** [END] DELETE ACTION ***/
+
+/***********************************/
+/***********************************/
+/***********************************/
 
 /*** FOOD ***/
 //#region
@@ -209,64 +235,8 @@ btnDeleteFood?.addEventListener('click', (event) => {
 //#endregion
 /*** [END] FOOD ***/
 
-/*** CHRONIC CONDITION ***/
-//#region
-//** Delete [Button] **/
-//elements
-const btnDeleteChronicCondition = document.getElementById('btn-delete-chronicCondition');
-const selectedChronicCondition = document.getElementById('select-chronicCondition-selection');
-const selectedChronicConditionName = selectedChronicCondition?.options[selectedChronicCondition.selectedIndex].text;
-const selectedChronicConditionId = selectedChronicCondition?.options[selectedChronicCondition.selectedIndex].value;
-const chronicConditionInfo = {
-    database: 'nutrition',
-    type: 'chronicCondition',
-    typeDisplay: 'condición crónica',
-    name: selectedChronicConditionName,
-    id: selectedChronicConditionId
-};
-
-//listeners
-btnDeleteChronicCondition?.addEventListener('click', (event) => { 
-    event.preventDefault();
-    deleteDocument(chronicConditionInfo);
-});
-//#endregion
-/*** [END] CHRONIC CONDITION ***/
-
-/*** DIET ***/
-//#region
-//***** Delete [Button] */
-//elements
-const btnDeleteDiet = document.getElementById('btn-delete-diet');
-const selectedDiet = document.getElementById('select-diet-selection');
-const selectedDietName = selectedDiet?.options[selectedDiet.selectedIndex].text;
-const selectedDietId = selectedDiet?.options[selectedDiet.selectedIndex].value;
-const dietInfo = {
-    database: 'nutrition',
-    type: 'diet',
-    typeDisplay: 'dieta',
-    name: selectedDietName,
-    id: selectedDietId
-};
-
-//listeners
-btnDeleteDiet?.addEventListener('click', (event) => { 
-    event.preventDefault();
-    deleteDocument(dietInfo);
-});
-//#endregion
-/*** [END] CHRONIC CONDITION ***/
-
 /*** RECIPE ***/
 //#region
-//** GET FOODS **/
-let foods;
-let getFoods = async () => {
-    const response = await fetch(`${SERVER_ADDRESS}/nutrition/foods`);
-    foods = await response.json();
-    return foods
-};
-
 /** Select Creators **/
 /* INGREDIENTS */
 //elements
@@ -325,38 +295,85 @@ btnDeleteRecipe?.addEventListener('click', (event) => {
 //#endregion
 /*** [END] RECIPE ***/
 
-/*** PHYSICAL CONDITION ***/
+/*** DIET ***/
 //#region
-//** Delete [Button] **/
+//***** Delete [Button] */
 //elements
-const btnDeletePhysicalCondition = document.getElementById('btn-delete-physicalCondition');
-const selectedPhysicalCondition = document.getElementById('select-physicalCondition-selection');
-const selectedPhysicalConditionName = selectedPhysicalCondition?.options[selectedPhysicalCondition.selectedIndex].text;
-const selectedPhysicalConditionId = selectedPhysicalCondition?.options[selectedPhysicalCondition.selectedIndex].value;
-const physicalConditionInfo = {
-    database: 'activities',
-    type: 'physicalCondition',
-    typeDisplay: 'condición crónica',
-    name: selectedPhysicalConditionName,
-    id: selectedPhysicalConditionId
+const btnDeleteDiet = document.getElementById('btn-delete-diet');
+const selectedDiet = document.getElementById('select-diet-selection');
+const selectedDietName = selectedDiet?.options[selectedDiet.selectedIndex].text;
+const selectedDietId = selectedDiet?.options[selectedDiet.selectedIndex].value;
+const dietInfo = {
+    database: 'nutrition',
+    type: 'diet',
+    typeDisplay: 'dieta',
+    name: selectedDietName,
+    id: selectedDietId
 };
 
 //listeners
-btnDeletePhysicalCondition?.addEventListener('click', (event) => { 
+btnDeleteDiet?.addEventListener('click', (event) => { 
     event.preventDefault();
-    deleteDocument(physicalConditionInfo);
+    deleteDocument(dietInfo);
 });
 //#endregion
-/*** [END] PHYSICAL CONDITION ***/
+/*** [END] CHRONIC CONDITION ***/
+
+/*** CHRONIC CONDITION ***/
+//#region
+//** Delete [Button] **/
+//elements
+const btnDeleteChronicCondition = document.getElementById('btn-delete-chronicCondition');
+const selectedChronicCondition = document.getElementById('select-chronicCondition-selection');
+const selectedChronicConditionName = selectedChronicCondition?.options[selectedChronicCondition.selectedIndex].text;
+const selectedChronicConditionId = selectedChronicCondition?.options[selectedChronicCondition.selectedIndex].value;
+const chronicConditionInfo = {
+    database: 'nutrition',
+    type: 'chronicCondition',
+    typeDisplay: 'condición crónica',
+    name: selectedChronicConditionName,
+    id: selectedChronicConditionId
+};
+
+//listeners
+btnDeleteChronicCondition?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteDocument(chronicConditionInfo);
+});
+//#endregion
+/*** [END] CHRONIC CONDITION ***/
+
+/*** EXERCISE ***/
+//#region
+//#endregion
+/*** [END] EXERCISE ***/
+
+/*** MUSCLE ***/
+//#region
+//** Delete [Button] **/
+//elements
+const btnDeleteMuscle = document.getElementById('btn-delete-muscle');
+const selectedMuscle = document.getElementById('select-muscle-selection');
+const selectedMuscleName = selectedMuscle?.options[selectedMuscle.selectedIndex].text;
+const selectedMuscleId = selectedMuscle?.options[selectedMuscle.selectedIndex].value;
+const muscleInfo = {
+    database: 'activities',
+    type: 'muscle',
+    typeDisplay: 'músculo',
+    name: selectedMuscleName,
+    id: selectedMuscleId
+};
+
+//listeners
+btnDeleteMuscle?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteDocument(muscleInfo);
+});
+//#endregion
+/*** [END] MUSCLE ***/
 
 /*** EQUIPMENT ***/
 //#region
-let exercises;
-let getExercises = async () => {
-    const response = await fetch(`${SERVER_ADDRESS}/activities/exercises`);
-    exercises = await response.json();
-    return exercises;
-};
 //elements
 const btnExercises = document.getElementById('btn-add-new-exercise');
 const exercisesDiv = document.getElementById('exercises-selects');
@@ -388,3 +405,27 @@ btnDeleteEquipment?.addEventListener('click', (event) => {
 });
 //#endregion
 /*** [END] EQUIPMENT ***/
+
+/*** PHYSICAL CONDITION ***/
+//#region
+//** Delete [Button] **/
+//elements
+const btnDeletePhysicalCondition = document.getElementById('btn-delete-physicalCondition');
+const selectedPhysicalCondition = document.getElementById('select-physicalCondition-selection');
+const selectedPhysicalConditionName = selectedPhysicalCondition?.options[selectedPhysicalCondition.selectedIndex].text;
+const selectedPhysicalConditionId = selectedPhysicalCondition?.options[selectedPhysicalCondition.selectedIndex].value;
+const physicalConditionInfo = {
+    database: 'activities',
+    type: 'physicalCondition',
+    typeDisplay: 'condición crónica',
+    name: selectedPhysicalConditionName,
+    id: selectedPhysicalConditionId
+};
+
+//listeners
+btnDeletePhysicalCondition?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteDocument(physicalConditionInfo);
+});
+//#endregion
+/*** [END] PHYSICAL CONDITION ***/
