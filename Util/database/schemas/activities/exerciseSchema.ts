@@ -46,11 +46,11 @@ export default new Schema({
   },
   difficulty: {
     type: String,
-    required: true
+    required: false
   },
   types: {
     type: [String],
-    required: true
+    required: false
   },
   compoundMovement: {
     type: Boolean,
@@ -62,7 +62,7 @@ export default new Schema({
   },
   secondaryMuscles: {
     type: [MuscleSubSchema],
-    required: true
+    required: false
   },
   equipments:{
     type: [EquipmentSubSchema],

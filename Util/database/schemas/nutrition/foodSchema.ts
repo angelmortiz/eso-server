@@ -31,19 +31,19 @@ export default new Schema({
   },
   classification: {
     type: String,
-    required: true
+    required: false
   },
   description: {
     type: String,
-    required: true
+    required: false
   },
   mainMacronutrient: {
     type: String,
-    required: true
+    required: false
   },
   secondaryMacronutrient: {
     type: String,
-    required: true
+    required: false
   },
   nutritionFacts: {
     type: Array,
@@ -51,11 +51,11 @@ export default new Schema({
   },
   mealType: {
     type: Array,
-    required: true
+    required: false
   },
   micronutrientDensity: {
     type: String,
-    required: true
+    required: false
   },
   safeForConditions:{
     type: [chronicConditionSubSchema],
@@ -71,7 +71,7 @@ export default new Schema({
   },
   compatibleWithDiets: {
     type: [dietSubSchema],
-    required: true
+    required: false
   },
   linkToImage: {
     type: String,

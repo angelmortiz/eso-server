@@ -24,7 +24,7 @@ export default new Schema({
     },
     description: {
         type: String,
-        required: true
+        required: false
     },
     exercises: {
         type: [ExerciseSubSchema],
@@ -32,6 +32,6 @@ export default new Schema({
     },
     linkToImage: {
         type: String,
-        required: true
+        required: false
     }
 }, { collection: 'equipments' });

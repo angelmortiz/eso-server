@@ -42,15 +42,15 @@ export default new Schema({
   },
   description: {
     type: String,
-    required: true
+    required: false
   },
   preparationTime: {
     type: Number,
-    required: true
+    required: false
   },
   complexity: {
     type: String,
-    required: true
+    required: false
   },
   source: {
     type: String,
@@ -62,15 +62,15 @@ export default new Schema({
   },
   mealType: {
     type: Array,
-    required: true
+    required: false
   },
   ingredients:{
     type: [foodSubSchema],
-    required: true
+    required: false
   },
   instructions: {
     type: Array,
-    required: true
+    required: false
   },
   utensils: {
     type: Array,
@@ -90,7 +90,7 @@ export default new Schema({
   },
   compatibleWithDiets: {
     type: [dietSubSchema],
-    required: true
+    required: false
   },
   linkToImage: {
     type: String,

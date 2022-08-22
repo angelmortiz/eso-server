@@ -20,11 +20,11 @@ export default new Schema({
     },
     alternativeName: {
         type: String,
-        required: true
+        required: false
     },
     type: {
         type: String,
-        required: true
+        required: false
     },
     exercises: {
         type: [ExerciseSubSchema],
@@ -32,6 +32,6 @@ export default new Schema({
     },
     linkToImage: {
         type: String,
-        required: true
+        required: false
     }
 }, { collection: 'muscles' });
