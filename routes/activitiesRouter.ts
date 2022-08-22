@@ -10,6 +10,7 @@ import * as physicalConditionsController from '../controllers/activitiesControll
 
 /* EXERCISE */
 //Renders
+router.get('/', exercisesController.getViewToAddExercise); //defeault render for '/activities'
 router.get('/exercise', exercisesController.getViewToAddExercise);
 router.get('/exercise/:exerciseId', exercisesController.getViewToSelectedExercise);
 router.get('/add-exercise', exercisesController.getViewToAddExercise);

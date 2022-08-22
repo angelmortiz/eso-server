@@ -114,8 +114,8 @@ export default class Muscle implements IMuscle {
         //TODO: DELETE ME AND FETCH FROM DB
         muscles: [
           {_id: "", name: "-- Elige --"},
-          {_id: "62e3fd1e2aeacf742c28845c", name: "Cuádriceps"},
-          {_id: "62e3fd1e2aeacf742c28845d", name: "Hamstrings"}
+          {_id: "630229e1dac62b4fb2141ea4", name: "Cuádriceps"},
+          {_id: "630229fcdac62b4fb2141eaa", name: "Hamstrings"}
         ] 
     };
 };

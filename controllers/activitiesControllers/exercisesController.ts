@@ -38,7 +38,9 @@ export const getViewToSelectedExercise = async (req: Request, res: Response) => 
       pageTitle: 'Información de ejercicio',
       exerciseNames: _exerciseNames,
       selectedExerciseInfo: selectedExerciseInfo,
-      exerciseSelectOptions: ExerciseHandler.exercisesStaticValues,
+      exerciseTypes: ExerciseHandler.exercisesStaticValues.types,
+      muscles: MuscleHandler.musclesStaticValues.muscles,
+      equipments: EquipmentHandler.equipmentsStaticValues.equipments,
       physicalConditions: PhysicalConditionHandler.physicalConditionsStaticValues.physicalConditions,
       menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
     });

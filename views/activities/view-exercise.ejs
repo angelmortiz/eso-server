@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <%- include('../includes/head.ejs') %> 
-    <link rel="stylesheet" href="/css/activities/view-exercise.css">
+    <link rel="stylesheet" href="/css/activities/exercise.css">
 </head>
 <body>
     <header class="main-header">
@@ -12,82 +12,215 @@
     <div class="page-title__div">
         <h2 class="page-title"><%= pageTitle %>:</h2>
     </div>
-    <div class="view-exercise-template">
-        <ul class="view-exercise-list">
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">ID:</span>
-                <span class="view-exercise-list__value">62d9ad342aeacf742c28839e</span>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Nombre:</span>
-                <span class="view-exercise-list__value">Sentadillas</span>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Otro nombre:</span>
-                <span class="view-exercise-list__value">Squats</span>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Dificultad:</span>
-                <span class="view-exercise-list__value">Difícil</span>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Tipo de ejercicio:</span>
-                <ul>
-                    <li>Fuerza</li>
-                    <li>HIIT</li>
-                </ul>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Movimiento compuesto:</span>
-                <span class="view-exercise-list__value">Sí</span>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Músculo principal:</span>
-                <span class="view-exercise-list__value">Cuádriceps</span>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Músculos secundarios:</span>
-                <ul>
-                    <li>Pantorillas</li>
-                    <li>Isquiotibiales</li>
-                    <li>Glúteos</li>
-                    <li>Abdomen</li>
-                </ul>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Equipos:</span>
-                <ul>
-                    <li>Pesas</li>
-                    <li>Barras</li>
-                    <li>Peso corporal</li>
-                    <li>Bandas de resistencia</li>
-                </ul>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Seguro para condiciones:</span>
-                <ul>
-                    <li></li>
-                </ul>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">No recomendado para condiciones:</span>
-                <ul>
-                    <li></li>
-                </ul>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Recomendado para fases menstruales:</span>
-                <ul>
-                    <li>Lútea</li>
-                    <li>Sangrado</li>
-                </ul>
-            </li>
-            <li class="view-exercise-list__item">
-                <span class="view-exercise-list__name">Video:</span>
-                <span class="view-exercise-list__value">{Añadir video}</span>
-            </li>
-        </ul>
-    </div>
+    <section class="selection-creation">
+        <div class="select-dropdown">
+            <label for="select-exercise" class="select-dropdown__title">Equipo:</label>
+            <form action="/activities/redirect-to-view-selected-exercise" method="POST">
+                <select name="selectedExercise" id="select-exercise-selection">
+                    <option value="">-- Elige --</option>
+                    <% exerciseNames.forEach( exercise=> { %>
+                        <option value="<%= exercise._id %>"
+                            <%=selectedExerciseInfo?._id?.toString() == exercise._id ? 'selected' : '' %>
+                            >
+                            <%= exercise.name %>
+                        </option>
+                        <% }); %>
+                </select>
+                <button class="select__btn" type="submit">Mostrar</button>
+            </form>
+        </div>
+        <form action="/activities/add-exercise" method="GET">
+            <button class="new__btn" type="submit">Nueva</button>
+        </form>
+    </section>
+    <form class="form" action="/activities/update-exercise/<%- selectedExerciseInfo._id %>" method="POST">
+        <div class="form__control">
+            <!-- NAME -->
+            <div class="form__item">
+                <label for="name" class="form__title">Nombre:</label>
+                <input type="text" name="name" id="exercise-name"
+                value="<%= selectedExerciseInfo.name %>">
+            </div>
+            <!-- ALTERNATIVE NAME -->
+            <div class="form__item">
+                <label for="alternativeName" class="form__title">Nombre alternativo:</label>
+                <input type="text" name="alternativeName" id="alternativeName"
+                value="<%= selectedExerciseInfo.alternativeName %>">
+            </div>
+            <!-- DIFFICULTY -->
+            <div class="form__item-rows">
+                <label for="difficulty" class="form__title">Dificultad:</label>
+                <select name="difficulty" id="difficulty-selection">
+                    <option value="">-- Elige --</option>
+                    <option
+                    <%=selectedExerciseInfo.difficulty === 'Baja' ? 'selected' : '' %>
+                    value="Baja">Baja</option>
+                    <option
+                    <%=selectedExerciseInfo.difficulty === 'Media' ? 'selected' : '' %>
+                    value="Media">Media</option>
+                    <option
+                    <%=selectedExerciseInfo.difficulty === 'Alta' ? 'selected' : '' %>
+                    value="Alta">Alta</option>
+                </select>
+            </div>
+            <!-- COMPOUND MOVEMENT -->
+            <div class="form__item">
+                <label class="form__title">Ejercicio compuesto:</label>
+                <input type="radio" name="compoundMovement" id="compoundMovementYes"
+                    <%=selectedExerciseInfo.compoundMovement ? 'checked' : '' %>
+                value="yes">
+                <label for="compoundMovementYes" class="form__title">Sí</label>
+                <input type="radio" name="compoundMovement" id="compoundMovementNo" 
+                    <%= selectedExerciseInfo.compoundMovement ? '' : 'checked' %>
+                value="no">
+                <label for="compoundMovementNo" class="form__title">No</label>
+            </div>
+            <!-- MAIN MUSCLE -->
+            <div class="form__item-rows">
+                <label for="mainMuscle" class="form__title">Músculo principal:</label>
+                <div class="form__selects-div" id="mainMuscle-selects">
+                    <select name="mainMuscle">
+                        <!-- [Loop1] Loop through all the muscles options -->
+                        <% muscles?.forEach( mus => { %>
+                            <option
+                            <%=selectedExerciseInfo.mainMuscle.muscleId == mus._id ? 'selected' : ''%>
+                            value="<%= mus._id %>"><%= mus.name %></option>
+                        <% }); %>
+                        <!-- [END-Loop1] -->
+                    </select>
+                </div>
+            </div>
+            <!-- SECONDARY MUSCLES -->
+            <div class="form__item-rows">
+                <label for="secondaryMuscles" class="form__title">Músculos secundarios:</label>
+                <div class="form__selects-div" id="secondaryMuscles-selects">
+                    <!-- [Loop1] Loop through secondaryMuscles associated to curret exercise -->
+                    <% selectedExerciseInfo?.secondaryMuscles?.forEach( (muscle) => { %> 
+                        <select name="secondaryMuscles">
+                            <!-- [Loop2] Loop through all the muscles options -->
+                            <% muscles?.forEach( mus => { %>
+                                <option value="<%= mus._id %>"
+                                    <%=muscle.muscleId == mus._id ? 'selected' : '' %>
+                                    ><%= mus.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop2] -->
+                        </select>
+                        <% });  %> 
+                    <!-- [END-Loop1] -->
+                </div>
+                <button class="form__add-btn" id="btn-add-new-secondaryMuscle">Añadir músculo</button>
+            </div>
+            <!-- TYPES -->
+            <div class="form__item-rows">
+                <label for="types" class="form__title">Tipos de ejercicio:</label>
+                <div class="form__selects-div" id="types-selects">
+                     <!-- [Loop1] Loop through types associated to curret exercise -->
+                     <% selectedExerciseInfo?.types?.forEach( (type) => { %> 
+                        <select name="types">
+                            <!-- [Loop2] Loop through all the types options -->
+                            <% exerciseTypes?.forEach( tp => { %>
+                                <option value="<%= tp._id %>"
+                                    <%=type == tp._id ? 'selected' : '' %>
+                                    ><%= tp.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop2] -->
+                        </select>
+                    <% });  %> 
+                    <!-- [END-Loop1] -->
+                </div>
+                <button class="form__add-btn" id="btn-add-new-type">Añadir tipo</button>
+            </div>
+            <!-- EQUIPMENTS -->
+            <div class="form__item-rows">
+                <label for="equipments" class="form__title">Equipos:</label>
+                <div class="form__selects-div" id="equipments-selects">
+                    <!-- [Loop1] Loop through equipment associated to curret exercise -->
+                    <% selectedExerciseInfo?.equipments?.forEach( (equipment) => { %> 
+                    <select name="equipments">
+                        <!-- [Loop2] Loop through all the equipments options -->
+                        <% equipments?.forEach( eq => { %>
+                            <option value="<%= eq._id %>"
+                                <%=equipment.equipmentId == eq._id ? 'selected' : '' %>
+                                ><%= eq.name %></option>
+                        <% }); %>
+                        <!-- [END-Loop2] -->
+                    </select>
+                    <% });  %> 
+                <!-- [END-Loop1] -->
+                </div>
+                <button class="form__add-btn" id="btn-add-new-equipment">Añadir equipo</button>
+            </div>
+            <!-- SAFE FOR CONDITIONS -->
+            <div class="form__item-rows">
+                <label for="safeForConditions" class="form__title">Seguro para condiciones:</label>
+                <div class="form__selects-div" id="safeForConditions-selects">
+                    <!-- [Loop1] Loop through physical conditions associated to curret exercise -->
+                    <% selectedExerciseInfo?.safeForConditions?.forEach( (condition) => { %> 
+                        <select name="safeForConditions">
+                            <!-- [Loop2] Loop through all the physical conditions options -->
+                            <% physicalConditions?.forEach( cc => { %>
+                                <option value="<%= cc._id %>"
+                                    <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                    ><%= cc.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop2] -->
+                        </select>
+                    <% });  %> 
+                    <!-- [END-Loop1] -->
+                </div>
+                <button class="form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
+            </div>
+            <!-- NOT RECOMMENDED FOR CONDITIONS -->
+            <div class="form__item-rows">
+                <label for="notRecommendedForConditions" class="form__title">No recomendado para condiciones:</label>
+                <div class="form__selects-div" id="notRecommendedForConditions-selects">
+                    <!-- [Loop1] Loop through physical conditions associated to curret exercise -->
+                    <% selectedExerciseInfo?.notRecommendedForConditions?.forEach( (condition) => { %> 
+                        <select name="notRecommendedForConditions">
+                            <!-- [Loop2] Loop through all the physical conditions options -->
+                            <% physicalConditions?.forEach( cc => { %>
+                                <option value="<%= cc._id %>"
+                                    <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                    ><%= cc.name %></option>
+                            <% }); %>
+                            <!-- [END-Loop2] -->
+                        </select>
+                    <% });  %> 
+                    <!-- [END-Loop1] -->
+                </div>
+                <button class="form__add-btn" id="btn-add-new-not-recommended-condition">Añadir condición</button>
+            </div>
+            <!-- RECOMMENDED FOR CYCLE PHASES -->
+            <div class="form__item-rows">
+                <label for="recommendedForCyclePhases" class="form__title">Recomendado para fases:</label>
+                <div class="form__selects-div" id="menstrualCyclePhases-selects">
+                    <!-- [Loop1] Loop through diets associated to curret exercise -->
+                    <% selectedExerciseInfo?.recommendedForCyclePhases?.forEach( (phase) => { %> 
+                        <select name="recommendedForCyclePhases">
+                            <% menstrualCyclePhases?.forEach( mcp=> { %>
+                                <option value="<%= mcp._id %>"
+                                    <%=phase == mcp._id ? 'selected' : '' %>
+                                    ><%= mcp.name %></option>
+                            <% }); %>
+                        <!-- [END-Loop2] -->
+                        </select>
+                    <% });  %> 
+                    <!-- [END-Loop1] -->
+                </div>
+                <button class="form__add-btn" id="btn-add-new-phase">Añadir fase</button>
+            </div>
+            <!-- LINK TO VIDEO -->
+            <div class="form__item-rows">
+                <label for="linkToVideo" class="form__title">Enlace para video:</label>
+                <input type="text" name="linkToVideo" id="linkToVideo"
+                value="<%= selectedExerciseInfo.linkToVideo %>">
+            </div>
+        </div>
+        <div class="form-btns__control">
+            <button class="update-form__btn" type="submit">Actualizar</button>
+            <button class="delete-form__btn" id="btn-delete-exercise">Borrar</button>
+        </div>
+    </form>
 </main>
 </body>
 </html>
