@@ -8,12 +8,12 @@ export interface IExercise {
     alternativeName: string;
     difficulty: string;
     types: string[];
-    compundMovement: boolean;
-    mainMuscle: MuscleIdAndName;
-    secondaryMuscles: MuscleIdAndName[];
-    equipments: EquipmentIdAndName[];
-    safeForConditions: ConditionIdAndName[];
-    notRecommendedForConditions: ConditionIdAndName[];
+    compoundMovement: boolean;
+    mainMuscle: MuscleIdAndName | null;
+    secondaryMuscles: MuscleIdAndName[] | null;
+    equipments: EquipmentIdAndName[] | null;
+    safeForConditions: ConditionIdAndName[] | null;
+    notRecommendedForConditions: ConditionIdAndName[] | null;
     recommendedForCyclePhases: string[];
     linkToVideo: string;
 }

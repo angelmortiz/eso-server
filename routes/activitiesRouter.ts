@@ -9,11 +9,17 @@ import * as equipmentsController from '../controllers/activitiesControllers/equi
 import * as physicalConditionsController from '../controllers/activitiesControllers/physicalConditionsController';
 
 /* EXERCISE */
-router.get('/', exercisesController.getExercise); //defeault render for activities
-router.get('/exercise', exercisesController.getExercise);
-router.get('/add-exercise', exercisesController.getAddExercise);
+//Renders
+router.get('/exercise', exercisesController.getViewToAddExercise);
+router.get('/exercise/:exerciseId', exercisesController.getViewToSelectedExercise);
+router.get('/add-exercise', exercisesController.getViewToAddExercise);
+//Actions
 router.post('/exercise', exercisesController.addExercise);
+router.post('/update-exercise/:exerciseId', exercisesController.updateExercise);
+router.post('/redirect-to-view-selected-exercise', exercisesController.redirectToViewSelectedExercise);
+//APIs
 router.get('/exercises', exercisesController.apiGetExercises);
+router.delete('/exercise/:exerciseId', exercisesController.apiDeleteExercise);
 
 /* MUSCLE */
 //Renders

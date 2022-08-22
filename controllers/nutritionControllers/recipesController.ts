@@ -21,7 +21,7 @@ export const redirectToViewSelectedRecipe = (req: Request, res: Response) => {
   res.redirect(`/nutrition/recipe/${req.body.selectedRecipe}`);
 }
 
-export const getViewOfSelectedRecipe = async (req: Request, res: Response) => {
+export const getViewToSelectedRecipe = async (req: Request, res: Response) => {
   const selectedRecipeId: string = req.params.recipeId;
   
   //Fetches the recipeNames from db if names don't exist or if the current recipeId doesn't exist in array

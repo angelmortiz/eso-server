@@ -28,6 +28,7 @@
             <div class="form__item-rows">
                 <label for="difficulty" class="form__title">Dificultad:</label>
                 <select name="difficulty" id="difficulty-selection">
+                    <option value="">-- Elige --</option>
                     <option value="Baja">Baja</option>
                     <option value="Media">Media</option>
                     <option value="Alta">Alta</option>
@@ -36,44 +37,55 @@
             <!-- COMPOUND MOVEMENT -->
             <div class="form__item">
                 <label class="form__title">Ejercicio compuesto:</label>
-                <input type="radio" name="compundMovement" id="compundMovement-yes-selection">
-                <label for="compundMovement" class="form__title">Sí</label>
-                <input type="radio" name="compundMovement" id="compundMovement-no-selection">
-                <label for="compundMovement" class="form__title">No</label>
+                <input type="radio" name="compoundMovement" id="compoundMovementYes" value="yes">
+                <label for="compoundMovementYes" class="form__title">Sí</label>
+                <input type="radio" name="compoundMovement" id="compoundMovementNo" value="no">
+                <label for="compoundMovementNo" class="form__title">No</label>
             </div>
             <!-- MAIN MUSCLE -->
             <div class="form__item-rows">
                 <label for="mainMuscle" class="form__title">Músculo principal:</label>
-                <select name="mainMuscle" id="mainMuscle-selection">
-                    <option value="pantorrilla">Pantorrilla</option>
-                </select>
+                <div class="form__selects-div" id="mainMuscle-selects">
+                    <select name="mainMuscle">
+                        <!-- [Loop1] Loop through all the muscles options -->
+                        <% muscles?.forEach( mus => { %>
+                            <option value="<%= mus._id %>"><%= mus.name %></option>
+                        <% }); %>
+                        <!-- [END-Loop1] -->
+                    </select>
+                </div>
             </div>
             <!-- SECONDARY MUSCLES -->
             <div class="form__item-rows">
                 <label for="secondaryMuscles" class="form__title">Músculos secundarios:</label>
                 <div class="form__selects-div" id="secondaryMuscles-selects">
-                    <select name="secondaryMuscles" id="secondaryMuscles-selection">
-                        <option value="pantorrilla">Pantorrilla</option>
+                    <select name="secondaryMuscles">
+                        <!-- [Loop1] Loop through all the muscles options -->
+                        <% muscles?.forEach( mus => { %>
+                            <option value="<%= mus._id %>"><%= mus.name %></option>
+                        <% }); %>
+                        <!-- [END-Loop1] -->
                     </select>
                 </div>
-                <button class="form__add-btn" id="btn-add-new-muscle">Añadir músculo</button>
+                <button class="form__add-btn" id="btn-add-new-secondaryMuscle">Añadir músculo</button>
             </div>
             <!-- TYPES -->
             <div class="form__item-rows">
                 <label for="types" class="form__title">Tipos de ejercicio:</label>
                 <div class="form__selects-div" id="types-selects">
-                    <select name="types" id="types-selection">
-                        <option value="fuerza">Fuerza</option>
-                        <option value="hiit">HIIT</option>
-                        <option value="cardio">Cardio</option>
-                        <option value="estiramiento">Estiramiento</option>
+                    <select name="types">
+                        <!-- [Loop1] Loop through all the muscles options -->
+                        <% exerciseTypes?.forEach( type => { %>
+                            <option value="<%= type._id %>"><%= type.name %></option>
+                        <% }); %>
+                        <!-- [END-Loop1] -->
                     </select>
                 </div>
                 <button class="form__add-btn" id="btn-add-new-type">Añadir tipo</button>
             </div>
             <!-- EQUIPMENTS -->
             <div class="form__item-rows">
-                <label for="equipments" class="form__title">Ejercicios:</label>
+                <label for="equipments" class="form__title">Equipos:</label>
                 <div class="form__selects-div" id="equipments-selects">
                     <select name="equipments">
                         <!-- [Loop1] Loop through all the equipments options -->
@@ -83,7 +95,7 @@
                         <!-- [END-Loop1] -->
                     </select>
                 </div>
-                <button class="form__add-btn" id="btn-add-new-equipment">Añadir ejercicio</button>
+                <button class="form__add-btn" id="btn-add-new-equipment">Añadir equipo</button>
             </div>
             <!-- SAFE FOR CONDITIONS -->
             <div class="form__item-rows">

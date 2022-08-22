@@ -2,15 +2,17 @@
 
 import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
-import { ConditionIdAndName, IdAndName } from '../../util/types/types';
+import { ConditionIdAndName, EquipmentIdAndName, IdAndName, MuscleIdAndName } from '../../util/types/types';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
+import MuscleHandler from '../../models/activitiesModels/muscleModel';
+import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
 import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
 import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
 
 let _exerciseNames: IdAndName[] = [];
-let _conditionNames: IdAndName[] = [];
-let _musclesNames: IdAndName[] = [];
+let _muscleNames: IdAndName[] = [];
 let _equipmentNames: IdAndName[] = [];
+let _conditionNames: IdAndName[] = [];
 
 /** RENDERS */
 export const redirectToViewAddExercise = (req: Request, res: Response) => {
@@ -21,7 +23,7 @@ export const redirectToViewSelectedExercise = (req: Request, res: Response) => {
   res.redirect(`/activities/exercise/${req.body.selectedExercise}`);
 }
 
-export const getViewOfSelectedExercise = async (req: Request, res: Response) => {
+export const getViewToSelectedExercise = async (req: Request, res: Response) => {
   const selectedExerciseId: string = req.params.exerciseId;
   
   //Fetches the exerciseNames from db if names don't exist or if the current exerciseId doesn't exist in array
@@ -55,6 +57,9 @@ export const getViewToAddExercise = async (req: Request, res: Response) => {
     pageTitle: 'Añadir ejercicio',
     exerciseNames: _exerciseNames,
     selectedExerciseInfo: null,
+    exerciseTypes: ExerciseHandler.exercisesStaticValues.types,
+    muscles: MuscleHandler.musclesStaticValues.muscles,
+    equipments: EquipmentHandler.equipmentsStaticValues.equipments,
     physicalConditions: PhysicalConditionHandler.physicalConditionsStaticValues.physicalConditions,
     menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
   });
@@ -83,6 +88,10 @@ export const updateExercise = (req: Request, res: Response) => {
 };
 
 /** APIS */
+export const apiGetExercises = (req: Request, res: Response) => {
+    res.json(ExerciseHandler.exercisesStaticValues.exercises);
+};
+
 export const apiDeleteExercise = (req: Request, res: Response) => {
   const exerciseId: string = req.params.exerciseId;
 
@@ -113,31 +122,108 @@ const fetchExerciseNames = async (forceFetch = false) => {
 };
 
 const refactorValuesForDb = (exercise: ExerciseHandler) => {
-  exercise = refactorMealTypeValues(exercise);
-  exercise.safeForConditions = refactorPhysicalConditions(exercise.safeForConditions);
-  exercise.notRecommendedForConditions = refactorPhysicalConditions(exercise.notRecommendedForConditions);
+    exercise.compoundMovement = refactorCompoundMovement(exercise.compoundMovement);
+    exercise.mainMuscle = refactorMainMuscle(exercise.mainMuscle);
+    exercise.secondaryMuscles = refactorSecondaryMuscles(exercise.secondaryMuscles);
+    exercise.types = refactorTypes(exercise.types);
+    exercise.equipments = refactorEquipments(exercise.equipments);
+    exercise.safeForConditions = refactorPhysicalConditions(exercise.safeForConditions);
+    exercise.notRecommendedForConditions = refactorPhysicalConditions(exercise.notRecommendedForConditions);
   exercise.recommendedForCyclePhases = refactorCyclePhases(exercise.recommendedForCyclePhases);
   return exercise;
 };
 
-const refactorMealTypeValues = (exercise) => {
-  exercise.mealType = [];
-
-  if (exercise.breakfast) {
-    exercise.mealType.push('Desayuno');
-    delete exercise.breakfast;
-  }
-  if (exercise.lunch) {
-    exercise.mealType.push('Almuerzo');
-    delete exercise.lunch;
-  }
-  if (exercise.dinner) {
-    exercise.mealType.push('Cena');
-    delete exercise.dinner;
-  }
-
-  return exercise;
+const refactorCompoundMovement = (movement) => {
+    return movement === 'yes';
 };
+
+const refactorMainMuscle = (muscleId) => {
+    if (!muscleId) {return null; }
+    
+    //Fetches all the muscles to pair with their names
+    if (!_muscleNames || _muscleNames.length === 0) {
+        //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+        _muscleNames = MuscleHandler.musclesStaticValues.muscles;
+    }
+
+    const muscleObject: MuscleIdAndName = {
+        muscleId: new ObjectId(muscleId),
+        muscleName: _muscleNames.find(c => c._id === muscleId)?.name || 'Nombre no disponible'
+    };
+
+    return muscleObject;
+};
+
+const refactorSecondaryMuscles = (muscles) => {
+    if (!muscles){ return null; }
+  
+    //Handles cases when the user only chooses one option and form returns a string
+    if (typeof(muscles) === 'string') {
+      muscles = [muscles]; 
+    }
+
+    //Fetches all the muscles to pair with their names
+    if (!_muscleNames || _muscleNames.length === 0) {
+        //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+        _muscleNames = MuscleHandler.musclesStaticValues.muscles;
+    }
+  
+    let refactoredMuscles: MuscleIdAndName[] = [];
+    muscles.forEach(muscleId => 
+      {
+        if (!muscleId) return; //skips empty selections
+  
+        const muscleObject: MuscleIdAndName = {
+          muscleId: new ObjectId(muscleId),
+          muscleName: _muscleNames.find(c => c._id === muscleId)?.name || 'Nombre no disponible'
+        };
+  
+        refactoredMuscles.push(muscleObject);
+      });
+    
+    return refactoredMuscles;
+  };
+
+const refactorTypes = (types) => {
+    if (!types){ return null; }
+
+    //Handles cases when the user only chooses one option and form returns a string
+    if (typeof(types) === 'string') {
+        types = [types]; 
+    }
+
+    return types;
+};
+
+//TODO: Create one reusable and abstract method to handle similar refactors functionns
+const refactorEquipments = (equipments) => {
+    if (!equipments){ return null; }
+
+  //Handles cases when the user only chooses one option and form returns a string
+  if (typeof(equipments) === 'string') {
+    equipments = [equipments]; 
+  }
+  //Fetches all the equipments to pair with their names
+  if (!_equipmentNames || _equipmentNames.length === 0) {
+    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
+    _equipmentNames = EquipmentHandler.equipmentsStaticValues.equipments;
+  }
+
+  let refactoredEquipments: EquipmentIdAndName[] = [];
+  equipments.forEach(equipmentId => 
+    {
+      if (!equipmentId) return; //skips empty selections
+
+      const equipmentObject: EquipmentIdAndName = {
+        equipmentId: new ObjectId(equipmentId),
+        equipmentName: _equipmentNames.find(c => c._id === equipmentId)?.name || 'Nombre no disponible'
+      };
+
+      refactoredEquipments.push(equipmentObject);
+    });
+  
+  return refactoredEquipments;
+}
 
 const refactorPhysicalConditions = (selectedConditions) => {
   if (!selectedConditions){ return null; }

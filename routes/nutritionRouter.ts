@@ -13,7 +13,7 @@ import * as menstrualCyclePhasesController from '../controllers/general/menstrua
 //Render Views
 router.get('/', foodsController.redirectToViewAddFood); //defeault render for '/nutrition'
 router.get('/food', foodsController.redirectToViewAddFood);
-router.get('/food/:foodId', foodsController.getViewOfSelectedFood);
+router.get('/food/:foodId', foodsController.getViewToSelectedFood);
 router.get('/add-food', foodsController.getViewToAddFood);
 //Actions
 router.post('/add-food', foodsController.addFood);
@@ -26,7 +26,7 @@ router.delete('/food/:foodId', foodsController.apiDeleteFood);
 /* RECIPE */
 //Render Views
 router.get('/recipe', recipesController.redirectToViewAddRecipe);
-router.get('/recipe/:recipeId', recipesController.getViewOfSelectedRecipe);
+router.get('/recipe/:recipeId', recipesController.getViewToSelectedRecipe);
 router.get('/add-recipe', recipesController.getViewToAddRecipe);
 //Actions
 router.post('/add-recipe', recipesController.addRecipe);
@@ -38,7 +38,7 @@ router.delete('/recipe/:recipeId', recipesController.apiDeleteRecipe);
 /* DIET */
 //Renders
 router.get('/diet', dietsController.getViewToAddDiet);
-router.get('/diet/:dietId', dietsController.getViewOfSelectedDiet);
+router.get('/diet/:dietId', dietsController.getViewToSelectedDiet);
 router.get('/add-diet', dietsController.getViewToAddDiet);
 //ACTIONS
 router.post('/diet', dietsController.addDiet);
