@@ -36,7 +36,7 @@ export const getViewOfSelectedRecipe = async (req: Request, res: Response) => {
       pageTitle: 'Información de receta',
       recipeNames: _recipeNames,
       selectedRecipeInfo: selectedRecipeInfo,
-      recipeSelectOptions: RecipeHandler.recipeSelectOptions,
+      recipeStaticValues: RecipeHandler.recipeStaticValues,
       ingredients: FoodHandler.foodStaticValues.foods,
       chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
       diets: DietHandler.compatibleWithDietsStaticValues.diets,

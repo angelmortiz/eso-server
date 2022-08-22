@@ -1,5 +1,6 @@
 import { ObjectId } from 'bson';
-import { ConditionIdAndName, ExerciseIdAndName } from '../types/types';
+import { ConditionIdAndName, EquipmentIdAndName, 
+        ExerciseIdAndName, MuscleIdAndName } from '../types/types';
 
 export interface IExercise {
     id: ObjectId | string;
@@ -8,9 +9,9 @@ export interface IExercise {
     difficulty: string;
     types: string[];
     compundMovement: boolean;
-    mainMuscle: string;
-    secondaryMuscles: string[];
-    equipments: any[];
+    mainMuscle: MuscleIdAndName;
+    secondaryMuscles: MuscleIdAndName[];
+    equipments: EquipmentIdAndName[];
     safeForConditions: ConditionIdAndName[];
     notRecommendedForConditions: ConditionIdAndName[];
     recommendedForCyclePhases: string[];

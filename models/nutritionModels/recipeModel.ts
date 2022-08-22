@@ -121,7 +121,7 @@ export default class Recipe implements IRecipe {
         });
       }
 
-      static recipeSelectOptions = {
+      static recipeStaticValues = {
         complexity: ['Baja', 'Media', 'Alta']
       }
 };

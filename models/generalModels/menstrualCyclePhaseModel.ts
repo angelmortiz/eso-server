@@ -1,5 +1,5 @@
 export default class MenstrualCyclePhase {
-    name;
+    name: string;
     
     static menstrualCyclePhasesStaticValues = {
         menstrualCyclePhases: [

@@ -12,20 +12,32 @@ export type FoodIdAndName = {
     foodName: string
 };
 
-/** Chronic Conditions */
-export type ConditionIdAndName = {
-    conditionId: ObjectId | string,
-    conditionName: string
-};
-
 /** Diets */
 export type DietIdAndName = {
     dietId: ObjectId | string,
     dietName: string
 };
 
+/** Chronic/Physical Conditions */
+export type ConditionIdAndName = {
+    conditionId: ObjectId | string,
+    conditionName: string
+};
+
 /** Exercises */
 export type ExerciseIdAndName = {
     exerciseId: ObjectId | string,
     exerciseName: string
+};
+
+/** Muscles */
+export type MuscleIdAndName = {
+    muscleId: ObjectId | string,
+    muscleName: string
+};
+
+/** Equipments */
+export type EquipmentIdAndName = {
+    equipmentId: ObjectId | string,
+    equipmentName: string
 };

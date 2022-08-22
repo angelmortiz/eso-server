@@ -14,31 +14,26 @@
     </div>
     <form class="form" action="/activities/exercise" method="POST">
         <div class="form__control">
+            <!-- NAME -->
             <div class="form__item">
                 <label for="name" class="form__title">Nombre:</label>
                 <input type="text" name="name" id="exercise-name">
             </div>
+            <!-- ALTERNATIVE NAME -->
             <div class="form__item">
                 <label for="alternativeName" class="form__title">Nombre alternativo:</label>
                 <input type="text" name="alternativeName" id="alternativeName">
             </div>
-            <div class="form__item">
+            <!-- DIFFICULTY -->
+            <div class="form__item-rows">
                 <label for="difficulty" class="form__title">Dificultad:</label>
                 <select name="difficulty" id="difficulty-selection">
-                    <option value="baja">Baja</option>
-                    <option value="media">Media</option>
-                    <option value="alta">Alta</option>
+                    <option value="Baja">Baja</option>
+                    <option value="Media">Media</option>
+                    <option value="Alta">Alta</option>
                 </select>
             </div>
-            <div class="form__item">
-                <label for="types" class="form__title">Tipos de ejercicio:</label>
-                <select name="types" id="types-selection">
-                    <option value="fuerza">Fuerza</option>
-                    <option value="hiit">HIIT</option>
-                    <option value="cardio">Cardio</option>
-                    <option value="estiramiento">Estiramiento</option>
-                </select>
-            </div>
+            <!-- COMPOUND MOVEMENT -->
             <div class="form__item">
                 <label class="form__title">Ejercicio compuesto:</label>
                 <input type="radio" name="compundMovement" id="compundMovement-yes-selection">
@@ -46,55 +41,101 @@
                 <input type="radio" name="compundMovement" id="compundMovement-no-selection">
                 <label for="compundMovement" class="form__title">No</label>
             </div>
-            <div class="form__item">
+            <!-- MAIN MUSCLE -->
+            <div class="form__item-rows">
                 <label for="mainMuscle" class="form__title">Músculo principal:</label>
                 <select name="mainMuscle" id="mainMuscle-selection">
                     <option value="pantorrilla">Pantorrilla</option>
                 </select>
             </div>
-            <div class="form__item">
+            <!-- SECONDARY MUSCLES -->
+            <div class="form__item-rows">
                 <label for="secondaryMuscles" class="form__title">Músculos secundarios:</label>
-                <select name="secondaryMuscles" id="secondaryMuscles-selection">
-                    <option value="pantorrilla">Pantorrilla</option>
-                </select>
+                <div class="form__selects-div" id="secondaryMuscles-selects">
+                    <select name="secondaryMuscles" id="secondaryMuscles-selection">
+                        <option value="pantorrilla">Pantorrilla</option>
+                    </select>
+                </div>
+                <button class="form__add-btn" id="btn-add-new-muscle">Añadir músculo</button>
             </div>
-            <div class="form__item">
-                <label for="equipments" class="form__title">Equipos:</label>
-                <select name="equipments" id="equipments-selection">
-                    <option value="barra">Barra</option>
-                </select>
+            <!-- TYPES -->
+            <div class="form__item-rows">
+                <label for="types" class="form__title">Tipos de ejercicio:</label>
+                <div class="form__selects-div" id="types-selects">
+                    <select name="types" id="types-selection">
+                        <option value="fuerza">Fuerza</option>
+                        <option value="hiit">HIIT</option>
+                        <option value="cardio">Cardio</option>
+                        <option value="estiramiento">Estiramiento</option>
+                    </select>
+                </div>
+                <button class="form__add-btn" id="btn-add-new-type">Añadir tipo</button>
             </div>
-            <div class="form__item">
+            <!-- EQUIPMENTS -->
+            <div class="form__item-rows">
+                <label for="equipments" class="form__title">Ejercicios:</label>
+                <div class="form__selects-div" id="equipments-selects">
+                    <select name="equipments">
+                        <!-- [Loop1] Loop through all the equipments options -->
+                        <% equipments?.forEach( eq => { %>
+                            <option value="<%= eq._id %>"><%= eq.name %></option>
+                        <% }); %>
+                        <!-- [END-Loop1] -->
+                    </select>
+                </div>
+                <button class="form__add-btn" id="btn-add-new-equipment">Añadir ejercicio</button>
+            </div>
+            <!-- SAFE FOR CONDITIONS -->
+            <div class="form__item-rows">
                 <label for="safeForConditions" class="form__title">Seguro para condiciones:</label>
-                <select name="safeForConditions" id="safeForConditions-selection">
-                    <option value="diabetestipo1">Diabetes tipo 1</option>
-                    <option value="diabetestipo2">Diabetes tipo 2</option>
-                    <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
-                </select>
+                <div class="form__selects-div" id="safeForConditions-selects">
+                    <select name="safeForConditions">
+                        <!-- [Loop1] Loop through all the physical conditions options -->
+                        <% physicalConditions?.forEach( pc => { %>
+                            <option value="<%= pc._id %>"><%= pc.name %></option>
+                        <% }); %>
+                        <!-- [END-Loop1] -->
+                    </select>
+                </div>
+                <button class="form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
             </div>
-            <div class="form__item">
+            <!-- NOT RECOMMENDED FOR CONDITIONS -->
+            <div class="form__item-rows">
                 <label for="notRecommendedForConditions" class="form__title">No recomendado para condiciones:</label>
-                <select name="notRecommendedForConditions" id="notRecommendedForConditions-selection">
-                    <option value="enfermedadesautinmunes">Enfermedades autoinmunes</option>
-                </select>
+                <div class="form__selects-div" id="notRecommendedForConditions-selects">
+                    <select name="notRecommendedForConditions">
+                        <!-- [Loop1] Loop through all the physical conditions options -->
+                        <% physicalConditions?.forEach( pc => { %>
+                            <option value="<%= pc._id %>"><%= pc.name %></option>
+                        <% }); %>
+                        <!-- [END-Loop1] -->
+                    </select>
+                </div>
+                <button class="form__add-btn" id="btn-add-new-not-recommended-condition">Añadir condición</button>
             </div>
-            <div class="form__item">
+            <!-- RECOMMENDED FOR CYCLE PHASES -->
+            <div class="form__item-rows">
                 <label for="recommendedForCyclePhases" class="form__title">Recomendado para fases:</label>
-                <select name="recommendedForCyclePhases" id="recommendedForCyclePhases-selection">
-                    <option value="periodo">Periodo</option>
-                    <option value="folicular">Folicular</option>
-                    <option value="ovulacion">Ovulación</option>
-                    <option value="secretora">Secretora</option>
-                </select>
+                <div class="form__selects-div" id="menstrualCyclePhases-selects">
+                    <select name="recommendedForCyclePhases">
+                    <!-- [Loop1] Loop through all the phases options -->
+                        <% menstrualCyclePhases?.forEach( mcp=> { %>
+                            <option value="<%= mcp._id %>"><%= mcp.name %></option>
+                        <% }); %>
+                    <!-- [END-Loop1] -->
+                    </select>
+                </div>
+                <button class="form__add-btn" id="btn-add-new-phase">Añadir fase</button>
             </div>
-            <div class="form__item">
+            <!-- LINK TO VIDEO -->
+            <div class="form__item-rows">
                 <label for="linkToVideo" class="form__title">Enlace para video:</label>
                 <input type="text" name="linkToVideo" id="linkToVideo">
             </div>
         </div>
 
-        <div class="form__btn-control">
-            <button class="form__btn" type="submit">Añadir</button>
+        <div class="form-btns__control">
+            <button class="form__btn"  type="submit" id="add-exercise-form-btn">Añadir</button>
         </div>
     </form>
 </main>

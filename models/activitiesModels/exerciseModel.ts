@@ -1,6 +1,6 @@
 import { ObjectId } from "bson";
 import { IExercise } from "../../util/interfaces/activitiesInterfaces";
-import { ConditionIdAndName } from "../../util/types/types";
+import { ConditionIdAndName, EquipmentIdAndName, MuscleIdAndName } from "../../util/types/types";
 
 const exercises: IExercise[] = [];
 
@@ -11,9 +11,9 @@ export default class Exercise implements IExercise {
     difficulty: string;
     types: string[];
     compundMovement: boolean;
-    mainMuscle: string;
-    secondaryMuscles: string[];
-    equipments: any[];
+    mainMuscle: MuscleIdAndName;
+    secondaryMuscles: MuscleIdAndName[];
+    equipments: EquipmentIdAndName[];
     safeForConditions: ConditionIdAndName[];
     notRecommendedForConditions: ConditionIdAndName[];
     recommendedForCyclePhases: string[];
@@ -55,6 +55,13 @@ export default class Exercise implements IExercise {
           {_id: "", name: "-- Elige --"},
           {_id: "62e3fb672aeacf742c288451", name: "Sentadillas"},
           {_id: "62e3fb672aeacf742c288452", name: "Deadlifts"}
+        ],
+        types: [
+            {_id: "", name: "-- Elige --"},
+            {_id: "Fuerza", name: "Fuerza"},
+            {_id: "Cardio", name: "Cardio"},
+            {_id: "HIIT", name: "HIIT"},
+            {_id: "Estiramiento", name: "Estiramiento"}
         ]
     }
 };

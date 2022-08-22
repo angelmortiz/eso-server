@@ -63,7 +63,7 @@
                     <!-- [Loop1] Loop through complexities associated to curret recipe -->
                     <select name="complexity" id="complexity-selection">
                         <option value="">-- Elige --</option>
-                        <% recipeSelectOptions.complexity.forEach( complexity => { %>
+                        <% recipeStaticValues.complexity.forEach( complexity => { %>
                             <option value="<%= complexity %>"
                                 <%=selectedRecipeInfo.complexity == complexity ? 'selected' : '' %>
                                 ><%= complexity %></option>
