@@ -20,6 +20,7 @@ router.post('/update-exercise/:exerciseId', exercisesController.updateExercise);
 router.post('/redirect-to-view-selected-exercise', exercisesController.redirectToViewSelectedExercise);
 //APIs
 router.get('/exercises', exercisesController.apiGetExercises);
+router.get('/exerciseTypes', exercisesController.apiGetExerciseTypes);
 router.delete('/exercise/:exerciseId', exercisesController.apiDeleteExercise);
 
 /* MUSCLE */

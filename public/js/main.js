@@ -41,6 +41,34 @@ let getExercises = async () => {
     exercises = await response.json();
     return exercises;
 };
+
+let exerciseTypes;
+let getExerciseTypes = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/activities/exerciseTypes`);
+    exerciseTypes = await response.json();
+    return exerciseTypes;
+};
+
+let muscles;
+let getMuscles = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/activities/muscles`);
+    muscles = await response.json();
+    return muscles;
+};
+
+let equipments;
+let getEquipments = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/activities/equipments`);
+    equipments = await response.json();
+    return equipments;
+};
+
+let physicalConditions;
+let getPhysicalConditions = async () => {
+    const response = await fetch(`${SERVER_ADDRESS}/activities/physicalConditions`);
+    physicalConditions = await response.json();
+    return physicalConditions
+};
 /** [END] GETTERS **/
 //#endregion
 /*** [END] INFO GETTERS ***/
@@ -193,8 +221,8 @@ let showDeleteConfirmation = (typeDisplay, name) => {
 }
 
 let sendDeleteCommand = async (database, type, id) => {
-     const response = await fetch(`${SERVER_ADDRESS}/${database}/${type}/${id}`, {method: 'DELETE'});
-     window.location.href = response.url;
+    const response = await fetch(`${SERVER_ADDRESS}/${database}/${type}/${id}`, {method: 'DELETE'});
+    window.location.href = response.url;
 };
 
 let deleteDocument = async (documentInfo) => {
@@ -345,6 +373,83 @@ btnDeleteChronicCondition?.addEventListener('click', (event) => {
 
 /*** EXERCISE ***/
 //#region
+/** Select Creators **/
+/* SECONDARY MUSCLES */
+//elements
+const btnAddSecondaryMuscle = document.getElementById('btn-add-new-secondaryMuscle');
+const secondaryMusclesDiv = document.getElementById('secondaryMuscles-selects');
+
+//listeners
+btnAddSecondaryMuscle?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addSelectToDiv(muscles, getMuscles, "secondaryMuscles", secondaryMusclesDiv);
+});
+
+/* EXERCISE TYPES */
+//elements
+const btnAddExerciseTypes = document.getElementById('btn-add-new-exerciseTypes');
+const exerciseTypesDiv = document.getElementById('exerciseTypes-selects');
+
+//listeners
+btnAddExerciseTypes?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addSelectToDiv(exerciseTypes, getExerciseTypes, "types", exerciseTypesDiv);
+});
+
+/* EQUIPMENTS */
+//elements
+const btnAddEquipments = document.getElementById('btn-add-new-equipments');
+const equipmentsDiv = document.getElementById('equipments-selects');
+
+//listeners
+btnAddEquipments?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addSelectToDiv(equipments, getEquipments, "equipments", equipmentsDiv);
+});
+/** [END] Select Creators **/
+
+/* SAFE FOR PHYSICAL CONDITIONS */
+//elements
+const btnAddPhysicalConditions = document.getElementById('btn-add-new-safe-physicalCondition');
+const physicalConditionsDiv = document.getElementById('safeForPhysicalConditions-selects');
+
+//listeners
+btnAddPhysicalConditions?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addSelectToDiv(physicalConditions, getPhysicalConditions, "safeForConditions", physicalConditionsDiv);
+});
+
+/* NOT RECOMMENDED FOR PHYSICAL CONDITIONS */
+//elements
+const btnAddNotRecommendedPhysicalConditions = document.getElementById('btn-add-new-not-recommended-physicalCondition');
+const notRecommendedPhysicalConditionsDiv = document.getElementById('notRecommendedForPhysicalCondition-selects');
+
+//listeners
+btnAddNotRecommendedPhysicalConditions?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    addSelectToDiv(physicalConditions, getPhysicalConditions, "notRecommendedForConditions", notRecommendedPhysicalConditionsDiv);
+});
+/** [END] Select Creators **/
+
+//** Delete [Button] **/
+//elements
+const btnDeleteExercise = document.getElementById('btn-delete-exercise');
+const selectedExercise = document.getElementById('select-exercise-selection');
+const selectedExerciseName = selectedExercise?.options[selectedExercise.selectedIndex].text;
+const selectedExerciseId = selectedExercise?.options[selectedExercise.selectedIndex].value;
+const exerciseInfo = {
+    database: 'activities',
+    type: 'exercise',
+    typeDisplay: 'ejercicio',
+    name: selectedExerciseName,
+    id: selectedExerciseId
+};
+
+//listeners
+btnDeleteExercise?.addEventListener('click', (event) => { 
+    event.preventDefault();
+    deleteDocument(exerciseInfo);
+});
 //#endregion
 /*** [END] EXERCISE ***/
 

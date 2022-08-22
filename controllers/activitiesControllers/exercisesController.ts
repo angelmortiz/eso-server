@@ -94,6 +94,10 @@ export const apiGetExercises = (req: Request, res: Response) => {
     res.json(ExerciseHandler.exercisesStaticValues.exercises);
 };
 
+export const apiGetExerciseTypes = (req: Request, res: Response) => {
+    res.json(ExerciseHandler.exercisesStaticValues.types);
+};
+
 export const apiDeleteExercise = (req: Request, res: Response) => {
   const exerciseId: string = req.params.exerciseId;
 

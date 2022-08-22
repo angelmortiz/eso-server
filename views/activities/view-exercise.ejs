@@ -113,7 +113,7 @@
             <!-- TYPES -->
             <div class="form__item-rows">
                 <label for="types" class="form__title">Tipos de ejercicio:</label>
-                <div class="form__selects-div" id="types-selects">
+                <div class="form__selects-div" id="exerciseTypes-selects">
                      <!-- [Loop1] Loop through types associated to curret exercise -->
                      <% selectedExerciseInfo?.types?.forEach( (type) => { %> 
                         <select name="types">
@@ -128,7 +128,7 @@
                     <% });  %> 
                     <!-- [END-Loop1] -->
                 </div>
-                <button class="form__add-btn" id="btn-add-new-type">Añadir tipo</button>
+                <button class="form__add-btn" id="btn-add-new-exerciseTypes">Añadir tipo</button>
             </div>
             <!-- EQUIPMENTS -->
             <div class="form__item-rows">
@@ -148,12 +148,12 @@
                     <% });  %> 
                 <!-- [END-Loop1] -->
                 </div>
-                <button class="form__add-btn" id="btn-add-new-equipment">Añadir equipo</button>
+                <button class="form__add-btn" id="btn-add-new-equipments">Añadir equipo</button>
             </div>
             <!-- SAFE FOR CONDITIONS -->
             <div class="form__item-rows">
                 <label for="safeForConditions" class="form__title">Seguro para condiciones:</label>
-                <div class="form__selects-div" id="safeForConditions-selects">
+                <div class="form__selects-div" id="safeForPhysicalConditions-selects">
                     <!-- [Loop1] Loop through physical conditions associated to curret exercise -->
                     <% selectedExerciseInfo?.safeForConditions?.forEach( (condition) => { %> 
                         <select name="safeForConditions">
@@ -168,12 +168,12 @@
                     <% });  %> 
                     <!-- [END-Loop1] -->
                 </div>
-                <button class="form__add-btn" id="btn-add-new-safe-condition">Añadir condición</button>
+                <button class="form__add-btn" id="btn-add-new-safe-physicalCondition">Añadir condición</button>
             </div>
             <!-- NOT RECOMMENDED FOR CONDITIONS -->
             <div class="form__item-rows">
                 <label for="notRecommendedForConditions" class="form__title">No recomendado para condiciones:</label>
-                <div class="form__selects-div" id="notRecommendedForConditions-selects">
+                <div class="form__selects-div" id="notRecommendedForPhysicalCondition-selects">
                     <!-- [Loop1] Loop through physical conditions associated to curret exercise -->
                     <% selectedExerciseInfo?.notRecommendedForConditions?.forEach( (condition) => { %> 
                         <select name="notRecommendedForConditions">
@@ -188,7 +188,7 @@
                     <% });  %> 
                     <!-- [END-Loop1] -->
                 </div>
-                <button class="form__add-btn" id="btn-add-new-not-recommended-condition">Añadir condición</button>
+                <button class="form__add-btn" id="btn-add-new-not-recommended-physicalCondition">Añadir condición</button>
             </div>
             <!-- RECOMMENDED FOR CYCLE PHASES -->
             <div class="form__item-rows">
@@ -222,5 +222,4 @@
         </div>
     </form>
 </main>
-</body>
-</html>
+<%- include('../includes/end.ejs') %>
