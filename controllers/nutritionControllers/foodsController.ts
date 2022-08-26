@@ -1,14 +1,10 @@
 import { ObjectId } from 'bson';
 import {Request, Response} from 'express';
-import { IdAndName, ConditionIdAndName, DietIdAndName } from '../../util/types/types';
+import { ConditionIdAndName, DietIdAndName } from '../../util/types/types';
 import FoodHandler from '../../models/nutritionModels/foodModel';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
 import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
-
-let _foodNames: IdAndName[] = [];
-let _conditionNames: IdAndName[] = [];
-let _dietNames: IdAndName[] = [];
 
 /** RENDERS */
 export const redirectToViewAddFood = (req: Request, res: Response) => {
@@ -22,22 +18,23 @@ export const redirectToViewSelectedFood = (req: Request, res: Response) => {
 export const getViewToSelectedFood = async (req: Request, res: Response) => {
   const selectedFoodId: string = req.params.foodId;
   
-  //Fetches the foodNames from db if names don't exist or if the current foodId doesn't exist in array
-  //Note: This logic is needed to fetch the new food info once a new food has been added to the db
-  const index: number = _foodNames?.findIndex(f => f._id.toString() == selectedFoodId);
-  (index > -1) ? await fetchFoodNames(false) : await fetchFoodNames(true);
+  //if selectedFoodId is new, fetches all names. Otherwise, returns local list.
+  const foodNames = await FoodHandler.getAllNames(selectedFoodId);
+  const chronicConditions = await ChronicConditionHandler.getAllNames();
+  const diets = await DietHandler.getAllNames();
+  const menstrualCyclePhases = MenstrualCyclePhaseHandler.getAllNames();
 
   FoodHandler.fetchById(selectedFoodId)
   .then((selectedFoodInfo) => {
     res.render('./nutrition/view-food', {
       caller: 'view-food',
       pageTitle: 'Información de comida',
-      foodNames: _foodNames,
+      foodNames: foodNames,
       foodSelectOptions: FoodHandler.foodSelectOptions,
       selectedFoodInfo: selectedFoodInfo,
-      chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
-      diets: DietHandler.compatibleWithDietsStaticValues.diets,
-      menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
+      chronicConditions: chronicConditions,
+      diets: diets,
+      menstrualCyclePhases: menstrualCyclePhases
     });
   })
   .catch((err) => {
@@ -46,33 +43,30 @@ export const getViewToSelectedFood = async (req: Request, res: Response) => {
 };
 
 export const getViewToAddFood = async (req: Request, res: Response) => {
-  //Fetches the foodNames from db if for some reason the data was lost from previous method
-  await fetchFoodNames();
-
   res.render('./nutrition/add-food', {
     caller: 'add-food',
     pageTitle: 'Añadir comida',
-    foodNames: _foodNames,
+    foodNames: await FoodHandler.getAllNames(),
     foodSelectOptions: FoodHandler.foodSelectOptions,
     selectedFoodInfo: null,
-    chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
-    diets: DietHandler.compatibleWithDietsStaticValues.diets,
-    menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
+    chronicConditions: await ChronicConditionHandler.getAllNames(),
+    diets: await DietHandler.getAllNames(),
+    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
   });
 };
 
 /** ACTIONS */
-export const addFood = (req: Request, res: Response) => {
+export const addFood = async (req: Request, res: Response) => {
   let foodHandler = new FoodHandler(req.body);
-  foodHandler = refactorValuesForDb(foodHandler);
+  foodHandler = await refactorValuesForDb(foodHandler);
   foodHandler.save().then( id => res.redirect(`/nutrition/food/${id}`) );
 };
 
-export const updateFood = (req: Request, res: Response) => {
+export const updateFood = async (req: Request, res: Response) => {
   const foodId: string = req.params.foodId;
   let food = new FoodHandler(req.body);
   food.id = foodId;
-  food = refactorValuesForDb(food);
+  food = await refactorValuesForDb(food);
   
   food.update()
   .then(() => {
@@ -84,8 +78,8 @@ export const updateFood = (req: Request, res: Response) => {
 };
 
 /** APIS */
-export const apiGetFoods = (req: Request, res: Response) => {
-  res.json(FoodHandler.foodStaticValues.foods);
+export const apiGetFoods = async (req: Request, res: Response) => {
+  res.json(await FoodHandler.getAllNames());
 };
 
 export const apiDeleteFood = (req: Request, res: Response) => {
@@ -94,10 +88,7 @@ export const apiDeleteFood = (req: Request, res: Response) => {
   FoodHandler.deleteById(foodId)
   .then( deleteResponse => {
     //removes the food from foods dropdown
-    const index: number = _foodNames?.findIndex(f => f._id.toString() == foodId);
-    if (index > -1){
-      _foodNames.splice(index, 1);
-    }
+    FoodHandler.removeNameById(foodId);
 
     console.log(`'${deleteResponse.name}' food deleted successfully.`);
 
@@ -109,19 +100,12 @@ export const apiDeleteFood = (req: Request, res: Response) => {
 };
 
 /*** FUNCTIONS */
-const fetchFoodNames = async (forceFetch = false) => {
-  //Fetches the foodNames from db only when foodNames is not available or when forced
-  //Note: This is forced to fetch when a new value has been added to the database
-  if (forceFetch || !_foodNames || _foodNames.length === 0) {
-    await FoodHandler.fetchAllNames().then((foodNames) => { _foodNames = foodNames});
-  }
-};
 
-const refactorValuesForDb = (food: FoodHandler) => {
+const refactorValuesForDb = async (food: FoodHandler) => {
   food = refactorMealTypeValues(food);
-  food.safeForConditions = refactorChronicConditions(food.safeForConditions);
-  food.notRecommendedForConditions = refactorChronicConditions(food.notRecommendedForConditions);
-  food.compatibleWithDiets = refactorCompatibleWithDiets(food.compatibleWithDiets);
+  food.safeForConditions = await refactorChronicConditions(food.safeForConditions);
+  food.notRecommendedForConditions = await refactorChronicConditions(food.notRecommendedForConditions);
+  food.compatibleWithDiets = await refactorCompatibleWithDiets(food.compatibleWithDiets);
   food.recommendedForCyclePhases = refactorCyclePhases(food.recommendedForCyclePhases);
   return food;
 };
@@ -145,7 +129,7 @@ const refactorMealTypeValues = (food) => {
   return food;
 };
 
-const refactorChronicConditions = (selectedConditions) => {
+const refactorChronicConditions = async (selectedConditions) => {
   if (!selectedConditions){ return null; }
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -153,10 +137,7 @@ const refactorChronicConditions = (selectedConditions) => {
     selectedConditions = [selectedConditions]; 
   }
   //Fetches all the chronic conditions to pair with their names
-  if (!_conditionNames || _conditionNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _conditionNames = ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions;
-  }
+  const _conditionNames = await ChronicConditionHandler.getAllNames();
 
   let refactoredConditions: ConditionIdAndName[] = [];
   selectedConditions.forEach(conditionId => 
@@ -174,7 +155,7 @@ const refactorChronicConditions = (selectedConditions) => {
   return refactoredConditions;
 };
 
-const refactorCompatibleWithDiets = (selectedDietsCompatible) => {
+const refactorCompatibleWithDiets = async (selectedDietsCompatible) => {
   if (!selectedDietsCompatible) {return null;}
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -182,10 +163,7 @@ const refactorCompatibleWithDiets = (selectedDietsCompatible) => {
     selectedDietsCompatible = [selectedDietsCompatible]; 
   }
   //Fetches all the diets to pair with their names
-  if (!_dietNames || _dietNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _dietNames = DietHandler.compatibleWithDietsStaticValues.diets;
-  }
+  const _dietNames = await DietHandler.getAllNames();
 
   let refactoredDiets: DietIdAndName[] = [];
   selectedDietsCompatible.forEach(dietId => 
@@ -212,7 +190,7 @@ const refactorCyclePhases = (selectedPhases) => {
   {
     selectedPhases = [selectedPhases];
   }
-  
+
   //removes all empty options if necessary.
   return selectedPhases.filter(p => p);
 };

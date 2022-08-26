@@ -127,6 +127,7 @@
                             <!-- [Loop1] Loop through chronic conditions associated to curret food -->
                             <% selectedFoodInfo?.safeForConditions?.forEach( (condition) => { %> 
                                 <select name="safeForConditions">
+                                    <option value="">-- Elige --</option>
                                     <!-- [Loop2] Loop through all the chronic conditions options -->
                                     <% chronicConditions?.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
@@ -147,6 +148,7 @@
                             <!-- [Loop1] Loop through chronic conditions associated to curret food -->
                             <% selectedFoodInfo?.notRecommendedForConditions?.forEach( (condition) => { %> 
                                 <select name="notRecommendedForConditions">
+                                    <option value="">-- Elige --</option>
                                     <!-- [Loop2] Loop through all the chronic conditions options -->
                                     <% chronicConditions?.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
@@ -167,6 +169,7 @@
                             <!-- [Loop1] Loop through diets associated to curret food -->
                             <% selectedFoodInfo?.compatibleWithDiets?.forEach( (diet) => { %> 
                                 <select name="compatibleWithDiets">
+                                    <option value="">-- Elige --</option>
                                 <!-- [Loop2] Loop through all the diets options -->
                                 <% diets?.forEach( d => { %>
                                     <option value="<%= d._id %>"
@@ -187,6 +190,7 @@
                             <!-- [Loop1] Loop through diets associated to curret food -->
                             <% selectedFoodInfo?.recommendedForCyclePhases?.forEach( (phase) => { %> 
                                 <select name="recommendedForCyclePhases">
+                                    <option value="">-- Elige --</option>
                                     <% menstrualCyclePhases?.forEach( mcp=> { %>
                                         <option value="<%= mcp._id %>"
                                             <%=phase == mcp._id ? 'selected' : '' %>

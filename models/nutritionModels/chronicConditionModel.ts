@@ -2,6 +2,7 @@ import { ObjectId } from 'bson';
 import { nutritionDb } from '../../util/database/connection';
 import { IChronicCondition } from '../../util/interfaces/nutritionInterfaces';
 import ChronicConditionSchema from '../../util/database/schemas/nutrition/chronicConditionSchema';
+import { IdAndName } from '../../util/types/types';
 
 const ChronicConditionModel = nutritionDb.model('ChronicCondition', ChronicConditionSchema);
 
@@ -13,6 +14,8 @@ export default class ChronicConditionHandler implements IChronicCondition {
     causes: string[];
     treatments: string[];
     tests: string[];
+
+    static _names: IdAndName[];
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
@@ -109,6 +112,29 @@ export default class ChronicConditionHandler implements IChronicCondition {
           return error;
         });
       }
+
+    static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
+      //forces to fetch all names if a new conditions has been added to the db
+      if (objectId) {
+        const index: number = this._names?.findIndex(obj => obj._id.toString() == objectId);
+        if (index === -1) forceFetch = true;
+      }
+  
+      //Only fetches names the first time or when it's forced
+      if (!this._names || forceFetch) {
+        await ChronicConditionHandler.fetchAllNames().then(fetchedNames => this._names = fetchedNames);
+      }
+  
+      return this._names;
+    } 
+  
+    //removes food from the list of names once it's been deleted
+    static removeNameById(objectId: string){
+      const index: number = this._names?.findIndex(obj => obj._id.toString() == objectId);
+      if (index > -1){
+        this._names.splice(index, 1);
+      }
+    }
 
     static chronicConditionsStaticValues = {
         //TODO: DELETE ME AND FETCH FROM DB

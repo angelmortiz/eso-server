@@ -1,5 +1,4 @@
 //NEXT
-//TODO: Check models and make sure data types make sense
 
 //FUTURE
 //TODO: Add button to remove options from selects
