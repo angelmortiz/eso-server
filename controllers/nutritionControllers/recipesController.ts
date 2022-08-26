@@ -1,16 +1,12 @@
 import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
-import { ConditionIdAndName, DietIdAndName, FoodIdAndName, IdAndName } from '../../util/types/types';
+import { ConditionIdAndName, DietIdAndName, FoodIdAndName } from '../../util/types/types';
+import { IRecipe } from '../../util/interfaces/nutritionInterfaces';
 import RecipeHandler from '../../models/nutritionModels/recipeModel';
 import FoodHandler from '../../models/nutritionModels/foodModel';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
 import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
-
-let _recipeNames: IdAndName[] = [];
-let _foodNames: IdAndName[] = [];
-let _conditionNames: IdAndName[] = [];
-let _dietNames: IdAndName[] = [];
 
 /** RENDERS */
 export const redirectToViewAddRecipe = (req: Request, res: Response) => {
@@ -23,59 +19,54 @@ export const redirectToViewSelectedRecipe = (req: Request, res: Response) => {
 
 export const getViewToSelectedRecipe = async (req: Request, res: Response) => {
   const selectedRecipeId: string = req.params.recipeId;
-  
-  //Fetches the recipeNames from db if names don't exist or if the current recipeId doesn't exist in array
-  //Note: This logic is needed to fetch the new recipe info once a new recipe has been added to the db
-  const index: number = _recipeNames?.findIndex(f => f._id.toString() == selectedRecipeId);
-  (index > -1) ? await fetchRecipeNames(false) : await fetchRecipeNames(true);
+  let selectedRecipeInfo: IRecipe = {} as IRecipe;
 
-  RecipeHandler.fetchById(selectedRecipeId)
-  .then((selectedRecipeInfo) => {
-    res.render('./nutrition/view-recipe', {
-      caller: 'view-recipe',
-      pageTitle: 'Información de receta',
-      recipeNames: _recipeNames,
-      selectedRecipeInfo: selectedRecipeInfo,
-      recipeStaticValues: RecipeHandler.recipeStaticValues,
-      ingredients: FoodHandler.foodStaticValues.foods,
-      chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
-      diets: DietHandler.compatibleWithDietsStaticValues.diets,
-      menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+  //if selectedRecipeId is new, fetches all names. Otherwise, returns local list.
+  const recipeNames = await RecipeHandler.getAllNames(selectedRecipeId);
+
+  //gets the information of the selected recipe
+  await RecipeHandler.fetchById(selectedRecipeId)
+  .then(recipeInfo => selectedRecipeInfo = recipeInfo)
+  .catch((err) => { console.log(err); return;});
+
+  res.render('./nutrition/view-recipe', {
+    caller: 'view-recipe',
+    pageTitle: 'Información de receta',
+    recipeNames: recipeNames,
+    selectedRecipeInfo: selectedRecipeInfo,
+    recipeStaticValues: RecipeHandler.recipeStaticValues,
+    ingredients: await FoodHandler.getAllNames(),
+    chronicConditions: await ChronicConditionHandler.getAllNames(),
+    diets: await DietHandler.getAllNames(),
+    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
   });
 };
 
 export const getViewToAddRecipe = async (req: Request, res: Response) => {
-  //Fetches the recipeNames from db if for some reason the data was lost from previous method
-  await fetchRecipeNames();
-
   res.render('./nutrition/add-recipe', {
     caller: 'add-recipe',
     pageTitle: 'Añadir receta',
-    recipeNames: _recipeNames,
+    recipeNames: await RecipeHandler.getAllNames(),
     selectedRecipeInfo: null,
-    ingredients: FoodHandler.foodStaticValues.foods,
-    chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
-    diets: DietHandler.compatibleWithDietsStaticValues.diets,
-    menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
+    ingredients: await FoodHandler.getAllNames(),
+    chronicConditions: await ChronicConditionHandler.getAllNames(),
+    diets: await DietHandler.getAllNames(),
+    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
   });
 };
 
 /** ACTIONS */
-export const addRecipe = (req: Request, res: Response) => {
+export const addRecipe = async (req: Request, res: Response) => {
   let recipeHandler = new RecipeHandler(req.body);
-  recipeHandler = refactorValuesForDb(recipeHandler);
+  recipeHandler = await refactorValuesForDb(recipeHandler);
   recipeHandler.save().then( id => res.redirect(`/nutrition/recipe/${id}`) );
 };
 
-export const updateRecipe = (req: Request, res: Response) => {
+export const updateRecipe = async (req: Request, res: Response) => {
   const recipeId: string = req.params.recipeId;
   let recipe = new RecipeHandler(req.body);
   recipe.id = recipeId;
-  recipe = refactorValuesForDb(recipe);
+  recipe = await refactorValuesForDb(recipe);
   
   recipe.update()
   .then(() => {
@@ -93,13 +84,9 @@ export const apiDeleteRecipe = (req: Request, res: Response) => {
   RecipeHandler.deleteById(recipeId)
   .then( deleteResponse => {
     //removes the recipe from recipes dropdown
-    const index: number = _recipeNames?.findIndex(f => f._id.toString() == recipeId);
-    if (index > -1){
-      _recipeNames.splice(index, 1);
-    }
-
+    //removes the food from foods dropdown
+    RecipeHandler.removeNameById(recipeId);
     console.log(`'${deleteResponse.name}' recipe deleted successfully.`);
-
     res.redirect(`/nutrition/recipe/`);
   })
   .catch(err => {
@@ -108,36 +95,25 @@ export const apiDeleteRecipe = (req: Request, res: Response) => {
 };
 
 /*** FUNCTIONS */
-const fetchRecipeNames = async (forceFetch = false) => {
-  //Fetches the recipeNames from db only when recipeNames is not available or when forced
-  //Note: This is forced to fetch when a new value has been added to the database
-  if (forceFetch || !_recipeNames || _recipeNames.length === 0) {
-    await RecipeHandler.fetchAllNames().then((recipeNames) => { _recipeNames = recipeNames});
-  }
-};
-
-const refactorValuesForDb = (recipe: RecipeHandler) => {
+const refactorValuesForDb = async (recipe: RecipeHandler) => {
   recipe = refactorMealTypeValues(recipe);
-  recipe.ingredients = refactorIngredients(recipe.ingredients);
-  recipe.safeForConditions = refactorChronicConditions(recipe.safeForConditions);
-  recipe.notRecommendedForConditions = refactorChronicConditions(recipe.notRecommendedForConditions);
-  recipe.compatibleWithDiets = refactorCompatibleWithDiets(recipe.compatibleWithDiets);
+  recipe.ingredients = await refactorIngredients(recipe.ingredients);
+  recipe.safeForConditions = await refactorChronicConditions(recipe.safeForConditions);
+  recipe.notRecommendedForConditions = await refactorChronicConditions(recipe.notRecommendedForConditions);
+  recipe.compatibleWithDiets = await refactorCompatibleWithDiets(recipe.compatibleWithDiets);
   recipe.recommendedForCyclePhases = refactorCyclePhases(recipe.recommendedForCyclePhases);
   return recipe;
 };
 
-const refactorIngredients = (ingredients)  => {
+const refactorIngredients = async (ingredients)  => {
   if (!ingredients){ return null; }
 
   //Handles cases when the user only chooses one option and form returns a string
   if (typeof(ingredients) === 'string') {
     ingredients = [ingredients]; 
   }
-  //Fetches all the foods to pair with their names
-  if (!_foodNames || _foodNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _foodNames = FoodHandler.foodStaticValues.foods;
-  }
+
+  const _foodNames = await FoodHandler.getAllNames();
 
   let refactoredFoods: FoodIdAndName[] = [];
   ingredients.forEach(foodId => 
@@ -174,7 +150,7 @@ const refactorMealTypeValues = (recipe) => {
   return recipe;
 };
 
-const refactorChronicConditions = (selectedConditions) => {
+const refactorChronicConditions = async (selectedConditions) => {
   if (!selectedConditions){ return null; }
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -182,10 +158,7 @@ const refactorChronicConditions = (selectedConditions) => {
     selectedConditions = [selectedConditions]; 
   }
   //Fetches all the chronic conditions to pair with their names
-  if (!_conditionNames || _conditionNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _conditionNames = ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions;
-  }
+  const _conditionNames = await ChronicConditionHandler.getAllNames();
 
   let refactoredConditions: ConditionIdAndName[] = [];
   selectedConditions.forEach(conditionId => 
@@ -203,7 +176,7 @@ const refactorChronicConditions = (selectedConditions) => {
   return refactoredConditions;
 };
 
-const refactorCompatibleWithDiets = (selectedDietsCompatible) => {
+const refactorCompatibleWithDiets = async (selectedDietsCompatible) => {
   if (!selectedDietsCompatible) {return null;}
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -211,10 +184,7 @@ const refactorCompatibleWithDiets = (selectedDietsCompatible) => {
     selectedDietsCompatible = [selectedDietsCompatible]; 
   }
   //Fetches all the diets to pair with their names
-  if (!_dietNames || _dietNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _dietNames = DietHandler.compatibleWithDietsStaticValues.diets;
-  }
+  const _dietNames = await DietHandler.getAllNames();
 
   let refactoredDiets: DietIdAndName[] = [];
   selectedDietsCompatible.forEach(dietId => 

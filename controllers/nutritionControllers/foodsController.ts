@@ -1,6 +1,7 @@
 import { ObjectId } from 'bson';
 import {Request, Response} from 'express';
 import { ConditionIdAndName, DietIdAndName } from '../../util/types/types';
+import { IFood } from '../../util/interfaces/nutritionInterfaces';
 import FoodHandler from '../../models/nutritionModels/foodModel';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
@@ -17,28 +18,25 @@ export const redirectToViewSelectedFood = (req: Request, res: Response) => {
 
 export const getViewToSelectedFood = async (req: Request, res: Response) => {
   const selectedFoodId: string = req.params.foodId;
+  let selectedFoodInfo: IFood = {} as IFood;
   
   //if selectedFoodId is new, fetches all names. Otherwise, returns local list.
   const foodNames = await FoodHandler.getAllNames(selectedFoodId);
-  const chronicConditions = await ChronicConditionHandler.getAllNames();
-  const diets = await DietHandler.getAllNames();
-  const menstrualCyclePhases = MenstrualCyclePhaseHandler.getAllNames();
 
-  FoodHandler.fetchById(selectedFoodId)
-  .then((selectedFoodInfo) => {
-    res.render('./nutrition/view-food', {
-      caller: 'view-food',
-      pageTitle: 'Información de comida',
-      foodNames: foodNames,
-      foodSelectOptions: FoodHandler.foodSelectOptions,
-      selectedFoodInfo: selectedFoodInfo,
-      chronicConditions: chronicConditions,
-      diets: diets,
-      menstrualCyclePhases: menstrualCyclePhases
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+  //gets the information of the selected food
+  await FoodHandler.fetchById(selectedFoodId)
+  .then(selectedFood => selectedFoodInfo = selectedFood)
+  .catch((err) => { console.log(err); return; });
+
+  res.render('./nutrition/view-food', {
+    caller: 'view-food',
+    pageTitle: 'Información de comida',
+    foodNames: foodNames,
+    foodSelectOptions: FoodHandler.foodSelectOptions,
+    selectedFoodInfo: selectedFoodInfo,
+    chronicConditions: await ChronicConditionHandler.getAllNames(),
+    diets: await DietHandler.getAllNames(),
+    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
   });
 };
 
@@ -89,9 +87,7 @@ export const apiDeleteFood = (req: Request, res: Response) => {
   .then( deleteResponse => {
     //removes the food from foods dropdown
     FoodHandler.removeNameById(foodId);
-
     console.log(`'${deleteResponse.name}' food deleted successfully.`);
-
     res.redirect(`/nutrition/food/`);
   })
   .catch(err => {

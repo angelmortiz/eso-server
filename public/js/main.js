@@ -88,6 +88,10 @@ let addSelectToDiv = async (selectOptions, getOptionsFunc, selectName, divNode) 
     selectNode.name = selectName;
     divNode.appendChild(selectNode);
 
+    //adds a placeholder for no selection
+    let option = new Option('-- Elige --', '');
+    selectNode.appendChild(option);
+
     //adds options to the dropdown
     selectOptions?.forEach(selectOpt => {
         let option = new Option(selectOpt.name, selectOpt._id);

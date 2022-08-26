@@ -1,12 +1,12 @@
 import { ObjectId } from "bson";
 import { IRecipe } from "../../util/interfaces/nutritionInterfaces";
 import { nutritionDb } from '../../util/database/connection';
-import { ConditionIdAndName, DietIdAndName, FoodIdAndName } from '../../util/types/types';
+import { ConditionIdAndName, DietIdAndName, FoodIdAndName, IdAndName } from '../../util/types/types';
 import RecipeSchema from '../../util/database/schemas/nutrition/recipeSchema';
 
 const RecipeModel = nutritionDb.model('Recipe', RecipeSchema);
 
-export default class Recipe implements IRecipe {
+export default class RecipeHandler implements IRecipe {
     id: ObjectId | string;
     name: string;
     description: string;
@@ -24,6 +24,8 @@ export default class Recipe implements IRecipe {
     compatibleWithDiets: DietIdAndName[] | null;
     linkToImage: string;
     linkToVideo: string;
+
+    static _names: IdAndName[];
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
@@ -119,6 +121,29 @@ export default class Recipe implements IRecipe {
           console.log(error);
           return error;
         });
+      }
+
+      static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
+        //forces to fetch all names if a new recipe has been added to the db
+        if (objectId) {
+          const index: number = this._names?.findIndex(obj => obj._id.toString() == objectId);
+          if (index === -1) forceFetch = true;
+        }
+    
+        //Only fetches names the first time or when it's forced
+        if (!this._names || forceFetch) { 
+          await RecipeHandler.fetchAllNames().then(fetchedNames => this._names = fetchedNames);
+        }
+    
+        return this._names;
+      }
+    
+      //removes food from the list of names once it's been deleted
+      static removeNameById(objectId: string){
+        const index: number = this._names?.findIndex(obj => obj._id.toString() == objectId);
+        if (index > -1){
+          this._names.splice(index, 1);
+        }
       }
 
       static recipeStaticValues = {

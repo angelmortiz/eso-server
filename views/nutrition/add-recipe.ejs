@@ -61,6 +61,7 @@
                 <div class="form__item">
                     <label for="complexity" class="form__title">Complejidad:</label>
                     <select name="complexity" id="complexity-selection">
+                        <option value="">-- Elige --</option>
                         <option value="Baja">Baja</option>
                         <option value="Media">Media</option>
                         <option value="Alta">Alta</option>
@@ -81,6 +82,7 @@
                     <label for="ingredients" class="form__title">Ingredientes:</label>
                     <div class="form__selects-div" id="ingredients-selects">
                         <select name="ingredients">
+                            <option value="">-- Elige --</option>
                             <!-- [Loop1] Loop through all the ingredients options -->
                             <% ingredients?.forEach( ing => { %>
                                 <option value="<%= ing._id %>"><%= ing.name %></option>
@@ -111,6 +113,7 @@
                     <label for="safeForConditions" class="form__title">Seguro para condiciones:</label>
                     <div class="form__selects-div" id="safeForConditions-selects">
                         <select name="safeForConditions">
+                            <option value="">-- Elige --</option>
                             <!-- [Loop1] Loop through all the chronic conditions options -->
                             <% chronicConditions?.forEach( cc => { %>
                                 <option value="<%= cc._id %>"><%= cc.name %></option>
@@ -125,6 +128,7 @@
                     <label for="notRecommendedForConditions" class="form__title">No recomendado para condiciones:</label>
                     <div class="form__selects-div" id="notRecommendedForConditions-selects">
                         <select name="notRecommendedForConditions">
+                            <option value="">-- Elige --</option>
                             <!-- [Loop1] Loop through all the chronic conditions options -->
                             <% chronicConditions?.forEach( cc => { %>
                                 <option value="<%= cc._id %>"><%= cc.name %></option>
@@ -139,9 +143,10 @@
                     <label for="compatibleWithDiets" class="form__title">Compatible con dietas:</label>
                     <div class="form__selects-div" id="compatibleWithDiets-selects">
                         <select name="compatibleWithDiets">
-                        <!-- [Loop1] Loop through all the diets options -->
-                        <% diets?.forEach( d => { %>
-                            <option value="<%= d._id %>"><%= d.name %></option>
+                            <option value="">-- Elige --</option>
+                            <!-- [Loop1] Loop through all the diets options -->
+                            <% diets?.forEach( d => { %>
+                                <option value="<%= d._id %>"><%= d.name %></option>
                             <% }); %>
                             <!-- [END-Loop1] -->
                         </select>
@@ -153,6 +158,7 @@
                     <label for="recommendedForCyclePhases" class="form__title">Recomendado para fases:</label>
                     <div class="form__selects-div" id="menstrualCyclePhases-selects">
                         <select name="recommendedForCyclePhases">
+                            <option value="">-- Elige --</option>
                         <!-- [Loop1] Loop through all the phases options -->
                             <% menstrualCyclePhases?.forEach( mcp=> { %>
                                 <option value="<%= mcp._id %>"><%= mcp.name %></option>
