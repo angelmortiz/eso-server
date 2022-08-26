@@ -62,8 +62,8 @@ export const updateChronicCondition = (req: Request, res: Response) => {
 };
 
 /** APIS */
-export const apiGetChronicConditions = (req: Request, res: Response) => {
-  res.json(ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions);
+export const apiGetChronicConditions = async (req: Request, res: Response) => {
+  res.json(await ChronicConditionHandler.getAllNames());
 };
 
 export const apiDeleteChronicCondition = (req: Request, res: Response) => {

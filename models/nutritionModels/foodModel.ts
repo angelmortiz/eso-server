@@ -148,13 +148,4 @@ export default class FoodHandler implements IFood {
     macronutrients: ['Proteína', 'Grasa', 'Carbohidrato'],
     micronutrientDensity: ['Bajo', 'Medio', 'Alto']
   }
-
-  static foodStaticValues = {
-    //TODO: DELETE ME AND FETCH FROM DB
-    foods: [
-      {_id: "", name: "-- Elige --"},
-      {_id: "62fd50c7e64d23cd5690b26e", name: "Pechuga de pollo"},
-      {_id: "62febe8b78e89b97e9fcb250", name: "Pechuga de pollo 2"}
-    ]
-}
 };

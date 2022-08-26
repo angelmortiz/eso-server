@@ -133,13 +133,4 @@ export default class DietHandler implements IDiet {
         this._names.splice(index, 1);
       }
     }
-
-    static compatibleWithDietsStaticValues = {
-        //TODO: DELETE ME AND FETCH FROM DB
-        diets: [
-          {_id: "", name: "-- Elige --"},
-          {_id: "62e3f8da2aeacf742c28842b", name: "Keto"},
-          {_id: "62e3f9a62aeacf742c28842c", name: "Paleo"}
-        ]
-    }
 };

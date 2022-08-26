@@ -67,8 +67,8 @@ export const updateDiet = async (req: Request, res: Response) => {
 };
 
 /** APIS */
-export const apiGetDiets = (req: Request, res: Response) => {
-  res.json(DietHandler.compatibleWithDietsStaticValues.diets);
+export const apiGetDiets = async (req: Request, res: Response) => {
+  res.json(await DietHandler.getAllNames());
 };
 
 export const apiDeleteDiet = (req: Request, res: Response) => {

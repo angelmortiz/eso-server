@@ -60,7 +60,7 @@
                             <option value="">-- Elige --</option>
                             <!-- [Loop1] Loop through all the chronic conditions options -->
                             <% chronicConditions?.forEach( cc => { %>
-                                <option value="<%= cc._id %>"><%= cc.name %></option>
+                                <option value="<%= cc._id.toString() %>"><%= cc.name.toString() %></option>
                             <% }); %>
                             <!-- [END-Loop1] -->
                         </select>
