@@ -1,11 +1,9 @@
 import {Request, Response} from 'express';
 import { ObjectId } from 'mongodb';
-import { ConditionIdAndName, IdAndName } from '../../util/types/types';
+import { ConditionIdAndName } from '../../util/types/types';
+import { IDiet } from '../../util/interfaces/nutritionInterfaces';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
-
-let _dietNames: IdAndName[] = [];
-let _conditionNames: IdAndName[] = [];
 
 /** RENDERS */
 export const redirectToViewAddDiet = (req: Request, res: Response) => {
@@ -18,52 +16,46 @@ export const redirectToViewSelectedDiet = (req: Request, res: Response) => {
 
 export const getViewToSelectedDiet = async (req: Request, res: Response) => {
   const selectedDietId: string = req.params.dietId;
-  
-  //Fetches the dietNames from db if names don't exist or if the current dietId doesn't exist in array
-  //Note: This logic is needed to fetch the new diet info once a new diet has been added to the db
-  const index: number = _dietNames?.findIndex(f => f._id.toString() == selectedDietId);
-  (index > -1) ? await fetchDietNames(false) : await fetchDietNames(true);
+  let selectedDietInfo: IDiet = {} as IDiet;
 
-  DietHandler.fetchById(selectedDietId)
-  .then((selectedDietInfo) => {
-    res.render('./nutrition/view-diet', {
-      caller: 'view-diet',
-      pageTitle: 'Información de dieta',
-      dietNames: _dietNames,
-      selectedDietInfo: selectedDietInfo,
-      chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+  //if selectedDietId is new, fetches all names. Otherwise, returns local list.
+  const dietNames = await DietHandler.getAllNames(selectedDietId);
+
+  await DietHandler.fetchById(selectedDietId)
+  .then(selectedDiet => selectedDietInfo = selectedDiet)
+  .catch((err) => { console.log(err); return; });
+
+  res.render('./nutrition/view-diet', {
+    caller: 'view-diet',
+    pageTitle: 'Información de dieta',
+    dietNames: dietNames,
+    selectedDietInfo: selectedDietInfo,
+    chronicConditions: await ChronicConditionHandler.getAllNames()
   });
 };
 
 export const getViewToAddDiet = async (req: Request, res: Response) => {
-  //Fetches the dietNames from db if for some reason the data was lost from previous method
-  await fetchDietNames();
-
   res.render('./nutrition/add-diet', {
     caller: 'add-diet',
     pageTitle: 'Añadir dieta',
-    dietNames: _dietNames,
+    dietNames: await DietHandler.getAllNames(),
     selectedDietInfo: null,
-    chronicConditions: ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions,
+    chronicConditions: await ChronicConditionHandler.getAllNames(),
   });
 };
 
 /** ACTIONS */
-export const addDiet = (req: Request, res: Response) => {
+export const addDiet = async (req: Request, res: Response) => {
   let dietHandler = new DietHandler(req.body);
-  dietHandler = refactorValuesForDb(dietHandler);
+  dietHandler = await refactorValuesForDb(dietHandler);
   dietHandler.save().then( id => res.redirect(`/nutrition/diet/${id}`) );
 };
 
-export const updateDiet = (req: Request, res: Response) => {
+export const updateDiet = async (req: Request, res: Response) => {
   const dietId: string = req.params.dietId;
   let diet = new DietHandler(req.body);
   diet.id = dietId;
-  diet = refactorValuesForDb(diet);
+  diet = await refactorValuesForDb(diet);
   
   diet.update()
   .then(() => {
@@ -85,13 +77,8 @@ export const apiDeleteDiet = (req: Request, res: Response) => {
   DietHandler.deleteById(dietId)
   .then( deleteResponse => {
     //removes the diet from diets dropdown
-    const index: number = _dietNames?.findIndex(f => f._id.toString() == dietId);
-    if (index > -1){
-      _dietNames.splice(index, 1);
-    }
-
+    DietHandler.removeNameById(dietId);
     console.log(`'${deleteResponse.name}' diet deleted successfully.`);
-
     res.redirect(`/nutrition/diet/`);
   })
   .catch(err => {
@@ -100,21 +87,12 @@ export const apiDeleteDiet = (req: Request, res: Response) => {
 };
 
 /*** FUNCTIONS */
-const fetchDietNames = async (forceFetch = false) => {
-  //Fetches the dietNames from db only when dietNames is not available or when forced
-  //Note: This is forced to fetch when a new value has been added to the database
-  if (forceFetch || !_dietNames || _dietNames.length === 0) {
-    // await DietHandler.fetchAllNames().then((dietNames) => { _dietNames = dietNames});
-    await DietHandler.fetchAllNames().then((dietNames) => { _dietNames = dietNames });
-  }
-};
-
-const refactorValuesForDb = (diet: DietHandler) => {
-  diet.safeForConditions = refactorChronicConditions(diet.safeForConditions);
+const refactorValuesForDb = async (diet: DietHandler) => {
+  diet.safeForConditions = await refactorChronicConditions(diet.safeForConditions);
   return diet;
 };
 
-const refactorChronicConditions = (selectedConditions) => {
+const refactorChronicConditions = async (selectedConditions) => {
   if (!selectedConditions){ return null; }
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -122,10 +100,7 @@ const refactorChronicConditions = (selectedConditions) => {
     selectedConditions = [selectedConditions]; 
   }
   //Fetches all the chronic conditions to pair with their names
-  if (!_conditionNames || _conditionNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _conditionNames = ChronicConditionHandler.chronicConditionsStaticValues.chronicConditions;
-  }
+  const _conditionNames = await ChronicConditionHandler.getAllNames();
 
   let refactoredConditions: ConditionIdAndName[] = [];
   selectedConditions.forEach(conditionId => 

@@ -1,8 +1,6 @@
 import {Request, Response} from 'express';
-import { IdAndName } from '../../util/types/types';
+import { IChronicCondition } from '../../util/interfaces/nutritionInterfaces';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
-
-let _conditionNames: IdAndName[] = [];
 
 /** RENDERS */
 export const redirectToViewAddChronicCondition = (req: Request, res: Response) => {
@@ -15,34 +13,29 @@ export const redirectToViewSelectedChronicCondition = (req: Request, res: Respon
 
 export const getViewToSelectedChronicCondition = async (req: Request, res: Response) => {
   const selectedConditionId: string = req.params.conditionId;
+  let selectedConditionInfo: IChronicCondition = {} as IChronicCondition;
 
-  //Fetches the conditionNames from db if names don't exist or if the current conditionId doesn't exist in array
-  //Note: This logic is needed to fetch the new condition info once a new condition has been added to the db
-  const index: number = _conditionNames?.findIndex(f => f._id.toString() == selectedConditionId);
-  (index > -1) ? await fetchConditionNames(false) : await fetchConditionNames(true);
+  //if selectedConditionId is new, fetches all names. Otherwise, returns local list.
+  const conditionNames = await ChronicConditionHandler.getAllNames(selectedConditionId);
 
-  ChronicConditionHandler.fetchById(selectedConditionId)
-  .then((selectedConditionInfo) => {
-    res.render('./nutrition/view-chronicCondition', {
-      caller: 'view-chronicCondition',
-      pageTitle: 'Información de condición crónica',
-      conditionNames: _conditionNames,
-      selectedConditionInfo: selectedConditionInfo
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+  //gets the information of the selected condition
+  await ChronicConditionHandler.fetchById(selectedConditionId)
+  .then(selectedCondition =>  selectedConditionInfo = selectedCondition)
+  .catch((err) => { console.log(err); return; });
+
+  res.render('./nutrition/view-chronicCondition', {
+    caller: 'view-chronicCondition',
+    pageTitle: 'Información de condición crónica',
+    conditionNames: conditionNames,
+    selectedConditionInfo: selectedConditionInfo
   });
 };
 
 export const getViewToAddChronicCondition = async (req: Request, res: Response) => {
-  //Fetches the conditionNames from db if for some reason the data was lost from previous method
-  await fetchConditionNames();
-
   res.render('./nutrition/add-chronicCondition', {
     caller: 'add-chronicCondition',
     pageTitle: 'Añadir condición crónica',
-    conditionNames: _conditionNames,
+    conditionNames: await ChronicConditionHandler.getAllNames(),
     selectedConditionInfo: null,
   });
 };
@@ -79,13 +72,8 @@ export const apiDeleteChronicCondition = (req: Request, res: Response) => {
   ChronicConditionHandler.deleteById(chronicConditionId)
   .then( deleteResponse => {
     //removes the chronicCondition from chronicConditions dropdown
-    const index: number = _conditionNames?.findIndex(f => f._id.toString() == chronicConditionId);
-    if (index > -1){
-      _conditionNames.splice(index, 1);
-    }
-
+    ChronicConditionHandler.removeNameById(chronicConditionId);
     console.log(`'${deleteResponse.name}' chronic condition deleted successfully.`);
-
     res.redirect(`/nutrition/chronicCondition/`);
   })
   .catch(err => {
@@ -94,15 +82,6 @@ export const apiDeleteChronicCondition = (req: Request, res: Response) => {
 };
 
 /*** FUNCTIONS */
-const fetchConditionNames = async (forceFetch = false) => {
-  //Fetches the conditionNames from db only when conditionNames is not available or when forced
-  //Note: This is forced to fetch when a new value has been added to the database
-  if (forceFetch || !_conditionNames || _conditionNames.length === 0) {
-    // await ChronicConditionHandler.fetchAllNames().then((conditionNames) => { _conditionNames = conditionNames});
-    await ChronicConditionHandler.fetchAllNames().then((conditionNames) => { _conditionNames = conditionNames });
-  }
-};
-
 const refactorValuesForDb = (condition: ChronicConditionHandler): ChronicConditionHandler => {
   condition.symptoms = removeEmptyValues(condition.symptoms);
   condition.causes = removeEmptyValues(condition.causes);

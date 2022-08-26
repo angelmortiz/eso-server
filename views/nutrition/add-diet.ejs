@@ -57,6 +57,7 @@
                     <label for="safeForConditions" class="form__title">Seguro para condiciones:</label>
                     <div class="form__selects-div" id="safeForConditions-selects">
                         <select name="safeForConditions">
+                            <option value="">-- Elige --</option>
                             <!-- [Loop1] Loop through all the chronic conditions options -->
                             <% chronicConditions?.forEach( cc => { %>
                                 <option value="<%= cc._id %>"><%= cc.name %></option>
