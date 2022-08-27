@@ -1,6 +1,7 @@
 import { ObjectId } from 'bson';
 import { activitiesDb } from '../../util/database/connection';
 import { IPhysicalCondition } from '../../util/interfaces/activitiesInterfaces';
+import { IdAndName } from '../../util/types/types';
 import PhysicalConditionSchema from '../../util/database/schemas/activities/physicalConditionSchema';
 
 const PhysicalConditionModel = activitiesDb.model('PhysicalCondition', PhysicalConditionSchema);
@@ -14,6 +15,8 @@ export default class PhysicalConditionHandler implements IPhysicalCondition {
     treatments: string[];
     tests: string[];
 
+    static _names: IdAndName[];
+    
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
         this.mapValues(inputValues);
@@ -110,12 +113,26 @@ export default class PhysicalConditionHandler implements IPhysicalCondition {
         });
       }
 
-    static physicalConditionsStaticValues = {
-        //TODO: DELETE ME AND FETCH FROM DB
-        physicalConditions: [
-          {_id: "", name: "-- Elige --"},
-          {_id: "62e3fd6e2aeacf742c28845f", name: "Dolor de espalda baja"},
-          {_id: "62e3fd6e2aeacf742c28845e", name: "Dolor en la cadera"}
-        ]
-    }
+      static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
+        //forces to fetch all names if a new physical conditions has been added to the db
+        if (objectId) {
+          const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
+          if (index === -1) forceFetch = true;
+        }
+    
+        //Only fetches names the first time or when it's forced
+        if (!this._names || forceFetch) {
+          await PhysicalConditionHandler.fetchAllNames().then(fetchedNames => this._names = fetchedNames);
+        }
+    
+        return this._names;
+      } 
+    
+      //removes food from the list of names once it's been deleted
+      static removeNameById(objectId: string){
+        const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
+        if (index > -1){
+          this._names.splice(index, 1);
+        }
+      }
 };

@@ -2,17 +2,13 @@
 
 import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
-import { ConditionIdAndName, EquipmentIdAndName, IdAndName, MuscleIdAndName } from '../../util/types/types';
+import { ConditionIdAndName, EquipmentIdAndName, MuscleIdAndName } from '../../util/types/types';
+import { IExercise } from '../../util/interfaces/activitiesInterfaces';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import MuscleHandler from '../../models/activitiesModels/muscleModel';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
 import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
 import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
-
-let _exerciseNames: IdAndName[] = [];
-let _muscleNames: IdAndName[] = [];
-let _equipmentNames: IdAndName[] = [];
-let _conditionNames: IdAndName[] = [];
 
 /** RENDERS */
 export const redirectToViewAddExercise = (req: Request, res: Response) => {
@@ -25,60 +21,55 @@ export const redirectToViewSelectedExercise = (req: Request, res: Response) => {
 
 export const getViewToSelectedExercise = async (req: Request, res: Response) => {
   const selectedExerciseId: string = req.params.exerciseId;
-  
-  //Fetches the exerciseNames from db if names don't exist or if the current exerciseId doesn't exist in array
-  //Note: This logic is needed to fetch the new exercise info once a new exercise has been added to the db
-  const index: number = _exerciseNames?.findIndex(e => e._id.toString() == selectedExerciseId);
-  (index > -1) ? await fetchExerciseNames(false) : await fetchExerciseNames(true);
+  let selectedExerciseInfo: IExercise = {} as IExercise;
 
-  ExerciseHandler.fetchById(selectedExerciseId)
-  .then((selectedExerciseInfo) => {
-    res.render('./activities/view-exercise', {
-      caller: 'view-exercise',
-      pageTitle: 'Información de ejercicio',
-      exerciseNames: _exerciseNames,
-      selectedExerciseInfo: selectedExerciseInfo,
-      exerciseTypes: ExerciseHandler.exercisesStaticValues.types,
-      muscles: MuscleHandler.musclesStaticValues.muscles,
-      equipments: EquipmentHandler.equipmentsStaticValues.equipments,
-      physicalConditions: PhysicalConditionHandler.physicalConditionsStaticValues.physicalConditions,
-      menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+  //if selectedExerciseId is new, fetches all names. Otherwise, returns local list.
+  const exerciseNames = await ExerciseHandler.getAllNames(selectedExerciseId);
+
+  //gets the information of the selected exercise
+  await ExerciseHandler.fetchById(selectedExerciseId)
+  .then(selectedExercise => selectedExerciseInfo = selectedExercise)
+  .catch((err) => { console.log(err); return; });
+
+  res.render('./activities/view-exercise', {
+    caller: 'view-exercise',
+    pageTitle: 'Información de ejercicio',
+    exerciseNames: exerciseNames,
+    selectedExerciseInfo: selectedExerciseInfo,
+    exerciseTypes: ExerciseHandler.exercisesStaticValues.types,
+    muscles: await MuscleHandler.getAllNames(),
+    equipments: await EquipmentHandler.getAllNames(),
+    physicalConditions: await PhysicalConditionHandler.getAllNames(),
+    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
   });
 };
 
 export const getViewToAddExercise = async (req: Request, res: Response) => {
-  //Fetches the exerciseNames from db if for some reason the data was lost from previous method
-  await fetchExerciseNames();
-
   res.render('./activities/add-exercise', {
     caller: 'add-exercise',
     pageTitle: 'Añadir ejercicio',
-    exerciseNames: _exerciseNames,
+    exerciseNames: await ExerciseHandler.getAllNames(),
     selectedExerciseInfo: null,
     exerciseTypes: ExerciseHandler.exercisesStaticValues.types,
-    muscles: MuscleHandler.musclesStaticValues.muscles,
-    equipments: EquipmentHandler.equipmentsStaticValues.equipments,
-    physicalConditions: PhysicalConditionHandler.physicalConditionsStaticValues.physicalConditions,
-    menstrualCyclePhases: MenstrualCyclePhaseHandler.menstrualCyclePhasesStaticValues.menstrualCyclePhases
+    muscles: await MuscleHandler.getAllNames(),
+    equipments: await EquipmentHandler.getAllNames(),
+    physicalConditions: await PhysicalConditionHandler.getAllNames(),
+    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
   });
 };
 
 /** ACTIONS */
-export const addExercise = (req: Request, res: Response) => {
+export const addExercise = async (req: Request, res: Response) => {
   let exerciseHandler = new ExerciseHandler(req.body);
-  exerciseHandler = refactorValuesForDb(exerciseHandler);
+  exerciseHandler = await refactorValuesForDb(exerciseHandler);
   exerciseHandler.save().then( id => res.redirect(`/activities/exercise/${id}`) );
 };
 
-export const updateExercise = (req: Request, res: Response) => {
+export const updateExercise = async (req: Request, res: Response) => {
   const exerciseId: string = req.params.exerciseId;
   let exercise = new ExerciseHandler(req.body);
   exercise.id = exerciseId;
-  exercise = refactorValuesForDb(exercise);
+  exercise = await refactorValuesForDb(exercise);
   
   exercise.update()
   .then(() => {
@@ -90,8 +81,8 @@ export const updateExercise = (req: Request, res: Response) => {
 };
 
 /** APIS */
-export const apiGetExercises = (req: Request, res: Response) => {
-    res.json(ExerciseHandler.exercisesStaticValues.exercises);
+export const apiGetExercises = async (req: Request, res: Response) => {
+    res.json(await ExerciseHandler.getAllNames());
 };
 
 export const apiGetExerciseTypes = (req: Request, res: Response) => {
@@ -104,13 +95,9 @@ export const apiDeleteExercise = (req: Request, res: Response) => {
   ExerciseHandler.deleteById(exerciseId)
   .then( deleteResponse => {
     //removes the exercise from exercises dropdown
-    const index: number = _exerciseNames?.findIndex(f => f._id.toString() == exerciseId);
-    if (index > -1){
-      _exerciseNames.splice(index, 1);
-    }
-
+    //removes the food from foods dropdown
+    ExerciseHandler.removeNameById(exerciseId);
     console.log(`'${deleteResponse.name}' exercise deleted successfully.`);
-
     res.redirect(`/activities/exercise/`);
   })
   .catch(err => {
@@ -119,22 +106,14 @@ export const apiDeleteExercise = (req: Request, res: Response) => {
 };
 
 /*** FUNCTIONS */
-const fetchExerciseNames = async (forceFetch = false) => {
-  //Fetches the exerciseNames from db only when exerciseNames is not available or when forced
-  //Note: This is forced to fetch when a new value has been added to the database
-  if (forceFetch || !_exerciseNames || _exerciseNames.length === 0) {
-    await ExerciseHandler.fetchAllNames().then((exerciseNames) => { _exerciseNames = exerciseNames});
-  }
-};
-
-const refactorValuesForDb = (exercise: ExerciseHandler) => {
+const refactorValuesForDb = async (exercise: ExerciseHandler) => {
     exercise.compoundMovement = refactorCompoundMovement(exercise.compoundMovement);
-    exercise.mainMuscle = refactorMainMuscle(exercise.mainMuscle);
-    exercise.secondaryMuscles = refactorSecondaryMuscles(exercise.secondaryMuscles);
+    exercise.mainMuscle = await refactorMainMuscle(exercise.mainMuscle);
+    exercise.secondaryMuscles = await refactorSecondaryMuscles(exercise.secondaryMuscles);
     exercise.types = refactorTypes(exercise.types);
-    exercise.equipments = refactorEquipments(exercise.equipments);
-    exercise.safeForConditions = refactorPhysicalConditions(exercise.safeForConditions);
-    exercise.notRecommendedForConditions = refactorPhysicalConditions(exercise.notRecommendedForConditions);
+    exercise.equipments = await refactorEquipments(exercise.equipments);
+    exercise.safeForConditions = await refactorPhysicalConditions(exercise.safeForConditions);
+    exercise.notRecommendedForConditions = await refactorPhysicalConditions(exercise.notRecommendedForConditions);
   exercise.recommendedForCyclePhases = refactorCyclePhases(exercise.recommendedForCyclePhases);
   return exercise;
 };
@@ -143,14 +122,11 @@ const refactorCompoundMovement = (movement) => {
     return movement === 'yes';
 };
 
-const refactorMainMuscle = (muscleId) => {
+const refactorMainMuscle = async (muscleId) => {
     if (!muscleId) {return null; }
     
     //Fetches all the muscles to pair with their names
-    if (!_muscleNames || _muscleNames.length === 0) {
-        //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-        _muscleNames = MuscleHandler.musclesStaticValues.muscles;
-    }
+    const _muscleNames = await MuscleHandler.getAllNames();
 
     const muscleObject: MuscleIdAndName = {
         muscleId: new ObjectId(muscleId),
@@ -160,7 +136,7 @@ const refactorMainMuscle = (muscleId) => {
     return muscleObject;
 };
 
-const refactorSecondaryMuscles = (muscles) => {
+const refactorSecondaryMuscles = async (muscles) => {
     if (!muscles){ return null; }
   
     //Handles cases when the user only chooses one option and form returns a string
@@ -168,11 +144,8 @@ const refactorSecondaryMuscles = (muscles) => {
       muscles = [muscles]; 
     }
 
-    //Fetches all the muscles to pair with their names
-    if (!_muscleNames || _muscleNames.length === 0) {
-        //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-        _muscleNames = MuscleHandler.musclesStaticValues.muscles;
-    }
+   //Fetches all the muscles to pair with their names
+   const _muscleNames = await MuscleHandler.getAllNames();
   
     let refactoredMuscles: MuscleIdAndName[] = [];
     muscles.forEach(muscleId => 
@@ -202,7 +175,7 @@ const refactorTypes = (types) => {
 };
 
 //TODO: Create one reusable and abstract method to handle similar refactors functionns
-const refactorEquipments = (equipments) => {
+const refactorEquipments = async (equipments) => {
     if (!equipments){ return null; }
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -210,10 +183,7 @@ const refactorEquipments = (equipments) => {
     equipments = [equipments]; 
   }
   //Fetches all the equipments to pair with their names
-  if (!_equipmentNames || _equipmentNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _equipmentNames = EquipmentHandler.equipmentsStaticValues.equipments;
-  }
+  const _equipmentNames = await EquipmentHandler.getAllNames();
 
   let refactoredEquipments: EquipmentIdAndName[] = [];
   equipments.forEach(equipmentId => 
@@ -231,7 +201,7 @@ const refactorEquipments = (equipments) => {
   return refactoredEquipments;
 }
 
-const refactorPhysicalConditions = (selectedConditions) => {
+const refactorPhysicalConditions = async (selectedConditions) => {
   if (!selectedConditions){ return null; }
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -239,10 +209,7 @@ const refactorPhysicalConditions = (selectedConditions) => {
     selectedConditions = [selectedConditions]; 
   }
   //Fetches all the physical conditions to pair with their names
-  if (!_conditionNames || _conditionNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _conditionNames = PhysicalConditionHandler.physicalConditionsStaticValues.physicalConditions;
-  }
+  const _conditionNames = await PhysicalConditionHandler.getAllNames();
 
   let refactoredConditions: ConditionIdAndName[] = [];
   selectedConditions.forEach(conditionId => 

@@ -1,18 +1,20 @@
 import { ObjectId } from 'bson';
 import { activitiesDb } from '../../util/database/connection';
 import { IMuscle } from '../../util/interfaces/activitiesInterfaces';
-import { ExerciseIdAndName } from '../../util/types/types';
+import { ExerciseIdAndName, IdAndName } from '../../util/types/types';
 import MuscleSchema from '../../util/database/schemas/activities/muscleSchema';
 
 const MuscleModel = activitiesDb.model('Muscle', MuscleSchema);
 
-export default class Muscle implements IMuscle {
+export default class MuscleHandler implements IMuscle {
     id: ObjectId | string;
     name: string;
     alternativeName: string;
     type: string;
     exercises: ExerciseIdAndName[] | null;
     linkToImage: string;
+
+    static _names: IdAndName[];
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
@@ -110,12 +112,26 @@ export default class Muscle implements IMuscle {
         });
       }
 
-    static musclesStaticValues = {
-        //TODO: DELETE ME AND FETCH FROM DB
-        muscles: [
-          {_id: "", name: "-- Elige --"},
-          {_id: "630229e1dac62b4fb2141ea4", name: "Cuádriceps"},
-          {_id: "630229fcdac62b4fb2141eaa", name: "Hamstrings"}
-        ] 
-    };
+      static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
+        //forces to fetch all names if a new muscles has been added to the db
+        if (objectId) {
+          const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
+          if (index === -1) forceFetch = true;
+        }
+    
+        //Only fetches names the first time or when it's forced
+        if (!this._names || forceFetch) {
+          await MuscleHandler.fetchAllNames().then(fetchedNames => this._names = fetchedNames);
+        }
+    
+        return this._names;
+      } 
+    
+      //removes food from the list of names once it's been deleted
+      static removeNameById(objectId: string){
+        const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
+        if (index > -1){
+          this._names.splice(index, 1);
+        }
+      }
 };

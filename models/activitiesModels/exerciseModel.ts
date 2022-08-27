@@ -1,12 +1,12 @@
 import { ObjectId } from "bson";
 import { activitiesDb } from '../../util/database/connection';
 import { IExercise } from "../../util/interfaces/activitiesInterfaces";
-import { ConditionIdAndName, EquipmentIdAndName, MuscleIdAndName } from "../../util/types/types";
+import { ConditionIdAndName, EquipmentIdAndName, IdAndName, MuscleIdAndName } from "../../util/types/types";
 import ExerciseSchema from '../../util/database/schemas/activities/exerciseSchema';
 
 const ExerciseModel = activitiesDb.model('Exercise', ExerciseSchema);
 
-export default class Exercise implements IExercise {
+export default class ExerciseHandler implements IExercise {
     id: ObjectId | string;
     name: string;
     alternativeName: string;
@@ -20,6 +20,8 @@ export default class Exercise implements IExercise {
     notRecommendedForConditions: ConditionIdAndName[] | null;
     recommendedForCyclePhases: string[];
     linkToVideo: string;
+
+    static _names: IdAndName[];
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
@@ -117,15 +119,31 @@ export default class Exercise implements IExercise {
         });
       }
 
+      static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
+        //forces to fetch all names if a new exercises has been added to the db
+        if (objectId) {
+          const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
+          if (index === -1) forceFetch = true;
+        }
+    
+        //Only fetches names the first time or when it's forced
+        if (!this._names || forceFetch) {
+          await ExerciseHandler.fetchAllNames().then(fetchedNames => this._names = fetchedNames);
+        }
+    
+        return this._names;
+      } 
+    
+      //removes food from the list of names once it's been deleted
+      static removeNameById(objectId: string){
+        const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
+        if (index > -1){
+          this._names.splice(index, 1);
+        }
+      }
+
     static exercisesStaticValues = {
-        //TODO: DELETE ME AND FETCH FROM DB
-        exercises: [
-          {_id: "", name: "-- Elige --"},
-          {_id: "62e3fb672aeacf742c288451", name: "Sentadillas"},
-          {_id: "62e3fb672aeacf742c288452", name: "Deadlifts"}
-        ],
         types: [
-            {_id: "", name: "-- Elige --"},
             {_id: "Fuerza", name: "Fuerza"},
             {_id: "Cardio", name: "Cardio"},
             {_id: "HIIT", name: "HIIT"},

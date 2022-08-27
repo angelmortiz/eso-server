@@ -1,8 +1,6 @@
 import {Request, Response} from 'express';
-import { IdAndName } from '../../util/types/types';
+import { IPhysicalCondition } from '../../util/interfaces/activitiesInterfaces';
 import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
-
-let _conditionNames: IdAndName[] = [];
 
 /** RENDERS */
 export const redirectToViewAddPhysicalCondition = (req: Request, res: Response) => {
@@ -15,42 +13,38 @@ export const redirectToViewSelectedPhysicalCondition = (req: Request, res: Respo
 
 export const getViewToSelectedPhysicalCondition = async (req: Request, res: Response) => {
   const selectedConditionId: string = req.params.conditionId;
+  let selectedConditionInfo: IPhysicalCondition = {} as IPhysicalCondition;
 
-  //Fetches the conditionNames from db if names don't exist or if the current conditionId doesn't exist in array
-  //Note: This logic is needed to fetch the new condition info once a new condition has been added to the db
-  const index: number = _conditionNames?.findIndex(f => f._id.toString() == selectedConditionId);
-  (index > -1) ? await fetchConditionNames(false) : await fetchConditionNames(true);
+  //if selectedConditionId is new, fetches all names. Otherwise, returns local list.
+  const conditionNames = await PhysicalConditionHandler.getAllNames(selectedConditionId);
 
-  PhysicalConditionHandler.fetchById(selectedConditionId)
-  .then((selectedConditionInfo) => {
-    res.render('./activities/view-physicalCondition', {
-      caller: 'view-physicalCondition',
-      pageTitle: 'Información de condición física',
-      conditionNames: _conditionNames,
-      selectedConditionInfo: selectedConditionInfo
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+  //gets the information of the selected condition
+  await PhysicalConditionHandler.fetchById(selectedConditionId)
+  .then(selectedCondition => selectedConditionInfo = selectedCondition)
+  .catch((err) => { console.log(err); return; });
+
+  res.render('./activities/view-physicalCondition', {
+    caller: 'view-physicalCondition',
+    pageTitle: 'Información de condición física',
+    conditionNames: conditionNames,
+    selectedConditionInfo: selectedConditionInfo
   });
 };
 
 export const getViewToAddPhysicalCondition = async (req: Request, res: Response) => {
-  //Fetches the conditionNames from db if for some reason the data was lost from previous method
-  await fetchConditionNames();
-
   res.render('./activities/add-physicalCondition', {
     caller: 'add-physicalCondition',
     pageTitle: 'Añadir condición física',
-    conditionNames: _conditionNames,
+    conditionNames: await PhysicalConditionHandler.getAllNames(),
     selectedConditionInfo: null,
   });
 };
 
 /** ACTIONS */
 export const addPhysicalCondition = (req: Request, res: Response) => {
-  const physicalConditionHandler = new PhysicalConditionHandler(req.body);
-  physicalConditionHandler.save().then( id => res.redirect(`/activities/physicalCondition/${id}`) );
+  let physicalCondition = new PhysicalConditionHandler(req.body);
+  physicalCondition = refactorValuesForDb(physicalCondition);
+  physicalCondition.save().then( id => res.redirect(`/activities/physicalCondition/${id}`) );
 };
 
 export const updatePhysicalCondition = (req: Request, res: Response) => {
@@ -69,8 +63,8 @@ export const updatePhysicalCondition = (req: Request, res: Response) => {
 };
 
 /** APIS */
-export const apiGetPhysicalConditions = (req: Request, res: Response) => {
-  res.json(PhysicalConditionHandler.physicalConditionsStaticValues.physicalConditions);
+export const apiGetPhysicalConditions = async (req: Request, res: Response) => {
+  res.json(await PhysicalConditionHandler.getAllNames());
 };
 
 export const apiDeletePhysicalCondition = (req: Request, res: Response) => {
@@ -79,13 +73,8 @@ export const apiDeletePhysicalCondition = (req: Request, res: Response) => {
   PhysicalConditionHandler.deleteById(physicalConditionId)
   .then( deleteResponse => {
     //removes the physicalCondition from physicalConditions dropdown
-    const index: number = _conditionNames?.findIndex(f => f._id.toString() == physicalConditionId);
-    if (index > -1){
-      _conditionNames.splice(index, 1);
-    }
-
+    PhysicalConditionHandler.removeNameById(physicalConditionId);
     console.log(`'${deleteResponse.name}' physical condition deleted successfully.`);
-
     res.redirect(`/activities/physicalCondition/`);
   })
   .catch(err => {
@@ -94,15 +83,6 @@ export const apiDeletePhysicalCondition = (req: Request, res: Response) => {
 };
 
 /*** FUNCTIONS */
-const fetchConditionNames = async (forceFetch = false) => {
-  //Fetches the conditionNames from db only when conditionNames is not available or when forced
-  //Note: This is forced to fetch when a new value has been added to the database
-  if (forceFetch || !_conditionNames || _conditionNames.length === 0) {
-    // await PhysicalConditionHandler.fetchAllNames().then((conditionNames) => { _conditionNames = conditionNames});
-    await PhysicalConditionHandler.fetchAllNames().then((conditionNames) => { _conditionNames = conditionNames });
-  }
-};
-
 const refactorValuesForDb = (condition: PhysicalConditionHandler): PhysicalConditionHandler => {
   condition.symptoms = removeEmptyValues(condition.symptoms);
   condition.causes = removeEmptyValues(condition.causes);

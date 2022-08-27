@@ -1,12 +1,12 @@
 import { ObjectId } from 'bson';
 import { activitiesDb } from '../../util/database/connection';
 import { IEquipment } from '../../util/interfaces/activitiesInterfaces';
-import { ExerciseIdAndName } from '../../util/types/types';
+import { ExerciseIdAndName, IdAndName } from '../../util/types/types';
 import EquipmentSchema from '../../util/database/schemas/activities/equipmentSchema';
 
 const EquipmentModel = activitiesDb.model('Equipment', EquipmentSchema);
 
-export default class Equipment implements IEquipment {
+export default class EquipmentHandler implements IEquipment {
     id: ObjectId | string;
     name: string;
     alternativeName: string;
@@ -14,6 +14,8 @@ export default class Equipment implements IEquipment {
     exercises: ExerciseIdAndName[] | null;
     linkToImage: string;
 
+    static _names: IdAndName[];
+    
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
         this.mapValues(inputValues);
@@ -110,12 +112,27 @@ export default class Equipment implements IEquipment {
         });
       }
 
-      static equipmentsStaticValues = {
-        //TODO: DELETE ME AND FETCH FROM DB
-        equipments: [
-          {_id: "", name: "-- Elige --"},
-          {_id: "62e3fd6e2aeacf742c28845f", name: "Barbell"},
-          {_id: "62e3fd6e2aeacf742c28845e", name: "Dumbbell"}
-        ]
+
+    static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
+      //forces to fetch all names if a new equipments has been added to the db
+      if (objectId) {
+        const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
+        if (index === -1) forceFetch = true;
+      }
+  
+      //Only fetches names the first time or when it's forced
+      if (!this._names || forceFetch) {
+        await EquipmentHandler.fetchAllNames().then(fetchedNames => this._names = fetchedNames);
+      }
+  
+      return this._names;
+    } 
+  
+    //removes food from the list of names once it's been deleted
+    static removeNameById(objectId: string){
+      const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
+      if (index > -1){
+        this._names.splice(index, 1);
+      }
     }
 };

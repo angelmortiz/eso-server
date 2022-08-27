@@ -1,11 +1,9 @@
 import { ObjectId } from 'bson';
 import {Request, Response} from 'express';
-import { ExerciseIdAndName, IdAndName } from '../../util/types/types';
+import { ExerciseIdAndName } from '../../util/types/types';
+import { IEquipment } from '../../util/interfaces/activitiesInterfaces';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
-
-let _equipmentNames: IdAndName[] = [];
-let _exerciseNames: IdAndName[] = [];
 
 /** RENDERS */
 export const redirectToViewAddEquipment = (req: Request, res: Response) => {
@@ -18,52 +16,47 @@ export const redirectToViewSelectedEquipment = (req: Request, res: Response) => 
 
 export const getViewToSelectedEquipment = async (req: Request, res: Response) => {
   const selectedEquipmentId: string = req.params.equipmentId;
+  let selectedEquipmentInfo: IEquipment = {} as IEquipment;
+  
+  //if selectedEquipmentId is new, fetches all names. Otherwise, returns local list.
+  const equipmentNames = await EquipmentHandler.getAllNames(selectedEquipmentId);
 
-  //Fetches the equipmentNames from db if names don't exist or if the current equipmentId doesn't exist in array
-  //Note: This logic is needed to fetch the new equipment info once a new equipment has been added to the db
-  const index: number = _equipmentNames?.findIndex(f => f._id.toString() == selectedEquipmentId);
-  (index > -1) ? await fetchEquipmentNames(false) : await fetchEquipmentNames(true);
+  //gets the information of the selected equipment
+  await EquipmentHandler.fetchById(selectedEquipmentId)
+  .then(selectedEquipment => selectedEquipmentInfo  = selectedEquipment)
+  .catch((err) => { console.log(err); return; });
 
-  EquipmentHandler.fetchById(selectedEquipmentId)
-  .then((selectedEquipmentInfo) => {
-    res.render('./activities/view-equipment', {
-      caller: 'view-equipment',
-      pageTitle: 'Información de equipo',
-      equipmentNames: _equipmentNames,
-      selectedEquipmentInfo: selectedEquipmentInfo,
-      exercises: ExerciseHandler.exercisesStaticValues.exercises
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+  res.render('./activities/view-equipment', {
+    caller: 'view-equipment',
+    pageTitle: 'Información de equipo',
+    equipmentNames: equipmentNames,
+    selectedEquipmentInfo: selectedEquipmentInfo,
+    exercises: await ExerciseHandler.getAllNames()
   });
 };
 
 export const getViewToAddEquipment = async (req: Request, res: Response) => {
-  //Fetches the equipmentNames from db if for some reason the data was lost from previous method
-  await fetchEquipmentNames();
-
-  res.render('./activities/add-equipment', {
+    res.render('./activities/add-equipment', {
     caller: 'add-equipment',
     pageTitle: 'Añadir equipo',
-    equipmentNames: _equipmentNames,
-    exercises: ExerciseHandler.exercisesStaticValues.exercises,
+    equipmentNames: await EquipmentHandler.getAllNames(),
+    exercises: await ExerciseHandler.getAllNames(),
     selectedEquipmentInfo: null
   });
 };
 
 /** ACTIONS */
-export const addEquipment = (req: Request, res: Response) => {
+export const addEquipment = async (req: Request, res: Response) => {
   let equipmentHandler = new EquipmentHandler(req.body);
-  equipmentHandler = refactorValuesForDb(equipmentHandler);
+  equipmentHandler = await refactorValuesForDb(equipmentHandler);
   equipmentHandler.save().then( id => res.redirect(`/activities/equipment/${id}`) );
 };
 
-export const updateEquipment = (req: Request, res: Response) => {
+export const updateEquipment = async (req: Request, res: Response) => {
   const equipmentId: string = req.params.equipmentId;
   let equipment = new EquipmentHandler(req.body);
   equipment.id = equipmentId;
-  equipment = refactorValuesForDb(equipment);
+  equipment = await refactorValuesForDb(equipment);
 
   equipment.update()
   .then(() => {
@@ -75,8 +68,8 @@ export const updateEquipment = (req: Request, res: Response) => {
 };
 
 /** APIS */
-export const apiGetEquipments = (req: Request, res: Response) => {
-  res.json(EquipmentHandler.equipmentsStaticValues.equipments);
+export const apiGetEquipments = async (req: Request, res: Response) => {
+  res.json(await EquipmentHandler.getAllNames());
 };
 
 export const apiDeleteEquipment = (req: Request, res: Response) => {
@@ -85,13 +78,8 @@ export const apiDeleteEquipment = (req: Request, res: Response) => {
   EquipmentHandler.deleteById(equipmentId)
   .then( deleteResponse => {
     //removes the equipment from equipments dropdown
-    const index: number = _equipmentNames?.findIndex(f => f._id.toString() == equipmentId);
-    if (index > -1){
-      _equipmentNames.splice(index, 1);
-    }
-
+    EquipmentHandler.removeNameById(equipmentId);
     console.log(`'${deleteResponse.name}' physical equipment deleted successfully.`);
-
     res.redirect(`/activities/equipment/`);
   })
   .catch(err => {
@@ -100,21 +88,12 @@ export const apiDeleteEquipment = (req: Request, res: Response) => {
 };
 
 /*** FUNCTIONS */
-const fetchEquipmentNames = async (forceFetch = false) => {
-  //Fetches the equipmentNames from db only when equipmentNames is not available or when forced
-  //Note: This is forced to fetch when a new value has been added to the database
-  if (forceFetch || !_equipmentNames || _equipmentNames.length === 0) {
-    // await EquipmentHandler.fetchAllNames().then((equipmentNames) => { _equipmentNames = equipmentNames});
-    await EquipmentHandler.fetchAllNames().then((equipmentNames) => { _equipmentNames = equipmentNames });
-  }
-};
-
-const refactorValuesForDb = (equipment: EquipmentHandler): EquipmentHandler => {
-  equipment.exercises = reformatExerciseValues(equipment.exercises);
+const refactorValuesForDb = async (equipment: EquipmentHandler) => {
+  equipment.exercises = await reformatExerciseValues(equipment.exercises);
   return equipment;
 };
 
-const reformatExerciseValues = (selectedExercises) => {
+const reformatExerciseValues = async (selectedExercises) => {
   if (!selectedExercises){ return null; }
 
   //Handles cases when the user only chooses one option and form returns a string
@@ -122,10 +101,7 @@ const reformatExerciseValues = (selectedExercises) => {
     selectedExercises = [selectedExercises]; 
   }
   //Fetches all the chronic exercises to pair with their names
-  if (!_exerciseNames || _exerciseNames.length === 0) {
-    //TODO: CHANGE THIS LOGIC FOR REAL DB FETCH
-    _exerciseNames = ExerciseHandler.exercisesStaticValues.exercises;
-  }
+  const _exerciseNames = await ExerciseHandler.getAllNames();
 
   let refactoredExercises: ExerciseIdAndName[] = [];
   selectedExercises.forEach(exerciseId => 
