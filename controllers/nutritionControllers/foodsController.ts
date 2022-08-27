@@ -142,7 +142,8 @@ const refactorChronicConditions = async (selectedConditions) => {
 
       const conditionObject: ConditionIdAndName = {
         conditionId: new ObjectId(conditionId),
-        conditionName: _conditionNames.find(c => c._id === conditionId)?.name || 'Nombre no disponible'
+        conditionName: _conditionNames.find(
+          c => c._id.toString() === conditionId.toString())?.name || 'Nombre no disponible'
       };
 
       refactoredConditions.push(conditionObject);
@@ -168,7 +169,8 @@ const refactorCompatibleWithDiets = async (selectedDietsCompatible) => {
 
       const dietObject: DietIdAndName = {
         dietId: new ObjectId(dietId),
-        dietName: _dietNames.find(c => c._id === dietId)?.name || 'Nombre no disponible'
+        dietName: _dietNames.find(
+          d => d._id.toString() === dietId.toString())?.name || 'Nombre no disponible'
       };
 
       refactoredDiets.push(dietObject);

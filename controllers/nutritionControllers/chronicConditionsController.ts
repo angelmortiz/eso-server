@@ -42,7 +42,8 @@ export const getViewToAddChronicCondition = async (req: Request, res: Response) 
 
 /** ACTIONS */
 export const addChronicCondition = (req: Request, res: Response) => {
-  const chronicConditionHandler = new ChronicConditionHandler(req.body);
+  let chronicConditionHandler = new ChronicConditionHandler(req.body);
+  chronicConditionHandler = refactorValuesForDb(chronicConditionHandler);
   chronicConditionHandler.save().then( id => res.redirect(`/nutrition/chronicCondition/${id}`) );
 };
 

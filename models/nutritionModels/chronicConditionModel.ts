@@ -116,7 +116,7 @@ export default class ChronicConditionHandler implements IChronicCondition {
     static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
       //forces to fetch all names if a new conditions has been added to the db
       if (objectId) {
-        const index: number = this._names?.findIndex(obj => obj._id.toString() == objectId);
+        const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
         if (index === -1) forceFetch = true;
       }
   
@@ -130,7 +130,7 @@ export default class ChronicConditionHandler implements IChronicCondition {
   
     //removes food from the list of names once it's been deleted
     static removeNameById(objectId: string){
-      const index: number = this._names?.findIndex(obj => obj._id.toString() == objectId);
+      const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
       if (index > -1){
         this._names.splice(index, 1);
       }

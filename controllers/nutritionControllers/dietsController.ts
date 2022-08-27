@@ -109,7 +109,8 @@ const refactorChronicConditions = async (selectedConditions) => {
 
       const conditionObject: ConditionIdAndName = {
         conditionId: new ObjectId(conditionId),
-        conditionName: _conditionNames.find(c => c._id === conditionId)?.name || 'Nombre no disponible'
+        conditionName: _conditionNames.find(
+          c => c._id.toString() === conditionId.toString())?.name || 'Nombre no disponible'
       };
 
       refactoredConditions.push(conditionObject);
