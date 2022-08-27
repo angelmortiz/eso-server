@@ -53,6 +53,7 @@
                 <label for="exercises" class="form__title">Ejercicios:</label>
                 <div class="form__selects-div" id="exercises-selects">
                     <select name="exercises">
+                        <option value="">-- Elige --</option>
                         <!-- [Loop1] Loop through all the exercises options -->
                         <% exercises?.forEach( exe => { %>
                             <option value="<%= exe._id %>"><%= exe.name %></option>

@@ -67,6 +67,7 @@
                      <!-- [Loop1] Loop through exercises associated to curret muscle -->
                      <% selectedMuscleInfo?.exercises?.forEach( (exercise) => { %> 
                         <select name="exercises">
+                            <option value="">-- Elige --</option>
                             <!-- [Loop2] Loop through all the exercises options -->
                             <% exercises?.forEach( ex => { %>
                                 <option value="<%= ex._id %>"

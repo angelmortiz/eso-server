@@ -80,6 +80,7 @@
                 <label for="mainMuscle" class="form__title">Músculo principal:</label>
                 <div class="form__selects-div" id="mainMuscle-selects">
                     <select name="mainMuscle">
+                        <option value="">-- Elige --</option>
                         <!-- [Loop1] Loop through all the muscles options -->
                         <% muscles?.forEach( mus => { %>
                             <option
@@ -97,6 +98,7 @@
                     <!-- [Loop1] Loop through secondaryMuscles associated to curret exercise -->
                     <% selectedExerciseInfo?.secondaryMuscles?.forEach( (muscle) => { %> 
                         <select name="secondaryMuscles">
+                            <option value="">-- Elige --</option>
                             <!-- [Loop2] Loop through all the muscles options -->
                             <% muscles?.forEach( mus => { %>
                                 <option value="<%= mus._id %>"
@@ -117,6 +119,7 @@
                      <!-- [Loop1] Loop through types associated to curret exercise -->
                      <% selectedExerciseInfo?.types?.forEach( (type) => { %> 
                         <select name="types">
+                            <option value="">-- Elige --</option>
                             <!-- [Loop2] Loop through all the types options -->
                             <% exerciseTypes?.forEach( tp => { %>
                                 <option value="<%= tp._id %>"
@@ -137,6 +140,7 @@
                     <!-- [Loop1] Loop through equipment associated to curret exercise -->
                     <% selectedExerciseInfo?.equipments?.forEach( (equipment) => { %> 
                     <select name="equipments">
+                        <option value="">-- Elige --</option>
                         <!-- [Loop2] Loop through all the equipments options -->
                         <% equipments?.forEach( eq => { %>
                             <option value="<%= eq._id %>"
@@ -157,6 +161,7 @@
                     <!-- [Loop1] Loop through physical conditions associated to curret exercise -->
                     <% selectedExerciseInfo?.safeForConditions?.forEach( (condition) => { %> 
                         <select name="safeForConditions">
+                            <option value="">-- Elige --</option>
                             <!-- [Loop2] Loop through all the physical conditions options -->
                             <% physicalConditions?.forEach( cc => { %>
                                 <option value="<%= cc._id %>"
@@ -177,6 +182,7 @@
                     <!-- [Loop1] Loop through physical conditions associated to curret exercise -->
                     <% selectedExerciseInfo?.notRecommendedForConditions?.forEach( (condition) => { %> 
                         <select name="notRecommendedForConditions">
+                            <option value="">-- Elige --</option>
                             <!-- [Loop2] Loop through all the physical conditions options -->
                             <% physicalConditions?.forEach( cc => { %>
                                 <option value="<%= cc._id %>"
@@ -197,6 +203,7 @@
                     <!-- [Loop1] Loop through diets associated to curret exercise -->
                     <% selectedExerciseInfo?.recommendedForCyclePhases?.forEach( (phase) => { %> 
                         <select name="recommendedForCyclePhases">
+                            <option value="">-- Elige --</option>
                             <% menstrualCyclePhases?.forEach( mcp=> { %>
                                 <option value="<%= mcp._id %>"
                                     <%=phase.toString() === mcp._id.toString() ? 'selected' : '' %>
