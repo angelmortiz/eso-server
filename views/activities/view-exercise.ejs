@@ -20,7 +20,7 @@
                     <option value="">-- Elige --</option>
                     <% exerciseNames.forEach( exercise=> { %>
                         <option value="<%= exercise._id %>"
-                            <%=selectedExerciseInfo?._id?.toString() == exercise._id ? 'selected' : '' %>
+                            <%=selectedExerciseInfo?._id?.toString() === exercise._id.toString() ? 'selected' : '' %>
                             >
                             <%= exercise.name %>
                         </option>
@@ -83,7 +83,7 @@
                         <!-- [Loop1] Loop through all the muscles options -->
                         <% muscles?.forEach( mus => { %>
                             <option
-                            <%=selectedExerciseInfo.mainMuscle.muscleId == mus._id ? 'selected' : ''%>
+                            <%=selectedExerciseInfo.mainMuscle.muscleId.toString() === mus._id.toString() ? 'selected' : ''%>
                             value="<%= mus._id %>"><%= mus.name %></option>
                         <% }); %>
                         <!-- [END-Loop1] -->
@@ -100,7 +100,7 @@
                             <!-- [Loop2] Loop through all the muscles options -->
                             <% muscles?.forEach( mus => { %>
                                 <option value="<%= mus._id %>"
-                                    <%=muscle.muscleId == mus._id ? 'selected' : '' %>
+                                    <%=muscle.muscleId.toString() === mus._id.toString() ? 'selected' : '' %>
                                     ><%= mus.name %></option>
                             <% }); %>
                             <!-- [END-Loop2] -->
@@ -120,7 +120,7 @@
                             <!-- [Loop2] Loop through all the types options -->
                             <% exerciseTypes?.forEach( tp => { %>
                                 <option value="<%= tp._id %>"
-                                    <%=type == tp._id ? 'selected' : '' %>
+                                    <%=type.toString() === tp._id.toString() ? 'selected' : '' %>
                                     ><%= tp.name %></option>
                             <% }); %>
                             <!-- [END-Loop2] -->
@@ -140,7 +140,7 @@
                         <!-- [Loop2] Loop through all the equipments options -->
                         <% equipments?.forEach( eq => { %>
                             <option value="<%= eq._id %>"
-                                <%=equipment.equipmentId == eq._id ? 'selected' : '' %>
+                                <%=equipment.equipmentId.toString() === eq._id.toString() ? 'selected' : '' %>
                                 ><%= eq.name %></option>
                         <% }); %>
                         <!-- [END-Loop2] -->
@@ -160,7 +160,7 @@
                             <!-- [Loop2] Loop through all the physical conditions options -->
                             <% physicalConditions?.forEach( cc => { %>
                                 <option value="<%= cc._id %>"
-                                    <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                    <%=condition.conditionId.toString() === cc._id.toString() ? 'selected' : '' %>
                                     ><%= cc.name %></option>
                             <% }); %>
                             <!-- [END-Loop2] -->
@@ -180,7 +180,7 @@
                             <!-- [Loop2] Loop through all the physical conditions options -->
                             <% physicalConditions?.forEach( cc => { %>
                                 <option value="<%= cc._id %>"
-                                    <%=condition.conditionId == cc._id ? 'selected' : '' %>
+                                    <%=condition.conditionId.toString() === cc._id.toString() ? 'selected' : '' %>
                                     ><%= cc.name %></option>
                             <% }); %>
                             <!-- [END-Loop2] -->
@@ -199,7 +199,7 @@
                         <select name="recommendedForCyclePhases">
                             <% menstrualCyclePhases?.forEach( mcp=> { %>
                                 <option value="<%= mcp._id %>"
-                                    <%=phase == mcp._id ? 'selected' : '' %>
+                                    <%=phase.toString() === mcp._id.toString() ? 'selected' : '' %>
                                     ><%= mcp.name %></option>
                             <% }); %>
                         <!-- [END-Loop2] -->

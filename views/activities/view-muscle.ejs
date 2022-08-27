@@ -20,7 +20,7 @@
                     <option value="">-- Elige --</option>
                     <% muscleNames.forEach( muscle=> { %>
                         <option value="<%= muscle._id %>"
-                            <%=selectedMuscleInfo?._id?.toString() == muscle._id ? 'selected' : '' %>
+                            <%=selectedMuscleInfo?._id?.toString() === muscle._id.toString() ? 'selected' : '' %>
                             >
                             <%= muscle.name %>
                         </option>
@@ -70,7 +70,7 @@
                             <!-- [Loop2] Loop through all the exercises options -->
                             <% exercises?.forEach( ex => { %>
                                 <option value="<%= ex._id %>"
-                                    <%=exercise.exerciseId == ex._id ? 'selected' : '' %>
+                                    <%=exercise.exerciseId.toString() === ex._id.toString() ? 'selected' : '' %>
                                     ><%= ex.name %></option>
                             <% }); %>
                             <!-- [END-Loop2] -->

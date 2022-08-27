@@ -24,7 +24,7 @@
                         <option value="">-- Elige --</option>
                         <% foodNames.forEach( food=> { %>
                             <option value="<%= food._id %>" 
-                                <%=selectedFoodInfo?._id?.toString() == food._id ? 'selected' : '' %>
+                                <%=selectedFoodInfo?._id?.toString() === food._id.toString() ? 'selected' : '' %>
                                 >
                                 <%= food.name %>
                             </option>
@@ -59,7 +59,7 @@
                             <option value="">-- Elige --</option>
                             <% foodSelectOptions.classification.forEach( c=> { %>
                                 <option value="<%= c %>"
-                                    <%=selectedFoodInfo.classification == c ? 'selected' : '' %>
+                                    <%=selectedFoodInfo.classification === c ? 'selected' : '' %>
                                     ><%= c %></option>
                             <% }); %>
                         </select>
@@ -71,7 +71,7 @@
                             <option value="">-- Elige --</option>
                             <% foodSelectOptions.macronutrients.forEach( mn=> { %>
                                 <option value="<%= mn %>"
-                                    <%=selectedFoodInfo.mainMacronutrient == mn ? 'selected' : '' %>
+                                    <%=selectedFoodInfo.mainMacronutrient === mn ? 'selected' : '' %>
                                     ><%= mn %></option>
                             <% }); %>
                         </select>
@@ -84,7 +84,7 @@
                             <option value="">-- Elige --</option>
                             <% foodSelectOptions.macronutrients.forEach( mn=> { %>
                                 <option value="<%= mn %>"
-                                    <%=selectedFoodInfo.secondaryMacronutrient == mn ? 'selected' : '' %>
+                                    <%=selectedFoodInfo.secondaryMacronutrient === mn ? 'selected' : '' %>
                                     ><%= mn %></option>
                             <% }); %>
                         </select>
@@ -114,7 +114,7 @@
                             <!-- [Loop1] Loop through nutrient density associated to curret food -->
                             <% foodSelectOptions.micronutrientDensity.forEach( md=> { %>
                                 <option value="<%= md %>"
-                                    <%=selectedFoodInfo.micronutrientDensity == md ? 'selected' : '' %>
+                                    <%=selectedFoodInfo.micronutrientDensity === md ? 'selected' : '' %>
                                     ><%= md %></option>
                             <% }); %>
                             <!-- [END-Loop1] -->
@@ -131,7 +131,7 @@
                                     <!-- [Loop2] Loop through all the chronic conditions options -->
                                     <% chronicConditions?.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
-                                            <%=condition.conditionId.toString() == cc._id.toString() ? 'selected' : '' %>
+                                            <%=condition.conditionId.toString() === cc._id.toString() ? 'selected' : '' %>
                                             ><%= cc.name %></option>
                                     <% }); %>
                                     <!-- [END-Loop2] -->
@@ -152,7 +152,7 @@
                                     <!-- [Loop2] Loop through all the chronic conditions options -->
                                     <% chronicConditions?.forEach( cc => { %>
                                         <option value="<%= cc._id %>"
-                                            <%=condition.conditionId.toString() == cc._id.toString() ? 'selected' : '' %>
+                                            <%=condition.conditionId.toString() === cc._id.toString() ? 'selected' : '' %>
                                             ><%= cc.name %></option>
                                     <% }); %>
                                     <!-- [END-Loop2] -->
@@ -173,7 +173,7 @@
                                 <!-- [Loop2] Loop through all the diets options -->
                                 <% diets?.forEach( d => { %>
                                     <option value="<%= d._id %>"
-                                        <%=diet.dietId.toString() == d._id.toString() ? 'selected' : '' %>
+                                        <%=diet.dietId.toString() === d._id.toString() ? 'selected' : '' %>
                                         ><%= d.name %></option>
                                     <% }); %>
                                     <!-- [END-Loop2] -->
@@ -193,7 +193,7 @@
                                     <option value="">-- Elige --</option>
                                     <% menstrualCyclePhases?.forEach( mcp=> { %>
                                         <option value="<%= mcp._id %>"
-                                            <%=phase == mcp._id ? 'selected' : '' %>
+                                            <%=phase.toString() === mcp._id.toString() ? 'selected' : '' %>
                                             ><%= mcp.name %></option>
                                     <% }); %>
                                 <!-- [END-Loop2] -->

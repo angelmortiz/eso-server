@@ -23,9 +23,7 @@
                     <select name="selectedFood" id="select-food-selection">
                         <option value="">-- Elige --</option>
                         <% foodNames.forEach( food=> { %>
-                            <option value="<%= food._id %>"
-                                <%=selectedFoodInfo?._id?.toString() == food._id ? 'selected' : '' %>
-                                >
+                            <option value="<%= food._id %>">
                                 <%= food.name %>
                             </option>
                             <% }); %>

@@ -22,7 +22,7 @@
                         <option value="">-- Elige --</option>
                         <% dietNames.forEach( diet=> { %>
                             <option value="<%= diet._id %>"
-                                <%=selectedDietInfo?._id?.toString() == diet._id ? 'selected' : '' %>
+                                <%=selectedDietInfo?._id?.toString() === diet._id.toString() ? 'selected' : '' %>
                                 >
                                 <%= diet.name %>
                             </option>

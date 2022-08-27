@@ -24,7 +24,7 @@
                         <option value="">-- Elige --</option>
                         <% conditionNames.forEach( condition=> { %>
                             <option value="<%= condition._id %>"
-                                <%=selectedConditionInfo?._id?.toString() == condition._id ? 'selected' : '' %>
+                                <%=selectedConditionInfo?._id?.toString() === condition._id.toString() ? 'selected' : '' %>
                                 >
                                 <%= condition.name %>
                             </option>

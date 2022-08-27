@@ -98,8 +98,8 @@ export const apiDeleteRecipe = (req: Request, res: Response) => {
 const refactorValuesForDb = async (recipe: RecipeHandler) => {
   recipe = refactorMealTypeValues(recipe);
   recipe.ingredients = await refactorIngredients(recipe.ingredients);
-  recipe.instructions = refactorInstructions(recipe.instructions);
-  recipe.utensils = refactorUtensils(recipe.utensils);
+  recipe.instructions = removeEmptyValues(recipe.instructions);
+  recipe.utensils = removeEmptyValues(recipe.utensils);
   recipe.safeForConditions = await refactorChronicConditions(recipe.safeForConditions);
   recipe.notRecommendedForConditions = await refactorChronicConditions(recipe.notRecommendedForConditions);
   recipe.compatibleWithDiets = await refactorCompatibleWithDiets(recipe.compatibleWithDiets);
@@ -134,29 +134,18 @@ const refactorIngredients = async (ingredients)  => {
   return refactoredFoods;
 };
 
-const refactorInstructions = (instructions: string[]): string[] => {
-  if (!instructions){ return []; }
+const removeEmptyValues = (values: string[]): string[] => {
+  if (!values) return [];
 
   //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(instructions) === 'string') {
-    instructions = [instructions]; 
+  if (typeof(values) === 'string')
+  {
+    values = [values];
   }
 
-  //removes all empty instructions
-  return instructions.filter(p => p);
-};
-
-const refactorUtensils = (utensils: string[]): string[] => {
-  if (!utensils){ return []; }
-
-  //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(utensils) === 'string') {
-    utensils = [utensils]; 
-  }
-
-  //removes all empty utensils
-  return utensils.filter(u => u);
-};
+  //removes all empty options if necessary.
+  return values.filter(v => v);
+}
 
 const refactorMealTypeValues = (recipe) => {
   recipe.mealType = [];

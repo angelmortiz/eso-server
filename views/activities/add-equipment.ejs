@@ -19,9 +19,7 @@
                 <select name="selectedEquipment" id="select-equipment-selection">
                     <option value="">-- Elige --</option>
                     <% equipmentNames.forEach( equipment=> { %>
-                        <option value="<%= equipment._id %>"
-                            <%=selectedEquipmentInfo?._id?.toString() == equipment._id ? 'selected' : '' %>
-                            >
+                        <option value="<%= equipment._id %>">
                             <%= equipment.name %>
                         </option>
                         <% }); %>

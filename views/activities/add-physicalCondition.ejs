@@ -23,9 +23,7 @@
                     <select name="selectedPhysicalCondition" id="select-chronic-condition-selection">
                         <option value="">-- Elige --</option>
                         <% conditionNames.forEach( condition=> { %>
-                            <option value="<%= condition._id %>"
-                                <%=selectedConditionInfo?._id?.toString() == condition._id ? 'selected' : '' %>
-                                >
+                            <option value="<%= condition._id %>">
                                 <%= condition.name %>
                             </option>
                             <% }); %>

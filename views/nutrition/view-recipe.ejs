@@ -22,7 +22,7 @@
                         <option value="">-- Elige --</option>
                         <% recipeNames.forEach( recipe=> { %>
                             <option value="<%= recipe._id %>"
-                                <%=selectedRecipeInfo?._id?.toString() == recipe._id ? 'selected' : '' %>
+                                <%=selectedRecipeInfo?._id?.toString() === recipe._id.toString() ? 'selected' : '' %>
                                 >
                                 <%= recipe.name %>
                             </option>
@@ -65,7 +65,7 @@
                         <option value="">-- Elige --</option>
                         <% recipeStaticValues.complexity.forEach( complexity => { %>
                             <option value="<%= complexity %>"
-                                <%=selectedRecipeInfo.complexity == complexity ? 'selected' : '' %>
+                                <%=selectedRecipeInfo.complexity === complexity ? 'selected' : '' %>
                                 ><%= complexity %></option>
                         <% }); %>
                     <!-- [END-Loop1] -->
@@ -98,7 +98,7 @@
                                 <!-- [Loop2] Loop through all the chronic ingredientss options -->
                                 <% ingredients?.forEach( ing => { %>
                                     <option value="<%= ing._id %>"
-                                        <%=ingredient.foodId.toString() == ing._id.toString() ? 'selected' : '' %>
+                                        <%=ingredient.foodId.toString() === ing._id.toString() ? 'selected' : '' %>
                                         ><%= ing.name %></option>
                                 <% }); %>
                                 <!-- [END-Loop2] -->
@@ -144,7 +144,7 @@
                                 <!-- [Loop2] Loop through all the chronic conditions options -->
                                 <% chronicConditions?.forEach( cc => { %>
                                     <option value="<%= cc._id %>"
-                                        <%=condition.conditionId.toString() == cc._id.toString() ? 'selected' : '' %>
+                                        <%=condition.conditionId.toString() === cc._id.toString() ? 'selected' : '' %>
                                         ><%= cc.name %></option>
                                 <% }); %>
                                 <!-- [END-Loop2] -->
@@ -165,7 +165,7 @@
                                 <!-- [Loop2] Loop through all the chronic conditions options -->
                                 <% chronicConditions?.forEach( cc => { %>
                                     <option value="<%= cc._id %>"
-                                        <%=condition.conditionId.toString() == cc._id.toString() ? 'selected' : '' %>
+                                        <%=condition.conditionId.toString() === cc._id.toString() ? 'selected' : '' %>
                                         ><%= cc.name %></option>
                                 <% }); %>
                                 <!-- [END-Loop2] -->
@@ -186,7 +186,7 @@
                                 <!-- [Loop2] Loop through all the diets options -->
                                 <% diets?.forEach( d => { %>
                                     <option value="<%= d._id %>"
-                                        <%=diet.dietId.toString() == d._id.toString() ? 'selected' : '' %>
+                                        <%=diet.dietId.toString() === d._id.toString() ? 'selected' : '' %>
                                         ><%= d.name %></option>
                                 <% }); %>
                                 <!-- [END-Loop2] -->
@@ -207,7 +207,7 @@
                                 <!-- [Loop2] Loop through all the cycle options -->
                                 <% menstrualCyclePhases?.forEach( mcp=> { %>
                                     <option value="<%= mcp._id %>"
-                                        <%=phase == mcp._id ? 'selected' : '' %>
+                                        <%=phase === mcp._id ? 'selected' : '' %>
                                         ><%= mcp.name %></option>
                                 <% }); %>
                             <!-- [END-Loop2] -->

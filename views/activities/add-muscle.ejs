@@ -19,9 +19,7 @@
                 <select name="selectedMuscle" id="select-muscle-selection">
                     <option value="">-- Elige --</option>
                     <% muscleNames.forEach( muscle=> { %>
-                        <option value="<%= muscle._id %>"
-                            <%=selectedMuscleInfo?._id?.toString() == muscle._id ? 'selected' : '' %>
-                            >
+                        <option value="<%= muscle._id %>">
                             <%= muscle.name %>
                         </option>
                         <% }); %>
