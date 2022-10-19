@@ -82,7 +82,7 @@ export const updateExercise = async (req: Request, res: Response) => {
 
 /** APIS */
 export const apiGetExercises = async (req: Request, res: Response) => {
-    res.json(await ExerciseHandler.getAllNames());
+    res.json(await ExerciseHandler.fetchAll());
 };
 
 export const apiGetExerciseTypes = (req: Request, res: Response) => {
