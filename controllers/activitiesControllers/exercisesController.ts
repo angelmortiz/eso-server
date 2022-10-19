@@ -85,6 +85,12 @@ export const apiGetExercises = async (req: Request, res: Response) => {
     res.json(await ExerciseHandler.fetchAll());
 };
 
+export const apiGetExerciseById = async (req: Request, res: Response) => {
+  const exerciseId: string = req.params.exerciseId;
+
+  res.json(await ExerciseHandler.fetchById(exerciseId));
+};
+
 export const apiGetExerciseTypes = (req: Request, res: Response) => {
     res.json(ExerciseHandler.exercisesStaticValues.types);
 };
