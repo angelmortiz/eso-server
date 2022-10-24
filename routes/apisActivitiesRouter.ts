@@ -13,6 +13,7 @@ import * as physicalConditionsController from '../controllers/activitiesControll
 router.get('/exercises', exercisesController.apiGetExercises);
 router.get('/exercise/:exerciseId', exercisesController.apiGetExerciseById);
 router.get('/exerciseTypes', exercisesController.apiGetExerciseTypes);
+router.post('/exercise', exercisesController.apiAddExercise);
 router.delete('/exercise/:exerciseId', exercisesController.apiDeleteExercise);
 
 /* MUSCLE */

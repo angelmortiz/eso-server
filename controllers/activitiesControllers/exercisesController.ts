@@ -1,5 +1,3 @@
-
-
 import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
 import { ConditionIdAndName, EquipmentIdAndName, MuscleIdAndName } from '../../util/types/types';
@@ -9,6 +7,7 @@ import MuscleHandler from '../../models/activitiesModels/muscleModel';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
 import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
 import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
+import { RESPONSE_ADDED_SUCCESSFULLY } from '../general/responseCodes';
 
 /** RENDERS */
 export const redirectToViewAddExercise = (req: Request, res: Response) => {
@@ -95,6 +94,16 @@ export const apiGetExerciseTypes = (req: Request, res: Response) => {
     res.json(ExerciseHandler.exercisesStaticValues.types);
 };
 
+export const apiAddExercise = async (req: Request, res: Response) => {
+  
+  // let exerciseHandler = new ExerciseHandler(req.body);
+  // exerciseHandler = await refactorValuesForDb(exerciseHandler);
+  // console.log("exerciseHandler: ", exerciseHandler);
+  
+  //exerciseHandler.save().then( id => res.status(201).send(`Exercise added successfully. Id: ${id} `) );
+  res.json(RESPONSE_ADDED_SUCCESSFULLY());
+};
+
 export const apiDeleteExercise = (req: Request, res: Response) => {
   const exerciseId: string = req.params.exerciseId;
 
@@ -114,7 +123,9 @@ export const apiDeleteExercise = (req: Request, res: Response) => {
 /*** FUNCTIONS */
 const refactorValuesForDb = async (exercise: ExerciseHandler) => {
     exercise.compoundMovement = refactorCompoundMovement(exercise.compoundMovement);
+    console.log("here 1");
     exercise.mainMuscle = await refactorMainMuscle(exercise.mainMuscle);
+    console.log("here 2");
     exercise.secondaryMuscles = await refactorSecondaryMuscles(exercise.secondaryMuscles);
     exercise.types = refactorTypes(exercise.types);
     exercise.equipments = await refactorEquipments(exercise.equipments);

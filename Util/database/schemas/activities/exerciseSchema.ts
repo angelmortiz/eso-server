@@ -83,5 +83,9 @@ export default new Schema({
   linkToVideo: {
     type: String,
     required: false
+  },
+  linkToImage: {
+    type: String,
+    required: false
   }
   });
