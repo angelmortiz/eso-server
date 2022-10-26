@@ -99,13 +99,10 @@ export const apiGetExerciseTypes = (req: Request, res: Response) => {
 };
 
 export const apiAddExercise = async (req: Request, res: Response) => {
+  let exerciseHandler = new ExerciseHandler(req.body);
   
-  // let exerciseHandler = new ExerciseHandler(req.body);
-  // exerciseHandler = await refactorValuesForDb(exerciseHandler);
-  // console.log("exerciseHandler: ", exerciseHandler);
-  
-  //exerciseHandler.save().then( id => res.status(201).send(`Exercise added successfully. Id: ${id} `) );
-  res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY());
+  //TODO: Implement an error catcher
+  exerciseHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
 };
 
 export const apiDeleteExercise = (req: Request, res: Response) => {

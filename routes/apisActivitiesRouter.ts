@@ -20,18 +20,21 @@ router.delete('/exercise/:exerciseId', exercisesController.apiDeleteExercise);
 /* MUSCLE */
 //APIs
 router.get('/muscles', musclesController.apiGetMuscles);
+router.get('/muscleNames', musclesController.apiGetMuscleNames);
 router.post('/muscle', musclesController.apiAddMuscle);
 router.delete('/muscle/:muscleId', musclesController.apiDeleteMuscle);
 
 /* EQUIPMENT */
 //APIs
 router.get('/equipments', equipmentsController.apiGetEquipments);
+router.get('/equipmentNames', equipmentsController.apiGetEquipmentNames);
 router.post('/equipment', equipmentsController.apiAddEquipment);
 router.delete('/equipment/:equipmentId', equipmentsController.apiDeleteEquipment);
 
 /* PHYSICAL CONDITION */
 //APIs
 router.get('/physicalConditions', physicalConditionsController.apiGetPhysicalConditions);
+router.get('/physicalConditionNames', physicalConditionsController.apiGetPhysicalConditionNames);
 router.post('/physicalCondition', physicalConditionsController.apiAddPhysicalCondition);
 router.delete('/physicalCondition/:physicalConditionId', physicalConditionsController.apiDeletePhysicalCondition);
 

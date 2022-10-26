@@ -73,6 +73,10 @@ export const apiGetMuscles = async (req: Request, res: Response) => {
   res.json(await MuscleHandler.getAllNames());
 };
 
+export const apiGetMuscleNames = async (req: Request, res: Response) => {
+  res.json(await MuscleHandler.fetchAllNames());
+};
+
 export const apiAddMuscle = (req: Request, res: Response) => {
   let muscleHandler = new MuscleHandler(req.body);
 

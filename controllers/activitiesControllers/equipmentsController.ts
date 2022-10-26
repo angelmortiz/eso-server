@@ -73,6 +73,10 @@ export const apiGetEquipments = async (req: Request, res: Response) => {
   res.json(await EquipmentHandler.getAllNames());
 };
 
+export const apiGetEquipmentNames = async (req: Request, res: Response) => {
+  res.json(await EquipmentHandler.fetchAllNames());
+};
+
 export const apiAddEquipment = (req: Request, res: Response) => {
   let equipmentHandler = new EquipmentHandler(req.body);
 

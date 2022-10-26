@@ -68,6 +68,10 @@ export const apiGetPhysicalConditions = async (req: Request, res: Response) => {
   res.json(await PhysicalConditionHandler.getAllNames());
 };
 
+export const apiGetPhysicalConditionNames = async (req: Request, res: Response) => {
+  res.json(await PhysicalConditionHandler.fetchAllNames());
+};
+
 export const apiAddPhysicalCondition = (req: Request, res: Response) => {
   let physicalconditionHandler = new PhysicalConditionHandler(req.body);
   //TODO: Implement an error catcher

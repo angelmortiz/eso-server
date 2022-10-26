@@ -20,7 +20,7 @@ export default new Schema({
     },
     alternativeName: {
         type: String,
-        required: true
+        required: false
     },
     description: {
         type: String,

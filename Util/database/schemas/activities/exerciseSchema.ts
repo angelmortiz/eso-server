@@ -42,7 +42,7 @@ export default new Schema({
   },
   alternativeName: {
     type: String,
-    required: true
+    required: false
   },
   difficulty: {
     type: String,
