@@ -1,9 +1,10 @@
 import {ObjectId} from 'bson';
 import {Request, Response} from 'express';
 import {ExerciseIdAndName} from '../../util/types/types';
+import { IMuscle } from '../../util/interfaces/activitiesInterfaces';
+import  *  as ResponseCodes from '../general/responseCodes';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import MuscleHandler from '../../models/activitiesModels/muscleModel';
-import { IMuscle } from '../../util/interfaces/activitiesInterfaces';
 
 /** RENDERS */
 export const redirectToViewAddMuscle = (req: Request, res: Response) => {
@@ -70,6 +71,13 @@ export const updateMuscle = async (req: Request, res: Response) => {
 /** APIS */
 export const apiGetMuscles = async (req: Request, res: Response) => {
   res.json(await MuscleHandler.getAllNames());
+};
+
+export const apiAddMuscle = (req: Request, res: Response) => {
+  let muscleHandler = new MuscleHandler(req.body);
+
+  //TODO: Implement an error catcher
+  muscleHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
 };
 
 export const apiDeleteMuscle = (req: Request, res: Response) => {

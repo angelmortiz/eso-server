@@ -11,6 +11,7 @@ import * as physicalConditionsController from '../controllers/activitiesControll
 /* EXERCISE */
 //APIs
 router.get('/exercises', exercisesController.apiGetExercises);
+router.get('/exerciseNames', exercisesController.apiGetExerciseNames);
 router.get('/exercise/:exerciseId', exercisesController.apiGetExerciseById);
 router.get('/exerciseTypes', exercisesController.apiGetExerciseTypes);
 router.post('/exercise', exercisesController.apiAddExercise);
@@ -19,16 +20,19 @@ router.delete('/exercise/:exerciseId', exercisesController.apiDeleteExercise);
 /* MUSCLE */
 //APIs
 router.get('/muscles', musclesController.apiGetMuscles);
+router.post('/muscle', musclesController.apiAddMuscle);
 router.delete('/muscle/:muscleId', musclesController.apiDeleteMuscle);
 
 /* EQUIPMENT */
 //APIs
 router.get('/equipments', equipmentsController.apiGetEquipments);
+router.post('/equipment', equipmentsController.apiAddEquipment);
 router.delete('/equipment/:equipmentId', equipmentsController.apiDeleteEquipment);
 
 /* PHYSICAL CONDITION */
 //APIs
 router.get('/physicalConditions', physicalConditionsController.apiGetPhysicalConditions);
+router.post('/physicalCondition', physicalConditionsController.apiAddPhysicalCondition);
 router.delete('/physicalCondition/:physicalConditionId', physicalConditionsController.apiDeletePhysicalCondition);
 
 //exports

@@ -2,12 +2,12 @@ import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
 import { ConditionIdAndName, EquipmentIdAndName, MuscleIdAndName } from '../../util/types/types';
 import { IExercise } from '../../util/interfaces/activitiesInterfaces';
+import  *  as ResponseCodes from '../general/responseCodes';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import MuscleHandler from '../../models/activitiesModels/muscleModel';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
 import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
 import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
-import { RESPONSE_ADDED_SUCCESSFULLY } from '../general/responseCodes';
 
 /** RENDERS */
 export const redirectToViewAddExercise = (req: Request, res: Response) => {
@@ -84,6 +84,10 @@ export const apiGetExercises = async (req: Request, res: Response) => {
     res.json(await ExerciseHandler.fetchAll());
 };
 
+export const apiGetExerciseNames = async (req: Request, res: Response) => {
+    res.json(await ExerciseHandler.fetchAllNames());
+};
+
 export const apiGetExerciseById = async (req: Request, res: Response) => {
   const exerciseId: string = req.params.exerciseId;
 
@@ -101,7 +105,7 @@ export const apiAddExercise = async (req: Request, res: Response) => {
   // console.log("exerciseHandler: ", exerciseHandler);
   
   //exerciseHandler.save().then( id => res.status(201).send(`Exercise added successfully. Id: ${id} `) );
-  res.json(RESPONSE_ADDED_SUCCESSFULLY());
+  res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY());
 };
 
 export const apiDeleteExercise = (req: Request, res: Response) => {
