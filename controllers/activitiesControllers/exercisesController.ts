@@ -100,7 +100,7 @@ export const apiGetExerciseTypes = (req: Request, res: Response) => {
 
 export const apiAddExercise = async (req: Request, res: Response) => {
   let exerciseHandler = new ExerciseHandler(req.body);
-  
+
   //TODO: Implement an error catcher
   exerciseHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
 };
@@ -114,10 +114,11 @@ export const apiDeleteExercise = (req: Request, res: Response) => {
     //removes the food from foods dropdown
     ExerciseHandler.removeNameById(exerciseId);
     console.log(`'${deleteResponse.name}' exercise deleted successfully.`);
-    res.redirect(`/activities/exercise/`);
+    res.json(ResponseCodes.RESPONSE_DELETED_SUCCESSFULLY())
   })
   .catch(err => {
     console.log('Error while deleting Exercise: ', err);
+    res.json(ResponseCodes.RESPONSE_DELETE_FAILED())
   });
 };
 
