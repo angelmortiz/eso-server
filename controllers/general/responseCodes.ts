@@ -9,6 +9,10 @@ export const RESPONSE_ADDED_SUCCESSFULLY = (): IResponse =>  {
     return RESPONSE(CREATED_CODE, SUCCEED, "Document added successfully to the database.");
 };
 
+export const RESPONSE_UPDATED_SUCCESSFULLY = (): IResponse =>  {
+    return RESPONSE(ACCEPTED_CODE, SUCCEED, "Document updated successfully in the database.");
+};
+
 export const RESPONSE_DELETED_SUCCESSFULLY = (): IResponse =>  {
     return RESPONSE(OK_CODE, SUCCEED, "Document deleted successfully from the database.");
 };

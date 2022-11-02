@@ -15,6 +15,7 @@ router.get('/exerciseNames', exercisesController.apiGetExerciseNames);
 router.get('/exercise/:exerciseId', exercisesController.apiGetExerciseById);
 router.get('/exerciseTypes', exercisesController.apiGetExerciseTypes);
 router.post('/exercise', exercisesController.apiAddExercise);
+router.put('/exercise/:exerciseId', exercisesController.apiUpdateExercise);
 router.delete('/exercise/:exerciseId', exercisesController.apiDeleteExercise);
 
 /* MUSCLE */
