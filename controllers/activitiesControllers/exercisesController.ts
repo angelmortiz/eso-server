@@ -105,6 +105,13 @@ export const apiAddExercise = async (req: Request, res: Response) => {
   exerciseHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
 };
 
+export const apiUpdateExercise = async (req: Request, res: Response) => {
+  let exerciseHandler = new ExerciseHandler(req.body);
+  
+  //TODO: Implement an error catcher
+  exerciseHandler.update().then( _ => res.json(ResponseCodes.RESPONSE_UPDATED_SUCCESSFULLY()) );
+};
+
 export const apiDeleteExercise = (req: Request, res: Response) => {
   const exerciseId: string = req.params.exerciseId;
 
