@@ -12,8 +12,8 @@ import * as errorController from './controllers/errorsController'; //imports log
 
 
 const exp = express(); //initializing express framework
-exp.use(express.json());
-exp.use(cors({origin: 'http://localhost:3001'}));
+exp.use(express.json())
+exp.use(cors({origin: ['http://localhost:3001', 'http://192.168.4.173:3001', 'http://192.168.4.129:3001']}));
 
 exp.set('view engine', 'ejs'); //activates ejs templates to create dynamic htmls
 exp.use(bodyParser.urlencoded({extended: false})); //parses the body that comes from the client
