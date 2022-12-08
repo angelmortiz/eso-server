@@ -6,3 +6,7 @@
 
 //NICE TO HAVE
 //TODO: Implement a 'Duplicate' button in order to create a new item with similar characteristics
+
+//FIXES
+//FIXME: Replace all imports for require
+//FIXME: Replace all "export const function" for exports.function

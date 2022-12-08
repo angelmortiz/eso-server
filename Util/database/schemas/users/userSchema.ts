@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
-export default new Schema({
+const UserSchema = new Schema({
     name: {
         type: String,
         required: [true, 'Name field is required']
@@ -18,12 +19,20 @@ export default new Schema({
         type: String,
         required: [true, 'Password field is required'],
     },
-    passwordConfirmation: {
-        type: String,
-        required: [true, 'Password confirmation field is required']
-    },
     imageLink: {
         type: String,
         required: false
     }
 });
+
+
+UserSchema.pre('save', async function(this: typeof UserSchema, next) {
+    //only runs when the password has been modified
+    if (!this.isModified('password')) return next();
+
+    //hashing password before saving into the db
+    this.password = await bcrypt.hash(this.password, 12);
+    next();
+});
+
+export default UserSchema;

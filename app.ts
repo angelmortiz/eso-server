@@ -7,6 +7,7 @@ import nutritionRouter from './routes/nutritionRouter'; //routes for nutrition
 import apisNutritionRouter from './routes/apisNutritionRouter';
 import activitiesRouter from './routes/activitiesRouter'; //routes for activities
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
+import apisAuthRouter from './routes/apisAuthRouter';
 import * as homeController from './controllers/homeController'; //imports logic to load home page
 import * as errorController from './controllers/errorsController'; //imports logic to load home page
 
@@ -22,6 +23,8 @@ exp.use(express.static(path.join(rootDir, 'public'))); //uploads public files (c
 
 //home
 exp.get('/', homeController.getHome); 
+//registration
+exp.use('/api/auth', apisAuthRouter);
 //server side internal routes
 exp.use('/nutrition', nutritionRouter); //executes routes for nutrition
 exp.use('/activities', activitiesRouter); //executes routes for activities
