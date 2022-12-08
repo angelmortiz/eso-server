@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import UserHandler from '../models/userModels/userModel';
+const jwt =  require('jsonwebtoken');
 
+//TODO: Implement the catchAsync function to catch errors
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.body.name 
         || !req.body.email 
@@ -27,14 +29,14 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         password: req.body.password,
         imageLink: req.body.imageLink
     }
+    const userHandler = new UserHandler(userInfo); 
+    const userId = await userHandler.save();
 
-    const userHandler = new UserHandler(userInfo);
-    userHandler.save().then( id => {
-        res.status(201).json({
-            status: 'success',
-            data: {
-                newUser: {userHandler}
-            }
-        });
+    const token = jwt.sign({id: userId},  )
+    res.status(201).json({
+        status: 'success',
+        data: {
+            newUser: {userId, ...userHandler}
+        }
     });
 }
