@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'; //using schemas and classes to interact with mongodb
-require('dotenv').config();
+const dotenv = require('dotenv');
+dotenv.config();
 
 let dbString = process.env.DATABASE_STRING?.replace('<PASSWORD>', process.env.DATABASE_PASSWORD!);
 //TODO: Find a better way to unify all collections into one connection string (using one db)

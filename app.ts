@@ -11,7 +11,6 @@ import apisAuthRouter from './routes/apisAuthRouter';
 import * as homeController from './controllers/homeController'; //imports logic to load home page
 import * as errorController from './controllers/errorsController'; //imports logic to load home page
 
-
 const exp = express(); //initializing express framework
 exp.use(express.json())
 exp.use(cors({origin: ['http://localhost:3001', 'http://192.168.4.173:3001', 'http://192.168.4.129:3001']}));
@@ -34,5 +33,4 @@ exp.use('/api/activities', apisActivitiesRouter);
 //error handling
 exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
 
-//starts the server
-exp.listen(3000); //specifying port #
+module.exports = exp;
