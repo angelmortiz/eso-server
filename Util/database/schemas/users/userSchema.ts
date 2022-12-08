@@ -25,7 +25,7 @@ const UserSchema = new Schema({
     }
 });
 
-
+//Schema save middleware
 UserSchema.pre('save', async function(this: typeof UserSchema, next) {
     //only runs when the password has been modified
     if (!this.isModified('password')) return next();
