@@ -17,7 +17,7 @@ const UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: [true, 'Password field is required'],
+        required: [true, 'Password field is required']
     },
     imageLink: {
         type: String,
@@ -34,5 +34,9 @@ UserSchema.pre('save', async function(this: typeof UserSchema, next) {
     this.password = await bcrypt.hash(this.password, 12);
     next();
 });
+
+UserSchema.methods.validatePassword = async function(inputPassword: string): Promise<boolean> {
+    return await bcrypt.compare(inputPassword, this.password);
+}
 
 export default UserSchema;
