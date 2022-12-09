@@ -10,6 +10,7 @@ import apisActivitiesRouter from './routes/apisActivitiesRouter';
 import apisAuthRouter from './routes/apisAuthRouter';
 import * as homeController from './controllers/homeController'; //imports logic to load home page
 import * as errorController from './controllers/errorsController'; //imports logic to load home page
+const authController = require('./controllers/authController');
 
 const exp = express(); //initializing express framework
 exp.use(express.json())

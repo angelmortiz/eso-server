@@ -10,6 +10,7 @@ export default class UserHandler implements IUser {
   name: string;
   email: string;
   password: string;
+  passwordChangedAt: Date;
   imageLink: string;
 
   constructor(inputValues) {

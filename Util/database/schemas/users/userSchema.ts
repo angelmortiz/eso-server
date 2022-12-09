@@ -19,6 +19,9 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'Password field is required']
     },
+    passwordChangedAt: {
+        type: Date
+    },
     imageLink: {
         type: String,
         required: false
@@ -37,6 +40,13 @@ UserSchema.pre('save', async function(this: typeof UserSchema, next) {
 
 UserSchema.methods.validatePassword = async function(inputPassword: string): Promise<boolean> {
     return await bcrypt.compare(inputPassword, this.password);
+}
+
+UserSchema.methods.hasChangedPasswordAfterJwtCreation = function(JwtTimestamp) {
+    if (!this.passwordChangedAt) return false;
+
+    const changedTimestamp = Math.round(this.passwordChangedAt.getTime()/1000);
+    return JwtTimestamp < changedTimestamp;
 }
 
 export default UserSchema;
