@@ -11,7 +11,7 @@ import * as physicalConditionsController from '../controllers/activitiesControll
 
 /* EXERCISE */
 //APIs
-router.get('/exercises', exercisesController.apiGetExercises);
+router.get('/exercises', authController.protectRoute, authController.restrictAccessTo('admin'), exercisesController.apiGetExercises);
 router.get('/exerciseNames', exercisesController.apiGetExerciseNames);
 router.get('/exercise/:exerciseId', exercisesController.apiGetExerciseById);
 router.get('/exerciseTypes', exercisesController.apiGetExerciseTypes);

@@ -22,6 +22,11 @@ const UserSchema = new Schema({
     passwordChangedAt: {
         type: Date
     },
+    role: {
+        type: String,
+        emun: ['user', 'editor', 'admin'],
+        default: 'user'
+    },
     imageLink: {
         type: String,
         required: false

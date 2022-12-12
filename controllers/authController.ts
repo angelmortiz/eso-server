@@ -6,7 +6,7 @@ const jwt =  require('jsonwebtoken');
 
 //TODO: Implement the catchAsync function to catch errors
 export const signup = async (req: Request, res: Response) => {
-    const {name, email, password, passwordConfirmation, imageLink} = req.body;
+    const {name, email, password, passwordConfirmation, role, imageLink} = req.body;
 
     if (!name || !email || !password || !passwordConfirmation) {
         res.status(400).json({
@@ -24,18 +24,18 @@ export const signup = async (req: Request, res: Response) => {
         return;
     }
 
-    const userInfo = {name, email, password, imageLink, passwordChangedAt: Date.now()}
+    const userInfo = {name, email, password, imageLink, role, passwordChangedAt: Date.now()}
 
     const userHandler = new UserHandler(userInfo); 
     const userId = await userHandler.save();
-
+    const user = await UserHandler.fetchById(userId);
     const token = getToken(userId);
 
     res.status(201).json({
         status: 'success',
         token,
         data: {
-            newUser: {userId, name, email}
+            newUser: {id: user._id, name: user.name, email: user.email, role: user.role}
         }
     });
 }
@@ -73,7 +73,7 @@ export const login = async (req: Request, res: Response) => {
     });
 }
 
-export const protectRoute = async (req: Request | any, res: Response, next: NextFunction) => {
+export const protectRoute = async (req: Request, res: Response, next: NextFunction) => {
     const {  authorization  } = req.headers;
     
     if (!authorization) {
@@ -131,10 +131,27 @@ export const protectRoute = async (req: Request | any, res: Response, next: Next
          return;
     }
 
-    req.user = currentUser;
+    res.locals.user = currentUser;
     next();
 }
 
+export const restrictAccessTo = (...roles) => {
+
+ return (req: Request, res: Response, next: NextFunction) => {
+    if (!roles.includes(res.locals.user?.role)) {
+        //TODO: Implement a global error handler
+        console.log('Current user does not have permission for this action.');
+        res.status(403).json({
+           status: 'failed',
+           message: 'Current user does not have permission for this action.'
+       })
+       return;
+    }
+
+    next();
+ }
+}
+    
 
 const getToken = (id: string | ObjectID) => {
     return jwt.sign({id},  process.env.JWT_SECRET, {
