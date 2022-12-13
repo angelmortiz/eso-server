@@ -31,15 +31,8 @@ export const signup = async (req: Request, res: Response) => {
     const userHandler = new UserHandler(userInfo); 
     const userId = await userHandler.save();
     const user = await UserHandler.fetchById(userId);
-    const token = getToken(userId);
 
-    res.status(201).json({
-        status: 'success',
-        token,
-        data: {
-            newUser: {id: user._id, name: user.name, email: user.email, role: user.role}
-        }
-    });
+    sendResponse(user._id, 201, res, 'User signed up successfully');
 }
 
 export const login = async (req: Request, res: Response) => {
@@ -64,15 +57,7 @@ export const login = async (req: Request, res: Response) => {
         return;
     }
 
-    const token = getToken(user._id);
-    res.status(200).json({
-        status: 'success',
-        message: 'User logged in successfully.',
-        user: {
-            userId: user._id
-        },
-        token
-    });
+    sendResponse(user._id, 200, res, 'User logged in successfully.');
 }
 
 export const protectRoute = async (req: Request, res: Response, next: NextFunction) => {
@@ -207,7 +192,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 
     res.status(200).json({
         status: 'success',
-        message: 'Token sent to email successfully'
+        message: 'Reset token sent to email successfully.'
     });
 }
 
@@ -253,16 +238,7 @@ export const resetPassword = async (req: Request, res: Response, NextFunction) =
     user.passwordResetExpiresAt = undefined;
     await user.save();
 
-    const token = getToken(user._id)
-
-    res.status(200).json({
-        status: 'success',
-        message: 'Password reset successfully.',
-        user: {
-            userId: user._id
-        },
-        token
-    });
+    sendResponse(user._id, 200, res, 'Password reset successfully.');
 }
 
 export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
@@ -301,20 +277,33 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
     user.password = newPassword;
     await user.save();
 
-    //IMPROVE: Same response in all methods of this file. Consider creating a function
-    const token = getToken(user._id);
-    res.status(200).json({
-        status: 'success',
-        message: 'User password changed successfully.',
-        user: {
-            userId: user._id
-        },
-        token
-    });
+    sendResponse(user._id, 201, res, 'User password changed successfully.');
 }
 
 const getToken = (id: string | ObjectID) => {
     return jwt.sign({id},  process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN
+    });
+}
+
+const sendResponse = (userId: string, statusCode: number, res: Response, message: string) => {
+    const token = getToken(userId);
+    const cookieOptions = {
+        expires: new Date(Date.now() + (parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000)),
+        secure: false,
+        httpOnly: true
+    };
+
+    if (process.env.NODE_ENV === 'productionn') cookieOptions.secure = true;
+
+    res.cookie('jwt', token, )
+
+    res.status(statusCode).json({
+        status: 'success',
+        message,
+        user: {
+            userId
+        },
+        token
     });
 }
