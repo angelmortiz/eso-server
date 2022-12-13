@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import UserHandler from '../models/userModels/userModel';
 const util = require('util');
 const jwt =  require('jsonwebtoken');
+const sendEmail = require('../util/email');
 
 //TODO: Implement the catchAsync function to catch errors
 export const signup = async (req: Request, res: Response) => {
@@ -152,6 +153,68 @@ export const restrictAccessTo = (...roles) => {
  }
 }
     
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+
+    if (!email) {
+        //TODO: Implement a global error handler
+        console.log('An email must be provided to reset password.');
+        res.status(400).json({
+        status: 'failed',
+        message: 'An email must be provided to reset password.'
+        })
+        return;
+    }
+
+    const user = await UserHandler.fetchByEmail(email);
+    if (!user) {
+        //TODO: Implement a global error handler
+        console.log('User not found.');
+        res.status(404).json({
+        status: 'failed',
+        message: 'User not found.'
+        })
+        return;
+    }
+    
+    const resetToken = user.createResetToken();
+    await user.save(); //saves resetToken and expiresAt after setting the values in schema.
+    
+    const resetURL = `${req.protocol}://${req.get('host')}/api/auth/resetPassword/${resetToken}}`;
+    
+    const message = `Forgot your password? Submit a request with your new password and confirmation password.\nIf this wasn't you, please ignore this email.`
+
+    try {
+        await sendEmail({ 
+            email,
+            subject: 'Your password reset token (valid for 10 minutes)',
+            message,
+        });
+    } catch (error) {
+        //clears out temp values if the email could not be sent
+        user.passwordResetToken = undefined;
+        user.passwordResetExpiresAt = undefined;
+        await user.save();
+
+        //TODO: Implement a global error handler
+        console.log('Email count not be sent. Error: ', error);
+        res.status(404).json({
+        status: 'failed',
+        message: `Email count not be sent. Error: ${error}`
+        })
+        return;
+    }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Token sent to email successfully'
+    });
+
+}
+
+export const resetPassword = (req: Request, res: Response, NextFunction) => {
+
+}
 
 const getToken = (id: string | ObjectID) => {
     return jwt.sign({id},  process.env.JWT_SECRET, {

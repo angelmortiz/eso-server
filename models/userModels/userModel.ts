@@ -22,7 +22,7 @@ export default class UserHandler implements IUser {
   mapValues(inputValues) {
     Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
   }
-  
+
   save() {
     return new UserModel(this)
       .save()
