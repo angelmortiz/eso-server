@@ -34,13 +34,14 @@ const UserSchema = new Schema({
     }
 });
 
-//Schema save middleware
+//Hashes passwords before saving into db
 UserSchema.pre('save', async function(this: typeof UserSchema, next) {
     //only runs when the password has been modified
     if (!this.isModified('password')) return next();
 
     //hashing password before saving into the db
     this.password = await bcrypt.hash(this.password, 12);
+    this.passwordChangedAt = Date.now() - 1000; //prevents problem with the time jwt is created
     next();
 });
 
@@ -58,7 +59,7 @@ UserSchema.methods.hasChangedPasswordAfterJwtCreation = function(JwtTimestamp) {
 UserSchema.methods.createResetToken = function() {
     const resetToken = crypto.randomBytes(32).toString('hex');
     this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-    this.passwordResetExpiresAt = Date.now() + 15 * 60 * 60 * 1000; //15 mins
+    this.passwordResetExpiresAt = Date.now() + 15 * 60 * 1000; //15 mins
     return resetToken;
 }
 

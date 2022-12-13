@@ -4,6 +4,7 @@ import UserHandler from '../models/userModels/userModel';
 const util = require('util');
 const jwt =  require('jsonwebtoken');
 const sendEmail = require('../util/email');
+const crypto = require('crypto');
 
 //TODO: Implement the catchAsync function to catch errors
 export const signup = async (req: Request, res: Response) => {
@@ -180,9 +181,8 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
     const resetToken = user.createResetToken();
     await user.save(); //saves resetToken and expiresAt after setting the values in schema.
     
-    const resetURL = `${req.protocol}://${req.get('host')}/api/auth/resetPassword/${resetToken}}`;
-    
-    const message = `Forgot your password? Submit a request with your new password and confirmation password.\nIf this wasn't you, please ignore this email.`
+    const resetURL = `${req.protocol}://${req.get('host')}/api/auth/resetPassword/${resetToken}`;
+    const message = `Forgot your password? Submit a request with your new password and confirmation password.\nUse the following url: '${resetURL}'\nIf this wasn't you, please ignore this email.`
 
     try {
         await sendEmail({ 
@@ -209,11 +209,60 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         status: 'success',
         message: 'Token sent to email successfully'
     });
-
 }
 
-export const resetPassword = (req: Request, res: Response, NextFunction) => {
+export const resetPassword = async (req: Request, res: Response, NextFunction) => {
+    const { resetToken } = req.params;
+    const { password, passwordConfirmation } = req.body;
 
+    if (password !== passwordConfirmation) {
+        //TODO: Implement a global error handler
+        console.log('Passwords do not match.');
+        res.status(400).json({
+        status: 'failed',
+        message: `Passwords do not match.`
+        })
+        return;
+    }
+
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    const user = await UserHandler.fetchByResetToken(hashedToken);
+
+    if (!user) {
+        //TODO: Implement a global error handler
+        console.log('User not found.');
+        res.status(404).json({
+        status: 'failed',
+        message: `User not found.`
+        })
+        return;
+    }
+
+    if (user.passwordResetExpiresAt < Date.now()){
+        //TODO: Implement a global error handler
+        console.log('Reset token has expired.');
+        res.status(400).json({
+        status: 'failed',
+        message: `Reset token has expired.`
+        })
+        return;
+    }
+
+    user.password = password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpiresAt = undefined;
+    await user.save();
+
+    const token = getToken(user._id)
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Password reset successfully.',
+        user: {
+            userId: user._id
+        },
+        token
+    });
 }
 
 const getToken = (id: string | ObjectID) => {

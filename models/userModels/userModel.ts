@@ -73,6 +73,18 @@ export default class UserHandler implements IUser {
     });
   }
 
+  static fetchByResetToken(passwordResetToken: string) {
+    return UserModel
+    .findOne({passwordResetToken})
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      return error;
+    });
+  }
+
   static deleteById(id: string | ObjectId) {
     return UserModel
     .findByIdAndDelete(id)
