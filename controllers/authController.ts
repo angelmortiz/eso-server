@@ -265,6 +265,54 @@ export const resetPassword = async (req: Request, res: Response, NextFunction) =
     });
 }
 
+export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
+    const { currentPassword, newPassword, passwordConfirmation } = req.body;
+    const userId = res.locals.user.id;
+    
+    //IMPROVE: consider creating a middleware for the schema to make this verification automatically
+    if (newPassword !== passwordConfirmation) {
+        //TODO: Implement a global error handler
+        console.log('Passwords do not match.');
+        res.status(400).json({
+        status: 'failed',
+        message: `Passwords do not match.`
+        })
+        return;
+    }
+
+    const user = await UserHandler.fetchById(userId);
+    if (!user) {
+        res.status(404).json({
+            status: 'failed',
+            message: 'User not found.'
+        });
+        return;
+    }
+
+    const isPasswordCorrect = await user.validatePassword(currentPassword);
+    if (!isPasswordCorrect) {
+        res.status(401).json({
+            status: 'failed',
+            message: 'Incorrect password.'
+        });
+        return;
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    //IMPROVE: Same response in all methods of this file. Consider creating a function
+    const token = getToken(user._id);
+    res.status(200).json({
+        status: 'success',
+        message: 'User password changed successfully.',
+        user: {
+            userId: user._id
+        },
+        token
+    });
+}
+
 const getToken = (id: string | ObjectID) => {
     return jwt.sign({id},  process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN
