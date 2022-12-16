@@ -18,7 +18,7 @@ import * as errorController from './controllers/errorsController'; //imports log
 const exp = express(); //initializing express framework
 
 /** UTIL MIDDLEWARES */
-//Adds different layers of security and protection to the app
+// Adds different layers of security and protection to the app
 exp.use(helmet()); 
 
 //TODO: Implement development env logger
@@ -36,11 +36,7 @@ exp.use(express.json({limit: '10kb'}));
 //parses the body that comes from the client
 exp.use(bodyParser.urlencoded({extended: false})); 
 
-
-exp.use(cors({origin: ['http://localhost:3001', 'http://192.168.4.173:3001', 'http://192.168.4.129:3001']}));
-
-//DELETE: Clean up the ejs files
-exp.set('view engine', 'ejs'); //activates ejs templates to create dynamic htmls
+exp.use(cors({origin: ['http://localhost:3001', 'http://192.168.4.173:3001', 'http://192.168.4.129:3001'], credentials: true}));
 
 //Data sanitization against NoSQL attacks
 exp.use(mongoSanitize());

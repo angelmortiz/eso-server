@@ -41,3 +41,10 @@ export type EquipmentIdAndName = {
     equipmentId: ObjectId | string,
     equipmentName: string
 };
+
+/** Cookie options */
+export type CookieOptions = {
+    expires: Date,
+    httpOnly: boolean,
+    secure?: boolean,
+}

@@ -7,7 +7,8 @@ const UserModel = usersDb.model('User', UserSchema);
 
 export default class UserHandler implements IUser {
   id: string | ObjectId;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   passwordChangedAt: Date;

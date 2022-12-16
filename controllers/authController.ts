@@ -5,12 +5,13 @@ import sendEmail from '../util/email';
 import UserHandler from '../models/userModels/userModel';
 import { ObjectID } from 'bson';
 import { NextFunction, Request, Response } from 'express';
+import { CookieOptions } from '../util/types/types';
 
 //TODO: Implement the catchAsync function to catch errors
 export const signup = async (req: Request, res: Response) => {
-    const {name, email, password, passwordConfirmation, role, imageLink} = req.body;
+    const {firstName, lastName, email, password, passwordConfirmation, imageLink} = req.body;
 
-    if (!name || !email || !password || !passwordConfirmation) {
+    if (!firstName || !lastName || !email || !password || !passwordConfirmation) {
         res.status(400).json({
             status: 'failed',
             message: 'One or more required fields missing.'
@@ -26,7 +27,7 @@ export const signup = async (req: Request, res: Response) => {
         return;
     }
 
-    const userInfo = {name, email, password, imageLink, role, passwordChangedAt: Date.now()}
+    const userInfo = {firstName, lastName, email, password, imageLink, passwordChangedAt: Date.now()}
 
     const userHandler = new UserHandler(userInfo); 
     const userId = await userHandler.save();
@@ -123,7 +124,6 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
 }
 
 export const restrictAccessTo = (...roles) => {
-
  return (req: Request, res: Response, next: NextFunction) => {
     if (!roles.includes(res.locals.user?.role)) {
         //TODO: Implement a global error handler
@@ -288,16 +288,14 @@ const getToken = (id: string | ObjectID) => {
 
 const sendResponse = (userId: string, statusCode: number, res: Response, message: string) => {
     const token = getToken(userId);
-    const cookieOptions = {
+    const cookieOptions: CookieOptions = {
         expires: new Date(Date.now() + (parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000)),
-        secure: false,
         httpOnly: true
     };
 
-    if (process.env.NODE_ENV === 'productionn') cookieOptions.secure = true;
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-    res.cookie('jwt', token, )
-
+    res.cookie('jwt', token, cookieOptions)
     res.status(statusCode).json({
         status: 'success',
         message,
