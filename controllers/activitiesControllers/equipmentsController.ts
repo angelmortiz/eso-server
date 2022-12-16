@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson';
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
 import { ExerciseIdAndName } from '../../util/types/types';
 import { IEquipment } from '../../util/interfaces/activitiesInterfaces';
 import  *  as ResponseCodes from '../general/responseCodes';
