@@ -1,21 +1,22 @@
 import express from 'express'; //importing framework
 import cors from 'cors';
 import path from 'path';  //tool to create addresses
-import rootDir from './util/path';// importing utility to create paths
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import xss from 'xss-clean';
 import bodyParser from 'body-parser'; //parser to read info from client-side
+import rootDir from './util/path';// importing utility to create paths
 import nutritionRouter from './routes/nutritionRouter'; //routes for nutrition
 import apisNutritionRouter from './routes/apisNutritionRouter';
 import activitiesRouter from './routes/activitiesRouter'; //routes for activities
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
 import apisAuthRouter from './routes/apisAuthRouter';
+import * as authController from './controllers/authController';
 import * as homeController from './controllers/homeController'; //imports logic to load home page
 import * as errorController from './controllers/errorsController'; //imports logic to load home page
-const authController = require('./controllers/authController');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
-// const hpp = require('hpp');
+
+// const hpp from 'hpp';
 
 const exp = express(); //initializing express framework
 
@@ -70,4 +71,4 @@ exp.use('/api/activities', apisActivitiesRouter);
 //error handling
 exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
 
-module.exports = exp;
+export default exp;

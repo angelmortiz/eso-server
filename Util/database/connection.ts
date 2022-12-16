@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'; //using schemas and classes to interact with mongodb
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 dotenv.config();
 
 let dbString = process.env.DATABASE_STRING?.replace('<PASSWORD>', process.env.DATABASE_PASSWORD!);

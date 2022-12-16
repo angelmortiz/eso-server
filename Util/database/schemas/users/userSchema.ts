@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
+import mongoose from 'mongoose';
+import validator from 'validator';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -35,13 +35,13 @@ const UserSchema = new Schema({
 });
 
 //Hashes passwords before saving into db
-UserSchema.pre('save', async function(this: typeof UserSchema, next) {
+UserSchema.pre('save', async function(next) {
     //only runs when the password has been modified
     if (!this.isModified('password')) return next();
 
     //hashing password before saving into the db
     this.password = await bcrypt.hash(this.password, 12);
-    this.passwordChangedAt = Date.now() - 1000; //prevents problem with the time jwt is created
+    this.passwordChangedAt = new Date(Date.now() - 1000); //prevents problem with the time jwt is created
     next();
 });
 
