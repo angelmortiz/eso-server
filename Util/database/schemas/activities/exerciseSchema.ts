@@ -42,7 +42,7 @@ export default new Schema({
   },
   alternativeName: {
     type: String,
-    required: true
+    required: false
   },
   difficulty: {
     type: String,
@@ -81,6 +81,10 @@ export default new Schema({
     required: false
   },
   linkToVideo: {
+    type: String,
+    required: false
+  },
+  linkToImage: {
     type: String,
     required: false
   }

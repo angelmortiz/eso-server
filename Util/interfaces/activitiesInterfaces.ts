@@ -16,6 +16,7 @@ export interface IExercise {
     notRecommendedForConditions: ConditionIdAndName[] | null;
     recommendedForCyclePhases: string[];
     linkToVideo: string;
+    linkToImage: string;
 }
 
 export interface IMuscle {

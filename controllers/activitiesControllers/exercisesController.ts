@@ -1,9 +1,8 @@
-
-
 import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
 import { ConditionIdAndName, EquipmentIdAndName, MuscleIdAndName } from '../../util/types/types';
 import { IExercise } from '../../util/interfaces/activitiesInterfaces';
+import  *  as ResponseCodes from '../general/responseCodes';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import MuscleHandler from '../../models/activitiesModels/muscleModel';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
@@ -82,11 +81,35 @@ export const updateExercise = async (req: Request, res: Response) => {
 
 /** APIS */
 export const apiGetExercises = async (req: Request, res: Response) => {
-    res.json(await ExerciseHandler.getAllNames());
+    res.json(await ExerciseHandler.fetchAll());
+};
+
+export const apiGetExerciseNames = async (req: Request, res: Response) => {
+    res.json(await ExerciseHandler.fetchAllNames());
+};
+
+export const apiGetExerciseById = async (req: Request, res: Response) => {
+  const exerciseId: string = req.params.exerciseId;
+
+  res.json(await ExerciseHandler.fetchById(exerciseId));
 };
 
 export const apiGetExerciseTypes = (req: Request, res: Response) => {
     res.json(ExerciseHandler.exercisesStaticValues.types);
+};
+
+export const apiAddExercise = async (req: Request, res: Response) => {
+  let exerciseHandler = new ExerciseHandler(req.body);
+
+  //TODO: Implement an error catcher
+  exerciseHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
+};
+
+export const apiUpdateExercise = async (req: Request, res: Response) => {
+  let exerciseHandler = new ExerciseHandler(req.body);
+  
+  //TODO: Implement an error catcher
+  exerciseHandler.update().then( _ => res.json(ResponseCodes.RESPONSE_UPDATED_SUCCESSFULLY()) );
 };
 
 export const apiDeleteExercise = (req: Request, res: Response) => {
@@ -98,17 +121,20 @@ export const apiDeleteExercise = (req: Request, res: Response) => {
     //removes the food from foods dropdown
     ExerciseHandler.removeNameById(exerciseId);
     console.log(`'${deleteResponse.name}' exercise deleted successfully.`);
-    res.redirect(`/activities/exercise/`);
+    res.json(ResponseCodes.RESPONSE_DELETED_SUCCESSFULLY())
   })
   .catch(err => {
     console.log('Error while deleting Exercise: ', err);
+    res.json(ResponseCodes.RESPONSE_DELETE_FAILED())
   });
 };
 
 /*** FUNCTIONS */
 const refactorValuesForDb = async (exercise: ExerciseHandler) => {
     exercise.compoundMovement = refactorCompoundMovement(exercise.compoundMovement);
+    console.log("here 1");
     exercise.mainMuscle = await refactorMainMuscle(exercise.mainMuscle);
+    console.log("here 2");
     exercise.secondaryMuscles = await refactorSecondaryMuscles(exercise.secondaryMuscles);
     exercise.types = refactorTypes(exercise.types);
     exercise.equipments = await refactorEquipments(exercise.equipments);

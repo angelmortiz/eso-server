@@ -20,6 +20,7 @@ export default class ExerciseHandler implements IExercise {
     notRecommendedForConditions: ConditionIdAndName[] | null;
     recommendedForCyclePhases: string[];
     linkToVideo: string;
+    linkToImage: string;
 
     static _names: IdAndName[];
 

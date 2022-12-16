@@ -2,6 +2,7 @@ import { ObjectId } from 'bson';
 import {Request, Response} from 'express';
 import { ExerciseIdAndName } from '../../util/types/types';
 import { IEquipment } from '../../util/interfaces/activitiesInterfaces';
+import  *  as ResponseCodes from '../general/responseCodes';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
 
@@ -72,6 +73,17 @@ export const apiGetEquipments = async (req: Request, res: Response) => {
   res.json(await EquipmentHandler.getAllNames());
 };
 
+export const apiGetEquipmentNames = async (req: Request, res: Response) => {
+  res.json(await EquipmentHandler.fetchAllNames());
+};
+
+export const apiAddEquipment = (req: Request, res: Response) => {
+  let equipmentHandler = new EquipmentHandler(req.body);
+
+  //TODO: Implement an error catcher
+  equipmentHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
+};
+
 export const apiDeleteEquipment = (req: Request, res: Response) => {
   const equipmentId: string = req.params.equipmentId;
 
@@ -110,7 +122,7 @@ const reformatExerciseValues = async (selectedExercises) => {
 
       const exerciseObject: ExerciseIdAndName = {
         exerciseId: new ObjectId(exerciseId),
-        exerciseName: _exerciseNames.find(c => c._id === exerciseId)?.name || 'Nombre no disponible'
+        exerciseName: _exerciseNames.find(c => c._id === exerciseId)?.name || 'Name not available'
       };
 
       refactoredExercises.push(exerciseObject);

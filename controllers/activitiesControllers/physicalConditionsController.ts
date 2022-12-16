@@ -1,5 +1,6 @@
 import {Request, Response} from 'express';
 import { IPhysicalCondition } from '../../util/interfaces/activitiesInterfaces';
+import  *  as ResponseCodes from '../general/responseCodes';
 import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
 
 /** RENDERS */
@@ -65,6 +66,16 @@ export const updatePhysicalCondition = (req: Request, res: Response) => {
 /** APIS */
 export const apiGetPhysicalConditions = async (req: Request, res: Response) => {
   res.json(await PhysicalConditionHandler.getAllNames());
+};
+
+export const apiGetPhysicalConditionNames = async (req: Request, res: Response) => {
+  res.json(await PhysicalConditionHandler.fetchAllNames());
+};
+
+export const apiAddPhysicalCondition = (req: Request, res: Response) => {
+  let physicalconditionHandler = new PhysicalConditionHandler(req.body);
+  //TODO: Implement an error catcher
+  physicalconditionHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
 };
 
 export const apiDeletePhysicalCondition = (req: Request, res: Response) => {
