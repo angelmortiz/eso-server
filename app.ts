@@ -1,4 +1,4 @@
-import express, { application } from 'express'; //importing framework
+import express from 'express'; //importing framework
 import cors from 'cors';
 import path from 'path';  //tool to create addresses
 import rootDir from './util/path';// importing utility to create paths
