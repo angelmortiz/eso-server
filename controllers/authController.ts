@@ -1,10 +1,10 @@
-import { ObjectID } from 'bson';
-import { NextFunction, Request, Response } from 'express';
 import util from 'util';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import sendEmail from '../util/email';
 import UserHandler from '../models/userModels/userModel';
+import { ObjectID } from 'bson';
+import { NextFunction, Request, Response } from 'express';
 
 //TODO: Implement the catchAsync function to catch errors
 export const signup = async (req: Request, res: Response) => {

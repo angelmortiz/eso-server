@@ -7,16 +7,13 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import bodyParser from 'body-parser'; //parser to read info from client-side
 import rootDir from './util/path';// importing utility to create paths
-import nutritionRouter from './routes/nutritionRouter'; //routes for nutrition
 import apisNutritionRouter from './routes/apisNutritionRouter';
-import activitiesRouter from './routes/activitiesRouter'; //routes for activities
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
 import apisAuthRouter from './routes/apisAuthRouter';
 import * as authController from './controllers/authController';
 import * as homeController from './controllers/homeController'; //imports logic to load home page
 import * as errorController from './controllers/errorsController'; //imports logic to load home page
-
-// const hpp from 'hpp';
+// import hpp from 'hpp';
 
 const exp = express(); //initializing express framework
 
@@ -57,14 +54,10 @@ exp.use(xss());
 //uploads public files (css) to client
 exp.use(express.static(path.join(rootDir, 'public'))); 
 
-
 //home
 exp.get('/', homeController.getHome); 
 //registration
 exp.use('/api/auth', apisAuthRouter);
-//server side internal routes
-exp.use('/nutrition', nutritionRouter); //executes routes for nutrition
-exp.use('/activities', activitiesRouter); //executes routes for activities
 //API external routes
 exp.use('/api/nutrition', apisNutritionRouter);
 exp.use('/api/activities', apisActivitiesRouter);

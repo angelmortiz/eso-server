@@ -1,8 +1,8 @@
 import { ObjectId } from 'bson';
 import { nutritionDb } from '../../util/database/connection';
 import { IChronicCondition } from '../../util/interfaces/nutritionInterfaces';
-import ChronicConditionSchema from '../../util/database/schemas/nutrition/chronicConditionSchema';
 import { IdAndName } from '../../util/types/types';
+import ChronicConditionSchema from '../../util/database/schemas/nutrition/chronicConditionSchema';
 
 const ChronicConditionModel = nutritionDb.model('ChronicCondition', ChronicConditionSchema);
 
