@@ -48,7 +48,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const user = await UserHandler.fetchByEmail(email);
-    const isPasswordCorrect = await user.validatePassword(password);
+    const isPasswordCorrect = await user?.validatePassword(password);
 
     if (!user || !isPasswordCorrect) {
         res.status(401).json({
@@ -62,35 +62,20 @@ export const login = async (req: Request, res: Response) => {
 }
 
 export const protectRoute = async (req: Request, res: Response, next: NextFunction) => {
-    const {  authorization  } = req.headers;
+    const {  cookie: cookies  } = req.headers;
     
-    if (!authorization) {
+    //getting authentication token from cookies
+    let token: string | undefined;
+    const arrCookies = cookies?.split('; ') || [];
+    token = arrCookies.length > 1 ? arrCookies.find(c => c.startsWith('jwt=')) : arrCookies[0];
+    token = token?.split('=')[1];
+
+    if (!token) {
         //TODO: Implement a global error handler
         console.log('No authorization token found.');
         res.status(401).json({
             status: 'failed',
             message: 'No authorization token found.'
-        })
-        return;
-    }
-
-    if (!authorization.startsWith('Bearer')){
-        //TODO: Implement a global error handler
-        console.log('Incorrect format for the authorization token.');
-        res.status(401).json({
-            status: 'failed',
-            message: 'Incorrect format for the authorization token.'
-        })
-        return;
-    }
-
-    const token = authorization.split(' ')[1];
-    if (!token) {
-        //TODO: Implement a global error handler
-        console.log('Incorrect format for the authorization token.');
-        res.status(401).json({
-            status: 'failed',
-            message: 'Incorrect format for the authorization token.'
         })
         return;
     }
@@ -295,7 +280,7 @@ const sendResponse = (userId: string, statusCode: number, res: Response, message
 
     if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-    res.cookie('jwt', token, cookieOptions)
+    res.cookie('jwt', token, cookieOptions);
     res.status(statusCode).json({
         status: 'success',
         message,

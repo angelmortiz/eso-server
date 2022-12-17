@@ -55,8 +55,8 @@ exp.get('/', homeController.getHome);
 //registration
 exp.use('/api/auth', apisAuthRouter);
 //API external routes
-exp.use('/api/nutrition', apisNutritionRouter);
-exp.use('/api/activities', apisActivitiesRouter);
+exp.use('/api/nutrition', authController.protectRoute, apisNutritionRouter);
+exp.use('/api/activities', authController.protectRoute, apisActivitiesRouter);
 //error handling
 exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
 
