@@ -44,7 +44,7 @@ export type EquipmentIdAndName = {
 
 /** Cookie options */
 export type CookieOptions = {
-    expires: Date,
+    expires?: Date,
     httpOnly: boolean,
     secure?: boolean,
 }

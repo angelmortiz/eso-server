@@ -150,9 +150,11 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
     
     const resetToken = user.createResetToken();
     await user.save(); //saves resetToken and expiresAt after setting the values in schema.
-    
-    const resetURL = `${req.protocol}://${req.get('host')}/api/auth/resetPassword/${resetToken}`;
-    const message = `Forgot your password? Submit a request with your new password and confirmation password.\nUse the following url: '${resetURL}'\nIf this wasn't you, please ignore this email.`
+
+    // const resetURL = `${req.protocol}://${req.get('host')}/api/auth/redirectToResetPassword/${resetToken}`;
+    //TODO: Change to final url once final version is completed and tested
+    const resetURL = `${req.protocol}://localhost:3001/auth/resetPassword?token=${resetToken}`;
+    const message = `Forgot your password? Submit a request with your new password and confirmation password.\nUse the following url: ${resetURL}\nIf this wasn't you, please ignore this email.`
 
     try {
         await sendEmail({ 
@@ -182,8 +184,17 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 }
 
 export const resetPassword = async (req: Request, res: Response, NextFunction) => {
-    const { resetToken } = req.params;
-    const { password, passwordConfirmation } = req.body;
+    const { password, passwordConfirmation, resetToken } = req.body;
+
+    if (!password || !passwordConfirmation || !resetToken) {
+        //TODO: Implement a global error handler
+        console.log('Missing required values to reset password.');
+        res.status(400).json({
+        status: 'failed',
+        message: `Missing required values to reset password.`
+        })
+        return;
+    }
 
     if (password !== passwordConfirmation) {
         //TODO: Implement a global error handler
@@ -224,6 +235,23 @@ export const resetPassword = async (req: Request, res: Response, NextFunction) =
     await user.save();
 
     sendResponse(user._id, 200, res, 'Password reset successfully.');
+}
+
+export const redirectToResetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const { resetToken } = req.params;
+
+    const cookieOptions: CookieOptions = {
+        expires: new Date(Date.now() + (parseInt(process.env.RESET_PASS_COOKIE_EXPIRES_IN!) * 60 * 1000)),
+        httpOnly: true
+    };
+
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+    res.cookie('tmpToken', resetToken, cookieOptions);
+    //TODO: Change to final url once final version is completed and tested
+    const redirectURL = `${req.protocol}://localhost:3001/auth/resetPassword/`;
+    console.log("redirectURL: ", redirectURL);
+    res.redirect(redirectURL);
 }
 
 export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
@@ -286,7 +314,6 @@ const sendResponse = (userId: string, statusCode: number, res: Response, message
         message,
         user: {
             userId
-        },
-        token
+        }
     });
 }
