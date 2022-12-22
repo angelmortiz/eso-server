@@ -9,12 +9,16 @@ router.post('/signup', authController.signup);
 //Log in
 router.post('/login', authController.login);
 
-//Change password
-router.post('/changePassword', authController.protectRoute, authController.changePassword);
+//Log out
+router.post('/logout', authController.logout);
 
 //Forgot password
 router.post('/forgotPassword', authController.forgotPassword);
 
 //Reset password
-router.patch('/resetPassword/:resetToken', authController.resetPassword);
+router.patch('/resetPassword', authController.resetPassword);
+
+//Change password
+router.post('/changePassword', authController.protectRoute, authController.changePassword);
+
 export default router;

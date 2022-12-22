@@ -10,15 +10,15 @@ import rootDir from './util/path';// importing utility to create paths
 import apisNutritionRouter from './routes/apisNutritionRouter';
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
 import apisAuthRouter from './routes/apisAuthRouter';
-import * as authController from './controllers/authController';
-import * as homeController from './controllers/homeController'; //imports logic to load home page
-import * as errorController from './controllers/errorsController'; //imports logic to load home page
+import apisUserRouter from './routes/apisUserRouter';
+
+import { protectRoute, restrictAccessTo }  from './controllers/authController';
 // import hpp from 'hpp';
 
 const exp = express(); //initializing express framework
 
 /** UTIL MIDDLEWARES */
-//Adds different layers of security and protection to the app
+// Adds different layers of security and protection to the app
 exp.use(helmet()); 
 
 //TODO: Implement development env logger
@@ -36,11 +36,7 @@ exp.use(express.json({limit: '10kb'}));
 //parses the body that comes from the client
 exp.use(bodyParser.urlencoded({extended: false})); 
 
-
-exp.use(cors({origin: ['http://localhost:3001', 'http://192.168.4.173:3001', 'http://192.168.4.129:3001']}));
-
-//DELETE: Clean up the ejs files
-exp.set('view engine', 'ejs'); //activates ejs templates to create dynamic htmls
+exp.use(cors({origin: ['http://localhost:3001', 'http://192.168.4.173:3001', 'http://192.168.4.129:3001'], credentials: true}));
 
 //Data sanitization against NoSQL attacks
 exp.use(mongoSanitize());
@@ -54,14 +50,9 @@ exp.use(xss());
 //uploads public files (css) to client
 exp.use(express.static(path.join(rootDir, 'public'))); 
 
-//home
-exp.get('/', homeController.getHome); 
-//registration
 exp.use('/api/auth', apisAuthRouter);
-//API external routes
-exp.use('/api/nutrition', apisNutritionRouter);
-exp.use('/api/activities', apisActivitiesRouter);
-//error handling
-exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
+exp.use('/api/user', apisUserRouter);
+exp.use('/api/nutrition', protectRoute, apisNutritionRouter);
+exp.use('/api/activities', protectRoute, apisActivitiesRouter);
 
 export default exp;

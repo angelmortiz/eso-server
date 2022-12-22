@@ -4,13 +4,14 @@ import crypto from 'crypto';
 import sendEmail from '../util/email';
 import UserHandler from '../models/userModels/userModel';
 import { ObjectID } from 'bson';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, request, Request, Response } from 'express';
+import { CookieOptions } from '../util/types/types';
 
 //TODO: Implement the catchAsync function to catch errors
 export const signup = async (req: Request, res: Response) => {
-    const {name, email, password, passwordConfirmation, role, imageLink} = req.body;
+    const {firstName, lastName, email, password, passwordConfirmation, imageLink} = req.body;
 
-    if (!name || !email || !password || !passwordConfirmation) {
+    if (!firstName || !lastName || !email || !password || !passwordConfirmation) {
         res.status(400).json({
             status: 'failed',
             message: 'One or more required fields missing.'
@@ -26,7 +27,7 @@ export const signup = async (req: Request, res: Response) => {
         return;
     }
 
-    const userInfo = {name, email, password, imageLink, role, passwordChangedAt: Date.now()}
+    const userInfo = {firstName, lastName, email, password, imageLink, passwordChangedAt: Date.now()}
 
     const userHandler = new UserHandler(userInfo); 
     const userId = await userHandler.save();
@@ -47,7 +48,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const user = await UserHandler.fetchByEmail(email);
-    const isPasswordCorrect = await user.validatePassword(password);
+    const isPasswordCorrect = await user?.validatePassword(password);
 
     if (!user || !isPasswordCorrect) {
         res.status(401).json({
@@ -60,36 +61,29 @@ export const login = async (req: Request, res: Response) => {
     sendResponse(user._id, 200, res, 'User logged in successfully.');
 }
 
+export const logout = async (req: Request, res: Response) => {
+    res.clearCookie('_accessToken');
+    res.status(200).json({
+        status: 'success',
+        message: 'User logged out successfully'
+    });
+}
+
 export const protectRoute = async (req: Request, res: Response, next: NextFunction) => {
-    const {  authorization  } = req.headers;
+    const {  cookie: cookies  } = req.headers;
     
-    if (!authorization) {
+    //getting authentication token from cookies
+    let token: string | undefined;
+    const arrCookies = cookies?.split('; ') || [];
+    token = arrCookies.length > 1 ? arrCookies.find(c => c.startsWith('_accessToken=')) : arrCookies[0];
+    token = token?.split('=')[1];
+
+    if (!token) {
         //TODO: Implement a global error handler
         console.log('No authorization token found.');
         res.status(401).json({
             status: 'failed',
             message: 'No authorization token found.'
-        })
-        return;
-    }
-
-    if (!authorization.startsWith('Bearer')){
-        //TODO: Implement a global error handler
-        console.log('Incorrect format for the authorization token.');
-        res.status(401).json({
-            status: 'failed',
-            message: 'Incorrect format for the authorization token.'
-        })
-        return;
-    }
-
-    const token = authorization.split(' ')[1];
-    if (!token) {
-        //TODO: Implement a global error handler
-        console.log('Incorrect format for the authorization token.');
-        res.status(401).json({
-            status: 'failed',
-            message: 'Incorrect format for the authorization token.'
         })
         return;
     }
@@ -123,7 +117,6 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
 }
 
 export const restrictAccessTo = (...roles) => {
-
  return (req: Request, res: Response, next: NextFunction) => {
     if (!roles.includes(res.locals.user?.role)) {
         //TODO: Implement a global error handler
@@ -165,9 +158,11 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
     
     const resetToken = user.createResetToken();
     await user.save(); //saves resetToken and expiresAt after setting the values in schema.
-    
-    const resetURL = `${req.protocol}://${req.get('host')}/api/auth/resetPassword/${resetToken}`;
-    const message = `Forgot your password? Submit a request with your new password and confirmation password.\nUse the following url: '${resetURL}'\nIf this wasn't you, please ignore this email.`
+
+    // const resetURL = `${req.protocol}://${req.get('host')}/api/auth/redirectToResetPassword/${resetToken}`;
+    //TODO: Change to final url once final version is completed and tested
+    const resetURL = `${req.protocol}://localhost:3001/auth/resetPassword?token=${resetToken}`;
+    const message = `Forgot your password? Submit a request with your new password and confirmation password.\nUse the following url: ${resetURL}\nIf this wasn't you, please ignore this email.`
 
     try {
         await sendEmail({ 
@@ -197,8 +192,17 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 }
 
 export const resetPassword = async (req: Request, res: Response, NextFunction) => {
-    const { resetToken } = req.params;
-    const { password, passwordConfirmation } = req.body;
+    const { password, passwordConfirmation, resetToken } = req.body;
+
+    if (!password || !passwordConfirmation || !resetToken) {
+        //TODO: Implement a global error handler
+        console.log('Missing required values to reset password.');
+        res.status(400).json({
+        status: 'failed',
+        message: `Missing required values to reset password.`
+        })
+        return;
+    }
 
     if (password !== passwordConfirmation) {
         //TODO: Implement a global error handler
@@ -239,6 +243,23 @@ export const resetPassword = async (req: Request, res: Response, NextFunction) =
     await user.save();
 
     sendResponse(user._id, 200, res, 'Password reset successfully.');
+}
+
+export const redirectToResetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const { resetToken } = req.params;
+
+    const cookieOptions: CookieOptions = {
+        expires: new Date(Date.now() + (parseInt(process.env.RESET_PASS_COOKIE_EXPIRES_IN!) * 60 * 1000)),
+        httpOnly: true
+    };
+
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+    res.cookie('tmpToken', resetToken, cookieOptions);
+    //TODO: Change to final url once final version is completed and tested
+    const redirectURL = `${req.protocol}://localhost:3001/auth/resetPassword/`;
+    console.log("redirectURL: ", redirectURL);
+    res.redirect(redirectURL);
 }
 
 export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
@@ -288,22 +309,19 @@ const getToken = (id: string | ObjectID) => {
 
 const sendResponse = (userId: string, statusCode: number, res: Response, message: string) => {
     const token = getToken(userId);
-    const cookieOptions = {
+    const cookieOptions: CookieOptions = {
         expires: new Date(Date.now() + (parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000)),
-        secure: false,
         httpOnly: true
     };
 
-    if (process.env.NODE_ENV === 'productionn') cookieOptions.secure = true;
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-    res.cookie('jwt', token, )
-
+    res.cookie('_accessToken', token, cookieOptions);
     res.status(statusCode).json({
         status: 'success',
         message,
         user: {
             userId
-        },
-        token
+        }
     });
 }

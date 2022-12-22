@@ -2,7 +2,8 @@ import { ObjectId } from 'bson';
 
 export interface IUser {
     id: ObjectId | string;
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     passwordChangedAt: Date;
