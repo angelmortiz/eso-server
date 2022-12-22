@@ -10,9 +10,9 @@ import rootDir from './util/path';// importing utility to create paths
 import apisNutritionRouter from './routes/apisNutritionRouter';
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
 import apisAuthRouter from './routes/apisAuthRouter';
-import * as authController from './controllers/authController';
-import * as homeController from './controllers/homeController'; //imports logic to load home page
-import * as errorController from './controllers/errorsController'; //imports logic to load home page
+import apisUserRouter from './routes/apisUserRouter';
+
+import { protectRoute, restrictAccessTo }  from './controllers/authController';
 // import hpp from 'hpp';
 
 const exp = express(); //initializing express framework
@@ -50,14 +50,9 @@ exp.use(xss());
 //uploads public files (css) to client
 exp.use(express.static(path.join(rootDir, 'public'))); 
 
-//home
-exp.get('/', homeController.getHome); 
-//registration
 exp.use('/api/auth', apisAuthRouter);
-//API external routes
-exp.use('/api/nutrition', authController.protectRoute, apisNutritionRouter);
-exp.use('/api/activities', authController.protectRoute, apisActivitiesRouter);
-//error handling
-exp.use('/', errorController.get404); //navigates to 404 error if the address provided does not exist
+exp.use('/api/user', apisUserRouter);
+exp.use('/api/nutrition', protectRoute, apisNutritionRouter);
+exp.use('/api/activities', protectRoute, apisActivitiesRouter);
 
 export default exp;
