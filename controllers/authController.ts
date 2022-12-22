@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import sendEmail from '../util/email';
 import UserHandler from '../models/userModels/userModel';
 import { ObjectID } from 'bson';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, request, Request, Response } from 'express';
 import { CookieOptions } from '../util/types/types';
 
 //TODO: Implement the catchAsync function to catch errors
@@ -61,13 +61,21 @@ export const login = async (req: Request, res: Response) => {
     sendResponse(user._id, 200, res, 'User logged in successfully.');
 }
 
+export const logout = async (req: Request, res: Response) => {
+    res.clearCookie('_accessToken');
+    res.status(200).json({
+        status: 'success',
+        message: 'User logged out successfully'
+    });
+}
+
 export const protectRoute = async (req: Request, res: Response, next: NextFunction) => {
     const {  cookie: cookies  } = req.headers;
     
     //getting authentication token from cookies
     let token: string | undefined;
     const arrCookies = cookies?.split('; ') || [];
-    token = arrCookies.length > 1 ? arrCookies.find(c => c.startsWith('jwt=')) : arrCookies[0];
+    token = arrCookies.length > 1 ? arrCookies.find(c => c.startsWith('_accessToken=')) : arrCookies[0];
     token = token?.split('=')[1];
 
     if (!token) {
@@ -308,7 +316,7 @@ const sendResponse = (userId: string, statusCode: number, res: Response, message
 
     if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-    res.cookie('jwt', token, cookieOptions);
+    res.cookie('_accessToken', token, cookieOptions);
     res.status(statusCode).json({
         status: 'success',
         message,

@@ -9,6 +9,9 @@ router.post('/signup', authController.signup);
 //Log in
 router.post('/login', authController.login);
 
+//Log out
+router.post('/logout', authController.logout);
+
 //Forgot password
 router.post('/forgotPassword', authController.forgotPassword);
 
