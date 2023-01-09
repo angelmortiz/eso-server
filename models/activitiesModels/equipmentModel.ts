@@ -1,10 +1,10 @@
 import { ObjectId } from 'bson';
-import { activitiesDb } from '../../util/database/connection';
 import { IEquipment } from '../../util/interfaces/activitiesInterfaces';
 import { ExerciseIdAndName, IdAndName } from '../../util/types/types';
 import EquipmentSchema from '../../util/database/schemas/activities/equipmentSchema';
+import mongoose from 'mongoose';
 
-const EquipmentModel = activitiesDb.model('Equipment', EquipmentSchema);
+const EquipmentModel = mongoose.model('Equipment', EquipmentSchema);
 
 export default class EquipmentHandler implements IEquipment {
     id: ObjectId | string;

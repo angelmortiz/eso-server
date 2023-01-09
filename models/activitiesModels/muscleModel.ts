@@ -1,10 +1,10 @@
 import { ObjectId } from 'bson';
-import { activitiesDb } from '../../util/database/connection';
 import { IMuscle } from '../../util/interfaces/activitiesInterfaces';
 import { ExerciseIdAndName, IdAndName } from '../../util/types/types';
 import MuscleSchema from '../../util/database/schemas/activities/muscleSchema';
+import mongoose from 'mongoose';
 
-const MuscleModel = activitiesDb.model('Muscle', MuscleSchema);
+const MuscleModel = mongoose.model('Muscle', MuscleSchema);
 
 export default class MuscleHandler implements IMuscle {
     id: ObjectId | string;

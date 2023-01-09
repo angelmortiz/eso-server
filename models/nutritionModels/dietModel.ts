@@ -1,10 +1,10 @@
 import { ObjectId } from "bson";
-import { nutritionDb } from "../../util/database/connection";
 import { IDiet } from "../../util/interfaces/nutritionInterfaces";
 import { ConditionIdAndName, IdAndName } from "../../util/types/types";
 import DietSchema from '../../util/database/schemas/nutrition/dietSchema';
+import mongoose from "mongoose";
 
-const DietModel = nutritionDb.model('Diet', DietSchema);
+const DietModel = mongoose.model('Diet', DietSchema);
 
 export default class DietHandler implements IDiet {
     id: ObjectId | string;

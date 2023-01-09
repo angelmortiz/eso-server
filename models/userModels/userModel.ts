@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
 import { IUser } from '../../util/interfaces/userInterfaces';
-import { usersDb } from '../../util/database/connection';
 import UserSchema from '../../util/database/schemas/users/userSchema';
+import mongoose from 'mongoose';
 
-const UserModel = usersDb.model('User', UserSchema);
+const UserModel = mongoose.model('User', UserSchema);
 
 export default class UserHandler implements IUser {
   _id: string | ObjectId;
