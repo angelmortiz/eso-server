@@ -1,70 +1,8 @@
 import {Request, Response} from 'express';
 import { ObjectId } from 'mongodb';
 import { ConditionIdAndName } from '../../util/types/types';
-import { IDiet } from '../../util/interfaces/nutritionInterfaces';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
-
-/** RENDERS */
-export const redirectToViewAddDiet = (req: Request, res: Response) => {
-  res.redirect(`/nutrition/add-diet`);
-}
-
-export const redirectToViewSelectedDiet = (req: Request, res: Response) => {
-  res.redirect(`/nutrition/diet/${req.body.selectedDiet}`);
-}
-
-export const getViewToSelectedDiet = async (req: Request, res: Response) => {
-  const selectedDietId: string = req.params.dietId;
-  let selectedDietInfo: IDiet = {} as IDiet;
-
-  //if selectedDietId is new, fetches all names. Otherwise, returns local list.
-  const dietNames = await DietHandler.getAllNames(selectedDietId);
-
-  await DietHandler.fetchById(selectedDietId)
-  .then(selectedDiet => selectedDietInfo = selectedDiet)
-  .catch((err) => { console.log(err); return; });
-
-  res.render('./nutrition/view-diet', {
-    caller: 'view-diet',
-    pageTitle: 'Información de dieta',
-    dietNames: dietNames,
-    selectedDietInfo: selectedDietInfo,
-    chronicConditions: await ChronicConditionHandler.getAllNames()
-  });
-};
-
-export const getViewToAddDiet = async (req: Request, res: Response) => {
-  res.render('./nutrition/add-diet', {
-    caller: 'add-diet',
-    pageTitle: 'Añadir dieta',
-    dietNames: await DietHandler.getAllNames(),
-    selectedDietInfo: null,
-    chronicConditions: await ChronicConditionHandler.getAllNames(),
-  });
-};
-
-/** ACTIONS */
-export const addDiet = async (req: Request, res: Response) => {
-  let dietHandler = new DietHandler(req.body);
-  dietHandler = await refactorValuesForDb(dietHandler);
-  dietHandler.save().then( id => res.redirect(`/nutrition/diet/${id}`) );
-};
-
-export const updateDiet = async (req: Request, res: Response) => {
-  const dietId: string = req.params.dietId;
-  let diet = new DietHandler(req.body);
-  diet.id = dietId;
-  diet = await refactorValuesForDb(diet);
-  
-  diet.update()
-  .then(() => {
-    res.redirect(`/nutrition/diet/${dietId}`);
-  })
-  .catch((err) => {
-    console.log('Error while inserting document to db', err);
-  });
-};
 
 /** APIS */
 export const apiGetDiets = async (req: Request, res: Response) => {

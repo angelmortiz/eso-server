@@ -1,67 +1,6 @@
 import {Request, Response} from 'express';
-import { IPhysicalCondition } from '../../util/interfaces/activitiesInterfaces';
 import  *  as ResponseCodes from '../general/responseCodes';
 import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
-
-/** RENDERS */
-export const redirectToViewAddPhysicalCondition = (req: Request, res: Response) => {
-  res.redirect(`/activities/add-physicalCondition`);
-}
-
-export const redirectToViewSelectedPhysicalCondition = (req: Request, res: Response) => {
-  res.redirect(`/activities/physicalCondition/${req.body.selectedPhysicalCondition}`);
-}
-
-export const getViewToSelectedPhysicalCondition = async (req: Request, res: Response) => {
-  const selectedConditionId: string = req.params.conditionId;
-  let selectedConditionInfo: IPhysicalCondition = {} as IPhysicalCondition;
-
-  //if selectedConditionId is new, fetches all names. Otherwise, returns local list.
-  const conditionNames = await PhysicalConditionHandler.getAllNames(selectedConditionId);
-
-  //gets the information of the selected condition
-  await PhysicalConditionHandler.fetchById(selectedConditionId)
-  .then(selectedCondition => selectedConditionInfo = selectedCondition)
-  .catch((err) => { console.log(err); return; });
-
-  res.render('./activities/view-physicalCondition', {
-    caller: 'view-physicalCondition',
-    pageTitle: 'Información de condición física',
-    conditionNames: conditionNames,
-    selectedConditionInfo: selectedConditionInfo
-  });
-};
-
-export const getViewToAddPhysicalCondition = async (req: Request, res: Response) => {
-  res.render('./activities/add-physicalCondition', {
-    caller: 'add-physicalCondition',
-    pageTitle: 'Añadir condición física',
-    conditionNames: await PhysicalConditionHandler.getAllNames(),
-    selectedConditionInfo: null,
-  });
-};
-
-/** ACTIONS */
-export const addPhysicalCondition = (req: Request, res: Response) => {
-  let physicalCondition = new PhysicalConditionHandler(req.body);
-  physicalCondition = refactorValuesForDb(physicalCondition);
-  physicalCondition.save().then( id => res.redirect(`/activities/physicalCondition/${id}`) );
-};
-
-export const updatePhysicalCondition = (req: Request, res: Response) => {
-  const physicalConditionId: string = req.params.physicalConditionId;
-  let physicalCondition = new PhysicalConditionHandler(req.body);
-  physicalCondition.id = physicalConditionId;
-  physicalCondition = refactorValuesForDb(physicalCondition);
-
-  physicalCondition.update()
-  .then(() => {
-    res.redirect(`/activities/physicalCondition/${physicalConditionId}`);
-  })
-  .catch((err) => {
-    console.log('Error while inserting document to db', err);
-  });
-};
 
 /** APIS */
 export const apiGetPhysicalConditions = async (req: Request, res: Response) => {

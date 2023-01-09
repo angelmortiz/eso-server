@@ -1,79 +1,9 @@
 import { ObjectId } from 'bson';
 import {Request, Response} from 'express';
 import { ConditionIdAndName, DietIdAndName } from '../../util/types/types';
-import { IFood } from '../../util/interfaces/nutritionInterfaces';
 import FoodHandler from '../../models/nutritionModels/foodModel';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
-import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
-
-/** RENDERS */
-export const redirectToViewAddFood = (req: Request, res: Response) => {
-  res.redirect(`/nutrition/add-food`);
-}
-
-export const redirectToViewSelectedFood = (req: Request, res: Response) => {
-  res.redirect(`/nutrition/food/${req.body.selectedFood}`);
-}
-
-export const getViewToSelectedFood = async (req: Request, res: Response) => {
-  const selectedFoodId: string = req.params.foodId;
-  let selectedFoodInfo: IFood = {} as IFood;
-  
-  //if selectedFoodId is new, fetches all names. Otherwise, returns local list.
-  const foodNames = await FoodHandler.getAllNames(selectedFoodId);
-
-  //gets the information of the selected food
-  await FoodHandler.fetchById(selectedFoodId)
-  .then(selectedFood => selectedFoodInfo = selectedFood)
-  .catch((err) => { console.log(err); return; });
-
-  res.render('./nutrition/view-food', {
-    caller: 'view-food',
-    pageTitle: 'Información de comida',
-    foodNames: foodNames,
-    foodSelectOptions: FoodHandler.foodSelectOptions,
-    selectedFoodInfo: selectedFoodInfo,
-    chronicConditions: await ChronicConditionHandler.getAllNames(),
-    diets: await DietHandler.getAllNames(),
-    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
-  });
-};
-
-export const getViewToAddFood = async (req: Request, res: Response) => {
-  res.render('./nutrition/add-food', {
-    caller: 'add-food',
-    pageTitle: 'Añadir comida',
-    foodNames: await FoodHandler.getAllNames(),
-    foodSelectOptions: FoodHandler.foodSelectOptions,
-    selectedFoodInfo: null,
-    chronicConditions: await ChronicConditionHandler.getAllNames(),
-    diets: await DietHandler.getAllNames(),
-    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
-  });
-};
-
-/** ACTIONS */
-export const addFood = async (req: Request, res: Response) => {
-  let foodHandler = new FoodHandler(req.body);
-  foodHandler = await refactorValuesForDb(foodHandler);
-  foodHandler.save().then( id => res.redirect(`/nutrition/food/${id}`) );
-};
-
-export const updateFood = async (req: Request, res: Response) => {
-  const foodId: string = req.params.foodId;
-  let food = new FoodHandler(req.body);
-  food.id = foodId;
-  food = await refactorValuesForDb(food);
-  
-  food.update()
-  .then(() => {
-    res.redirect(`/nutrition/food/${foodId}`);
-  })
-  .catch((err) => {
-    console.log('Error while inserting document to db', err);
-  });
-};
 
 /** APIS */
 export const apiGetFoods = async (req: Request, res: Response) => {

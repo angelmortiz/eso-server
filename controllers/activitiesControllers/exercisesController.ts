@@ -1,83 +1,11 @@
 import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
 import { ConditionIdAndName, EquipmentIdAndName, MuscleIdAndName } from '../../util/types/types';
-import { IExercise } from '../../util/interfaces/activitiesInterfaces';
 import  *  as ResponseCodes from '../general/responseCodes';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import MuscleHandler from '../../models/activitiesModels/muscleModel';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
 import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
-import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
-
-/** RENDERS */
-export const redirectToViewAddExercise = (req: Request, res: Response) => {
-  res.redirect(`/activities/add-exercise`);
-}
-
-export const redirectToViewSelectedExercise = (req: Request, res: Response) => {
-  res.redirect(`/activities/exercise/${req.body.selectedExercise}`);
-}
-
-export const getViewToSelectedExercise = async (req: Request, res: Response) => {
-  const selectedExerciseId: string = req.params.exerciseId;
-  let selectedExerciseInfo: IExercise = {} as IExercise;
-
-  //if selectedExerciseId is new, fetches all names. Otherwise, returns local list.
-  const exerciseNames = await ExerciseHandler.getAllNames(selectedExerciseId);
-
-  //gets the information of the selected exercise
-  await ExerciseHandler.fetchById(selectedExerciseId)
-  .then(selectedExercise => selectedExerciseInfo = selectedExercise)
-  .catch((err) => { console.log(err); return; });
-
-  res.render('./activities/view-exercise', {
-    caller: 'view-exercise',
-    pageTitle: 'Información de ejercicio',
-    exerciseNames: exerciseNames,
-    selectedExerciseInfo: selectedExerciseInfo,
-    exerciseTypes: ExerciseHandler.exercisesStaticValues.types,
-    muscles: await MuscleHandler.getAllNames(),
-    equipments: await EquipmentHandler.getAllNames(),
-    physicalConditions: await PhysicalConditionHandler.getAllNames(),
-    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
-  });
-};
-
-export const getViewToAddExercise = async (req: Request, res: Response) => {
-  res.render('./activities/add-exercise', {
-    caller: 'add-exercise',
-    pageTitle: 'Añadir ejercicio',
-    exerciseNames: await ExerciseHandler.getAllNames(),
-    selectedExerciseInfo: null,
-    exerciseTypes: ExerciseHandler.exercisesStaticValues.types,
-    muscles: await MuscleHandler.getAllNames(),
-    equipments: await EquipmentHandler.getAllNames(),
-    physicalConditions: await PhysicalConditionHandler.getAllNames(),
-    menstrualCyclePhases: MenstrualCyclePhaseHandler.getAllNames()
-  });
-};
-
-/** ACTIONS */
-export const addExercise = async (req: Request, res: Response) => {
-  let exerciseHandler = new ExerciseHandler(req.body);
-  exerciseHandler = await refactorValuesForDb(exerciseHandler);
-  exerciseHandler.save().then( id => res.redirect(`/activities/exercise/${id}`) );
-};
-
-export const updateExercise = async (req: Request, res: Response) => {
-  const exerciseId: string = req.params.exerciseId;
-  let exercise = new ExerciseHandler(req.body);
-  exercise.id = exerciseId;
-  exercise = await refactorValuesForDb(exercise);
-  
-  exercise.update()
-  .then(() => {
-    res.redirect(`/activities/exercise/${exerciseId}`);
-  })
-  .catch((err) => {
-    console.log('Error while inserting document to db', err);
-  });
-};
 
 /** APIS */
 export const apiGetExercises = async (req: Request, res: Response) => {
