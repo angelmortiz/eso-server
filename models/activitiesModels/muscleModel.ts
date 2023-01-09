@@ -4,7 +4,7 @@ import { ExerciseIdAndName, IdAndName } from '../../util/types/types';
 import MuscleSchema from '../../util/database/schemas/activities/muscleSchema';
 import mongoose from 'mongoose';
 
-const MuscleModel = mongoose.model('Muscle', MuscleSchema);
+const MuscleModel = mongoose.model('activities.muscle', MuscleSchema);
 
 export default class MuscleHandler implements IMuscle {
     id: ObjectId | string;

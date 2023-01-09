@@ -4,7 +4,7 @@ import { ExerciseIdAndName, IdAndName } from '../../util/types/types';
 import EquipmentSchema from '../../util/database/schemas/activities/equipmentSchema';
 import mongoose from 'mongoose';
 
-const EquipmentModel = mongoose.model('Equipment', EquipmentSchema);
+const EquipmentModel = mongoose.model('activities.equipment', EquipmentSchema);
 
 export default class EquipmentHandler implements IEquipment {
     id: ObjectId | string;

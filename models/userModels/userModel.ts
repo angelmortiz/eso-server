@@ -3,7 +3,7 @@ import { IUser } from '../../util/interfaces/userInterfaces';
 import UserSchema from '../../util/database/schemas/users/userSchema';
 import mongoose from 'mongoose';
 
-const UserModel = mongoose.model('User', UserSchema);
+const UserModel = mongoose.model('users.auth', UserSchema);
 
 export default class UserHandler implements IUser {
   _id: string | ObjectId;

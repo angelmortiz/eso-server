@@ -4,7 +4,7 @@ import { ConditionIdAndName, DietIdAndName, IdAndName } from '../../util/types/t
 import FoodSchema from '../../util/database/schemas/nutrition/foodSchema';
 import mongoose from 'mongoose';
 
-const FoodModel = mongoose.model('Food', FoodSchema);
+const FoodModel = mongoose.model('nutrition.food', FoodSchema);
 
 export default class FoodHandler implements IFood {
   id: ObjectId | string;
