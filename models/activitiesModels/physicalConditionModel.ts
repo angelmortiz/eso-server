@@ -4,7 +4,7 @@ import { IdAndName } from '../../util/types/types';
 import PhysicalConditionSchema from '../../util/database/schemas/activities/physicalConditionSchema';
 import mongoose from 'mongoose';
 
-const PhysicalConditionModel = mongoose.model('activities.physicalCondition', PhysicalConditionSchema);
+const PhysicalConditionModel = mongoose.model('PhysicalCondition', PhysicalConditionSchema);
 
 export default class PhysicalConditionHandler implements IPhysicalCondition {
     id: ObjectId | string;

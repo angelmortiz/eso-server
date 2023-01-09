@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
+const UserAuthSchema = new Schema({
     firstName: {
         type: String,
         required: [true, 'First name field is required']
@@ -36,10 +36,10 @@ const UserSchema = new Schema({
         type: String,
         required: false
     }
-});
+}, { collection: 'users.auth' });
 
 //Hashes passwords before saving into db
-UserSchema.pre('save', async function(next) {
+UserAuthSchema.pre('save', async function(next) {
     //only runs when the password has been modified
     if (!this.isModified('password')) return next();
 
@@ -49,22 +49,22 @@ UserSchema.pre('save', async function(next) {
     next();
 });
 
-UserSchema.methods.validatePassword = async function(inputPassword: string): Promise<boolean> {
+UserAuthSchema.methods.validatePassword = async function(inputPassword: string): Promise<boolean> {
     return await bcrypt.compare(inputPassword, this.password);
 }
 
-UserSchema.methods.hasChangedPasswordAfterJwtCreation = function(JwtTimestamp) {
+UserAuthSchema.methods.hasChangedPasswordAfterJwtCreation = function(JwtTimestamp) {
     if (!this.passwordChangedAt) return false;
 
     const changedTimestamp = Math.round(this.passwordChangedAt.getTime()/1000);
     return JwtTimestamp < changedTimestamp;
 }
 
-UserSchema.methods.createResetToken = function() {
+UserAuthSchema.methods.createResetToken = function() {
     const resetToken = crypto.randomBytes(32).toString('hex');
     this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     this.passwordResetExpiresAt = Date.now() + 15 * 60 * 1000; //15 mins
     return resetToken;
 }
 
-export default UserSchema;
+export default UserAuthSchema;

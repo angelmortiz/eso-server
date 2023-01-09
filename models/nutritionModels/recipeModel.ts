@@ -4,7 +4,7 @@ import { ConditionIdAndName, DietIdAndName, FoodIdAndName, IdAndName } from '../
 import RecipeSchema from '../../util/database/schemas/nutrition/recipeSchema';
 import mongoose from "mongoose";
 
-const RecipeModel = mongoose.model('nutrition.recipe', RecipeSchema);
+const RecipeModel = mongoose.model('Recipe', RecipeSchema);
 
 export default class RecipeHandler implements IRecipe {
     id: ObjectId | string;

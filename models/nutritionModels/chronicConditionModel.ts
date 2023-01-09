@@ -4,7 +4,7 @@ import { IdAndName } from '../../util/types/types';
 import ChronicConditionSchema from '../../util/database/schemas/nutrition/chronicConditionSchema';
 import mongoose from 'mongoose';
 
-const ChronicConditionModel = mongoose.model('nutrition.chronicCondition', ChronicConditionSchema);
+const ChronicConditionModel = mongoose.model('ChronicCondition', ChronicConditionSchema);
 
 export default class ChronicConditionHandler implements IChronicCondition {
     id: ObjectId | string;

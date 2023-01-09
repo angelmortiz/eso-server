@@ -17,8 +17,12 @@ export const apiGetMuscleNames = async (req: Request, res: Response) => {
 export const apiAddMuscle = (req: Request, res: Response) => {
   let muscleHandler = new MuscleHandler(req.body);
 
+  console.log('muscleHandler: ', muscleHandler);
   //TODO: Implement an error catcher
-  muscleHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
+  muscleHandler.save().then( response => {
+    res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY());
+    console.log('response: ', response);
+  });
 };
 
 export const apiDeleteMuscle = (req: Request, res: Response) => {
