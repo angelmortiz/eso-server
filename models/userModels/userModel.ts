@@ -6,7 +6,7 @@ import UserSchema from '../../util/database/schemas/users/userSchema';
 const UserModel = usersDb.model('User', UserSchema);
 
 export default class UserHandler implements IUser {
-  id: string | ObjectId;
+  _id: string | ObjectId;
   firstName: string;
   lastName: string;
   email: string;
@@ -39,7 +39,7 @@ export default class UserHandler implements IUser {
 
   update() {
     return UserModel
-    .updateOne({_id: this.id}, this)
+    .updateOne({_id: this._id}, this)
     .then((result) => {
       console.log('Document updated successfully.', result);
       return result;

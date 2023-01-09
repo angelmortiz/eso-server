@@ -51,7 +51,7 @@ exp.use(xss());
 exp.use(express.static(path.join(rootDir, 'public'))); 
 
 exp.use('/api/auth', apisAuthRouter);
-exp.use('/api/user', apisUserRouter);
+exp.use('/api/user', protectRoute, apisUserRouter);
 exp.use('/api/nutrition', protectRoute, apisNutritionRouter);
 exp.use('/api/activities', protectRoute, apisActivitiesRouter);
 

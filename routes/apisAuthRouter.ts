@@ -21,4 +21,7 @@ router.patch('/resetPassword', authController.resetPassword);
 //Change password
 router.post('/changePassword', authController.protectRoute, authController.changePassword);
 
+//Check user authentication
+router.post('/isAuthenticationValid', authController.isAuthenticationValid);
+
 export default router;

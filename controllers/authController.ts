@@ -8,6 +8,7 @@ import { NextFunction, request, Request, Response } from 'express';
 import { CookieOptions } from '../util/types/types';
 
 //TODO: Implement the catchAsync function to catch errors
+//TODO: Send confirmation email to check the email provided is valid
 export const signup = async (req: Request, res: Response) => {
     const {firstName, lastName, email, password, passwordConfirmation, imageLink} = req.body;
 
@@ -33,7 +34,13 @@ export const signup = async (req: Request, res: Response) => {
     const userId = await userHandler.save();
     const user = await UserHandler.fetchById(userId);
 
-    sendResponse(user._id, 201, res, 'User signed up successfully');
+    res.status(201).json({
+        status: 'success',
+        message: 'User signed up successfully',
+        user: {
+            userId: user._id
+        }
+    });
 }
 
 export const login = async (req: Request, res: Response) => {
@@ -159,7 +166,6 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
     const resetToken = user.createResetToken();
     await user.save(); //saves resetToken and expiresAt after setting the values in schema.
 
-    // const resetURL = `${req.protocol}://${req.get('host')}/api/auth/redirectToResetPassword/${resetToken}`;
     //TODO: Change to final url once final version is completed and tested
     const resetURL = `${req.protocol}://localhost:3001/auth/resetPassword?token=${resetToken}`;
     const message = `Forgot your password? Submit a request with your new password and confirmation password.\nUse the following url: ${resetURL}\nIf this wasn't you, please ignore this email.`
@@ -245,24 +251,7 @@ export const resetPassword = async (req: Request, res: Response, NextFunction) =
     sendResponse(user._id, 200, res, 'Password reset successfully.');
 }
 
-export const redirectToResetPassword = async (req: Request, res: Response, next: NextFunction) => {
-    const { resetToken } = req.params;
-
-    const cookieOptions: CookieOptions = {
-        expires: new Date(Date.now() + (parseInt(process.env.RESET_PASS_COOKIE_EXPIRES_IN!) * 60 * 1000)),
-        httpOnly: true
-    };
-
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-
-    res.cookie('tmpToken', resetToken, cookieOptions);
-    //TODO: Change to final url once final version is completed and tested
-    const redirectURL = `${req.protocol}://localhost:3001/auth/resetPassword/`;
-    console.log("redirectURL: ", redirectURL);
-    res.redirect(redirectURL);
-}
-
-export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
+export const changePassword = async (req: Request, res: Response) => {
     const { currentPassword, newPassword, passwordConfirmation } = req.body;
     const userId = res.locals.user.id;
     
@@ -299,6 +288,56 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
     await user.save();
 
     sendResponse(user._id, 201, res, 'User password changed successfully.');
+}
+
+//FIXME: This logic is the same as protectRoute. This should be either eliminated or merged after protectRoute is using global errors
+export const isAuthenticationValid = async (req: Request, res: Response) => {
+    const {  cookie: cookies  } = req.headers;
+    
+    //getting authentication token from cookies
+    let token: string | undefined;
+    const arrCookies = cookies?.split('; ') || [];
+    token = arrCookies.length > 1 ? arrCookies.find(c => c.startsWith('_accessToken=')) : arrCookies[0];
+    token = token?.split('=')[1];
+
+    if (!token) {
+        //TODO: Implement a global error handler
+        console.log('No authorization token found.');
+        res.status(202).json({
+            status: 'failed',
+            message: 'No authorization token found.'
+        });
+        return;
+    }
+
+    const jwtVerify = util.promisify(jwt.verify); //converts node.js callback function to promise
+    const decodedJwt = await jwtVerify(token, process.env.JWT_SECRET);
+
+    const currentUser = await UserHandler.fetchById(decodedJwt.id);
+    if (!currentUser) {
+        //TODO: Implement a global error handler
+        console.log('User deleted.');
+        res.status(202).json({
+            status: 'failed',
+            message: 'User deleted.'
+        });
+        return;
+    }
+
+    if (currentUser.hasChangedPasswordAfterJwtCreation(decodedJwt.iat)){
+        //TODO: Implement a global error handler
+        console.log('Password changed after JWT creation.');
+        res.status(202).json({
+            status: 'failed',
+            message: 'Password changed after JWT creation.'
+        });
+        return;
+    }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'User authenticated successfully'
+    })
 }
 
 const getToken = (id: string | ObjectID) => {
