@@ -1,10 +1,10 @@
 import { ObjectId } from "bson";
-import { activitiesDb } from '../../util/database/connection';
 import { IExercise } from "../../util/interfaces/activitiesInterfaces";
 import { ConditionIdAndName, EquipmentIdAndName, IdAndName, MuscleIdAndName } from "../../util/types/types";
 import ExerciseSchema from '../../util/database/schemas/activities/exerciseSchema';
+import mongoose from "mongoose";
 
-const ExerciseModel = activitiesDb.model('Exercise', ExerciseSchema);
+const ExerciseModel = mongoose.model('Exercise', ExerciseSchema);
 
 export default class ExerciseHandler implements IExercise {
     id: ObjectId | string;

@@ -1,72 +1,9 @@
 import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
 import { ExerciseIdAndName } from '../../util/types/types';
-import { IEquipment } from '../../util/interfaces/activitiesInterfaces';
 import  *  as ResponseCodes from '../general/responseCodes';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
-
-/** RENDERS */
-export const redirectToViewAddEquipment = (req: Request, res: Response) => {
-  res.redirect(`/activities/add-equipment`);
-}
-
-export const redirectToViewSelectedEquipment = (req: Request, res: Response) => {
-  res.redirect(`/activities/equipment/${req.body.selectedEquipment}`);
-}
-
-export const getViewToSelectedEquipment = async (req: Request, res: Response) => {
-  const selectedEquipmentId: string = req.params.equipmentId;
-  let selectedEquipmentInfo: IEquipment = {} as IEquipment;
-  
-  //if selectedEquipmentId is new, fetches all names. Otherwise, returns local list.
-  const equipmentNames = await EquipmentHandler.getAllNames(selectedEquipmentId);
-
-  //gets the information of the selected equipment
-  await EquipmentHandler.fetchById(selectedEquipmentId)
-  .then(selectedEquipment => selectedEquipmentInfo  = selectedEquipment)
-  .catch((err) => { console.log(err); return; });
-
-  res.render('./activities/view-equipment', {
-    caller: 'view-equipment',
-    pageTitle: 'Información de equipo',
-    equipmentNames: equipmentNames,
-    selectedEquipmentInfo: selectedEquipmentInfo,
-    exercises: await ExerciseHandler.getAllNames()
-  });
-};
-
-export const getViewToAddEquipment = async (req: Request, res: Response) => {
-    res.render('./activities/add-equipment', {
-    caller: 'add-equipment',
-    pageTitle: 'Añadir equipo',
-    equipmentNames: await EquipmentHandler.getAllNames(),
-    exercises: await ExerciseHandler.getAllNames(),
-    selectedEquipmentInfo: null
-  });
-};
-
-/** ACTIONS */
-export const addEquipment = async (req: Request, res: Response) => {
-  let equipmentHandler = new EquipmentHandler(req.body);
-  equipmentHandler = await refactorValuesForDb(equipmentHandler);
-  equipmentHandler.save().then( id => res.redirect(`/activities/equipment/${id}`) );
-};
-
-export const updateEquipment = async (req: Request, res: Response) => {
-  const equipmentId: string = req.params.equipmentId;
-  let equipment = new EquipmentHandler(req.body);
-  equipment.id = equipmentId;
-  equipment = await refactorValuesForDb(equipment);
-
-  equipment.update()
-  .then(() => {
-    res.redirect(`/activities/equipment/${equipmentId}`);
-  })
-  .catch((err) => {
-    console.log('Error while inserting document to db', err);
-  });
-};
 
 /** APIS */
 export const apiGetEquipments = async (req: Request, res: Response) => {

@@ -30,4 +30,4 @@ export default new Schema({
         type: [chronicConditionSubSchema],
         required: false
     },
-});
+}, { collection: 'nutrition.diets' });

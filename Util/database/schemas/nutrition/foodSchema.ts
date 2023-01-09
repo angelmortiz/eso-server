@@ -76,5 +76,4 @@ export default new Schema({
   linkToImage: {
     type: String,
     required: false
-  }
-  });
+  }}, { collection: 'nutrition.foods' });

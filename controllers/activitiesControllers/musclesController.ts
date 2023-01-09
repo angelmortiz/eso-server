@@ -1,72 +1,9 @@
 import {ObjectId} from 'bson';
 import {Request, Response} from 'express';
 import {ExerciseIdAndName} from '../../util/types/types';
-import { IMuscle } from '../../util/interfaces/activitiesInterfaces';
 import  *  as ResponseCodes from '../general/responseCodes';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import MuscleHandler from '../../models/activitiesModels/muscleModel';
-
-/** RENDERS */
-export const redirectToViewAddMuscle = (req: Request, res: Response) => {
-  res.redirect(`/activities/add-muscle`);
-}
-
-export const redirectToViewSelectedMuscle = (req: Request, res: Response) => {
-  res.redirect(`/activities/muscle/${req.body.selectedMuscle}`);
-}
-
-export const getViewToSelectedMuscle = async (req: Request, res: Response) => {
-  const selectedMuscleId: string = req.params.muscleId;
-  let selectedMuscleInfo: IMuscle = {} as IMuscle;
-
-  //if selectedMuscleId is new, fetches all names. Otherwise, returns local list.
-  const muscleNames = await MuscleHandler.getAllNames(selectedMuscleId);
-
-  //gets the information of the selected muscle
-  await MuscleHandler.fetchById(selectedMuscleId)
-  .then(selectedMuscle => selectedMuscleInfo = selectedMuscle)
-  .catch((err) => { console.log(err); return;  });
-
-  res.render('./activities/view-muscle', {
-    caller: 'view-muscle',
-    pageTitle: 'Información de músculo',
-    muscleNames: muscleNames,
-    selectedMuscleInfo: selectedMuscleInfo,
-    exercises: await ExerciseHandler.getAllNames()
-  });
-};
-
-export const getViewToAddMuscle = async (req: Request, res: Response) => {
-  res.render('./activities/add-muscle', {
-    caller: 'add-muscle',
-    pageTitle: 'Añadir músculo',
-    muscleNames: await MuscleHandler.getAllNames(),
-    exercises: await ExerciseHandler.getAllNames(),
-    selectedMuscleInfo: null
-  });
-};
-
-/** ACTIONS */
-export const addMuscle = async (req: Request, res: Response) => {
-  let muscleHandler = new MuscleHandler(req.body);
-  muscleHandler = await refactorValuesForDb(muscleHandler);
-  muscleHandler.save().then( id => res.redirect(`/activities/muscle/${id}`) );
-};
-
-export const updateMuscle = async (req: Request, res: Response) => {
-  const muscleId: string = req.params.muscleId;
-  let muscle = new MuscleHandler(req.body);
-  muscle.id = muscleId;
-  muscle = await refactorValuesForDb(muscle);
-
-  muscle.update()
-  .then(() => {
-    res.redirect(`/activities/muscle/${muscleId}`);
-  })
-  .catch((err) => {
-    console.log('Error while inserting document to db', err);
-  });
-};
 
 /** APIS */
 export const apiGetMuscles = async (req: Request, res: Response) => {
@@ -80,8 +17,12 @@ export const apiGetMuscleNames = async (req: Request, res: Response) => {
 export const apiAddMuscle = (req: Request, res: Response) => {
   let muscleHandler = new MuscleHandler(req.body);
 
+  console.log('muscleHandler: ', muscleHandler);
   //TODO: Implement an error catcher
-  muscleHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
+  muscleHandler.save().then( response => {
+    res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY());
+    console.log('response: ', response);
+  });
 };
 
 export const apiDeleteMuscle = (req: Request, res: Response) => {

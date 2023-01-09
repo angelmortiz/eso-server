@@ -1,10 +1,10 @@
 import { ObjectId } from 'bson';
-import { activitiesDb } from '../../util/database/connection';
 import { IPhysicalCondition } from '../../util/interfaces/activitiesInterfaces';
 import { IdAndName } from '../../util/types/types';
 import PhysicalConditionSchema from '../../util/database/schemas/activities/physicalConditionSchema';
+import mongoose from 'mongoose';
 
-const PhysicalConditionModel = activitiesDb.model('PhysicalCondition', PhysicalConditionSchema);
+const PhysicalConditionModel = mongoose.model('PhysicalCondition', PhysicalConditionSchema);
 
 export default class PhysicalConditionHandler implements IPhysicalCondition {
     id: ObjectId | string;

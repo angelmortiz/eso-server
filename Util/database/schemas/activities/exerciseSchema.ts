@@ -88,4 +88,4 @@ export default new Schema({
     type: String,
     required: false
   }
-  });
+  }, { collection: 'activities.exercises' });

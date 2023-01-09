@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { IUser } from "../util/interfaces/userInterfaces";
-import UserHandler from '../models/userModels/userModel';
+import UserHandler from '../models/userModels/userAuthModel';
 
 export const getCurrentUser = async (req: Request, res: Response) => {
     const userId = res.locals.user.id;

@@ -1,10 +1,10 @@
 import { ObjectId } from "bson";
 import { IRecipe } from "../../util/interfaces/nutritionInterfaces";
-import { nutritionDb } from '../../util/database/connection';
 import { ConditionIdAndName, DietIdAndName, FoodIdAndName, IdAndName } from '../../util/types/types';
 import RecipeSchema from '../../util/database/schemas/nutrition/recipeSchema';
+import mongoose from "mongoose";
 
-const RecipeModel = nutritionDb.model('Recipe', RecipeSchema);
+const RecipeModel = mongoose.model('Recipe', RecipeSchema);
 
 export default class RecipeHandler implements IRecipe {
     id: ObjectId | string;

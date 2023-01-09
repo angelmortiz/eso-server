@@ -1,10 +1,10 @@
 import { ObjectId } from 'bson';
 import { IFood } from "../../util/interfaces/nutritionInterfaces";
-import { nutritionDb } from '../../util/database/connection';
 import { ConditionIdAndName, DietIdAndName, IdAndName } from '../../util/types/types';
 import FoodSchema from '../../util/database/schemas/nutrition/foodSchema';
+import mongoose from 'mongoose';
 
-const FoodModel = nutritionDb.model('Food', FoodSchema);
+const FoodModel = mongoose.model('Food', FoodSchema);
 
 export default class FoodHandler implements IFood {
   id: ObjectId | string;

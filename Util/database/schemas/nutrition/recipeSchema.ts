@@ -100,4 +100,4 @@ export default new Schema({
     type: String,
     required: false
   }
-  });
+  }, { collection: 'nutrition.recipes' });

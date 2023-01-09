@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb';
 import { IUser } from '../../util/interfaces/userInterfaces';
-import { usersDb } from '../../util/database/connection';
-import UserSchema from '../../util/database/schemas/users/userSchema';
+import UserAuthSchema from '../../util/database/schemas/users/userAuthSchema';
+import mongoose from 'mongoose';
 
-const UserModel = usersDb.model('User', UserSchema);
+const UserAuthModel = mongoose.model('UserAuth', UserAuthSchema);
 
-export default class UserHandler implements IUser {
+export default class UserAuthHandler implements IUser {
   _id: string | ObjectId;
   firstName: string;
   lastName: string;
@@ -25,7 +25,7 @@ export default class UserHandler implements IUser {
   }
 
   save() {
-    return new UserModel(this)
+    return new UserAuthModel(this)
       .save()
       .then((result) => {
         console.log('New document inserted successfully.');
@@ -38,7 +38,7 @@ export default class UserHandler implements IUser {
   }
 
   update() {
-    return UserModel
+    return UserAuthModel
     .updateOne({_id: this._id}, this)
     .then((result) => {
       console.log('Document updated successfully.', result);
@@ -51,7 +51,7 @@ export default class UserHandler implements IUser {
   }
 
   static fetchById(id: string | ObjectId) {
-    return UserModel
+    return UserAuthModel
     .findById(id)
     .then((response) => {
       return response;
@@ -63,7 +63,7 @@ export default class UserHandler implements IUser {
   }
 
   static fetchByEmail(email: string) {
-    return UserModel
+    return UserAuthModel
     .findOne({email})
     .then((response) => {
       return response;
@@ -75,7 +75,7 @@ export default class UserHandler implements IUser {
   }
 
   static fetchByResetToken(passwordResetToken: string) {
-    return UserModel
+    return UserAuthModel
     .findOne({passwordResetToken})
     .then((response) => {
       return response;
@@ -87,7 +87,7 @@ export default class UserHandler implements IUser {
   }
 
   static deleteById(id: string | ObjectId) {
-    return UserModel
+    return UserAuthModel
     .findByIdAndDelete(id)
     .then((response) => {
       return response;

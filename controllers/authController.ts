@@ -2,9 +2,9 @@ import util from 'util';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import sendEmail from '../util/email';
-import UserHandler from '../models/userModels/userModel';
+import UserAuthHandler from '../models/userModels/userAuthModel';
 import { ObjectID } from 'bson';
-import { NextFunction, request, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { CookieOptions } from '../util/types/types';
 
 //TODO: Implement the catchAsync function to catch errors
@@ -30,9 +30,9 @@ export const signup = async (req: Request, res: Response) => {
 
     const userInfo = {firstName, lastName, email, password, imageLink, passwordChangedAt: Date.now()}
 
-    const userHandler = new UserHandler(userInfo); 
-    const userId = await userHandler.save();
-    const user = await UserHandler.fetchById(userId);
+    const userAuthHandler = new UserAuthHandler(userInfo); 
+    const userId = await userAuthHandler.save();
+    const user = await UserAuthHandler.fetchById(userId);
 
     res.status(201).json({
         status: 'success',
@@ -54,7 +54,7 @@ export const login = async (req: Request, res: Response) => {
         return;
     }
 
-    const user = await UserHandler.fetchByEmail(email);
+    const user = await UserAuthHandler.fetchByEmail(email);
     const isPasswordCorrect = await user?.validatePassword(password);
 
     if (!user || !isPasswordCorrect) {
@@ -98,7 +98,7 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
     const jwtVerify = util.promisify(jwt.verify); //converts node.js callback function to promise
     const decodedJwt = await jwtVerify(token, process.env.JWT_SECRET);
 
-    const currentUser = await UserHandler.fetchById(decodedJwt.id);
+    const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);
     if (!currentUser) {
         //TODO: Implement a global error handler
         console.log('User deleted.');
@@ -152,7 +152,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         return;
     }
 
-    const user = await UserHandler.fetchByEmail(email);
+    const user = await UserAuthHandler.fetchByEmail(email);
     if (!user) {
         //TODO: Implement a global error handler
         console.log('User not found.');
@@ -221,7 +221,7 @@ export const resetPassword = async (req: Request, res: Response, NextFunction) =
     }
 
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-    const user = await UserHandler.fetchByResetToken(hashedToken);
+    const user = await UserAuthHandler.fetchByResetToken(hashedToken);
 
     if (!user) {
         //TODO: Implement a global error handler
@@ -266,7 +266,7 @@ export const changePassword = async (req: Request, res: Response) => {
         return;
     }
 
-    const user = await UserHandler.fetchById(userId);
+    const user = await UserAuthHandler.fetchById(userId);
     if (!user) {
         res.status(404).json({
             status: 'failed',
@@ -313,7 +313,7 @@ export const isAuthenticationValid = async (req: Request, res: Response) => {
     const jwtVerify = util.promisify(jwt.verify); //converts node.js callback function to promise
     const decodedJwt = await jwtVerify(token, process.env.JWT_SECRET);
 
-    const currentUser = await UserHandler.fetchById(decodedJwt.id);
+    const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);
     if (!currentUser) {
         //TODO: Implement a global error handler
         console.log('User deleted.');

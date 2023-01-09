@@ -34,4 +34,4 @@ export default new Schema({
         type: String,
         required: false
     }
-}, { collection: 'equipments' });
+}, { collection: 'activities.equipments' });
