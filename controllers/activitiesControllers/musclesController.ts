@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import  *  as ResponseCodes from '../general/responseCodes';
+import  *  as ResponseCodes from '../errorControllers/responseCodes';
 import MuscleHandler from '../../models/activitiesModels/muscleModel';
 
 /** APIS */
@@ -11,7 +11,7 @@ export const apiGetMuscleNames = async (req: Request, res: Response) => {
   res.json(await MuscleHandler.fetchAllNames());
 };
 
-export const apiAddMuscle = (req: Request, res: Response) => {
+export const apiAddMuscle = async (req: Request, res: Response) => {
   let muscleHandler = new MuscleHandler(req.body);
 
   console.log('muscleHandler: ', muscleHandler);
@@ -22,7 +22,7 @@ export const apiAddMuscle = (req: Request, res: Response) => {
   });
 };
 
-export const apiDeleteMuscle = (req: Request, res: Response) => {
+export const apiDeleteMuscle = async (req: Request, res: Response) => {
   const muscleId: string = req.params.muscleId;
 
   MuscleHandler.deleteById(muscleId)

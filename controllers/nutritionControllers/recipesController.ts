@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import RecipeHandler from '../../models/nutritionModels/recipeModel';
 
 /** APIS */
-export const apiDeleteRecipe = (req: Request, res: Response) => {
+export const apiDeleteRecipe = async (req: Request, res: Response) => {
   const recipeId: string = req.params.recipeId;
 
   RecipeHandler.deleteById(recipeId)

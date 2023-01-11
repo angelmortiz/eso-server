@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import  *  as ResponseCodes from '../general/responseCodes';
+import  *  as ResponseCodes from '../errorControllers/responseCodes';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
 
 /** APIS */
@@ -11,14 +11,14 @@ export const apiGetEquipmentNames = async (req: Request, res: Response) => {
   res.json(await EquipmentHandler.fetchAllNames());
 };
 
-export const apiAddEquipment = (req: Request, res: Response) => {
+export const apiAddEquipment = async (req: Request, res: Response) => {
   let equipmentHandler = new EquipmentHandler(req.body);
 
   //TODO: Implement an error catcher
   equipmentHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
 };
 
-export const apiDeleteEquipment = (req: Request, res: Response) => {
+export const apiDeleteEquipment = async (req: Request, res: Response) => {
   const equipmentId: string = req.params.equipmentId;
 
   EquipmentHandler.deleteById(equipmentId)

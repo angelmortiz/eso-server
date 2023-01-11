@@ -6,7 +6,7 @@ export const apiGetDiets = async (req: Request, res: Response) => {
   res.json(await DietHandler.getAllNames());
 };
 
-export const apiDeleteDiet = (req: Request, res: Response) => {
+export const apiDeleteDiet = async (req: Request, res: Response) => {
   const dietId: string = req.params.dietId;
 
   DietHandler.deleteById(dietId)

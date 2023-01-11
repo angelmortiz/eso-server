@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import  *  as ResponseCodes from '../general/responseCodes';
+import  *  as ResponseCodes from '../errorControllers/responseCodes';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
+import { catchAsync } from '../../util/errors/catchAsync';
 
 /** APIS */
 export const apiGetExercises = async (req: Request, res: Response) => {
@@ -17,7 +18,7 @@ export const apiGetExerciseById = async (req: Request, res: Response) => {
   res.json(await ExerciseHandler.fetchById(exerciseId));
 };
 
-export const apiGetExerciseTypes = (req: Request, res: Response) => {
+export const apiGetExerciseTypes = async (req: Request, res: Response) => {
     res.json(ExerciseHandler.exercisesStaticValues.types);
 };
 
@@ -35,13 +36,12 @@ export const apiUpdateExercise = async (req: Request, res: Response) => {
   exerciseHandler.update().then( _ => res.json(ResponseCodes.RESPONSE_UPDATED_SUCCESSFULLY()) );
 };
 
-export const apiDeleteExercise = (req: Request, res: Response) => {
+export const apiDeleteExercise = catchAsync(async (req: Request, res: Response) => {
   const exerciseId: string = req.params.exerciseId;
 
   ExerciseHandler.deleteById(exerciseId)
   .then( deleteResponse => {
-    //removes the exercise from exercises dropdown
-    //removes the food from foods dropdown
+    //removes the exercise from exercises list (cached ids and names)
     ExerciseHandler.removeNameById(exerciseId);
     console.log(`'${deleteResponse.name}' exercise deleted successfully.`);
     res.json(ResponseCodes.RESPONSE_DELETED_SUCCESSFULLY())
@@ -50,4 +50,4 @@ export const apiDeleteExercise = (req: Request, res: Response) => {
     console.log('Error while deleting Exercise: ', err);
     res.json(ResponseCodes.RESPONSE_DELETE_FAILED())
   });
-};
+});

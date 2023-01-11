@@ -22,7 +22,7 @@ export default class ExerciseHandler implements IExercise {
     linkToVideo: string;
     linkToImage: string;
 
-    static _names: IdAndName[];
+    static _names: IdAndName[]; //IMPROVE: Use a better caching data strategy to cache the names of the exercises 
 
     constructor(inputValues) {
         if (!inputValues) return; //if no values were provided, ignore the rest of the logic
@@ -135,7 +135,7 @@ export default class ExerciseHandler implements IExercise {
         return this._names;
       } 
     
-      //removes food from the list of names once it's been deleted
+      //removes exericse from the list of names once it's been deleted
       static removeNameById(objectId: string){
         const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
         if (index > -1){

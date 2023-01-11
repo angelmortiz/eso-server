@@ -15,7 +15,7 @@ import apisUserRouter from './routes/apisUserRouter';
 
 
 import { protectRoute, restrictAccessTo }  from './controllers/authController';
-import { globalErrorHandler } from './controllers/errorController';
+import { globalErrorHandler } from './controllers/errorControllers/errorController';
 // import hpp from 'hpp';
 
 const app = express(); //initializing express framework

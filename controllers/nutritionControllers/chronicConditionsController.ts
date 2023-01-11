@@ -6,7 +6,7 @@ export const apiGetChronicConditions = async (req: Request, res: Response) => {
   res.json(await ChronicConditionHandler.getAllNames());
 };
 
-export const apiDeleteChronicCondition = (req: Request, res: Response) => {
+export const apiDeleteChronicCondition = async (req: Request, res: Response) => {
   const chronicConditionId: string = req.params.chronicConditionId;
 
   ChronicConditionHandler.deleteById(chronicConditionId)

@@ -6,7 +6,7 @@ export const apiGetFoods = async (req: Request, res: Response) => {
   res.json(await FoodHandler.getAllNames());
 };
 
-export const apiDeleteFood = (req: Request, res: Response) => {
+export const apiDeleteFood = async (req: Request, res: Response) => {
   const foodId: string = req.params.foodId;
 
   FoodHandler.deleteById(foodId)
