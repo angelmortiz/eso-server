@@ -6,7 +6,7 @@ import RecipeHandler from '../../models/nutritionModels/recipeModel';
 import FoodHandler from '../../models/nutritionModels/foodModel';
 import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
 import DietHandler from '../../models/nutritionModels/dietModel';
-import MenstrualCyclePhaseHandler from '../../models/generalModels/menstrualCyclePhaseModel';
+import MenstrualCyclePhaseHandler from '../../models/cycleModels/menstrualCyclePhaseModel';
 
 /** APIS */
 export const apiDeleteRecipe = (req: Request, res: Response) => {

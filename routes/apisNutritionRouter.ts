@@ -7,7 +7,7 @@ import * as foodsController from '../controllers/nutritionControllers/foodsContr
 import * as recipesController from '../controllers/nutritionControllers/recipesController';
 import * as dietsController from '../controllers/nutritionControllers/dietsController';
 import * as chronicConditionsController from '../controllers/nutritionControllers/chronicConditionsController';
-import * as menstrualCyclePhasesController from '../controllers/general/menstrualCyclePhasesController';
+import * as menstrualCyclePhasesController from '../controllers/cycleControllers/menstrualCyclePhasesController';
 
 /* FOOD */
 //APIs
