@@ -1,8 +1,5 @@
-import { ObjectId } from 'bson';
 import { Request, Response } from 'express';
-import { ExerciseIdAndName } from '../../util/types/types';
 import  *  as ResponseCodes from '../general/responseCodes';
-import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
 
 /** APIS */
@@ -34,36 +31,4 @@ export const apiDeleteEquipment = (req: Request, res: Response) => {
   .catch(err => {
     console.log('Error while deleting Equipment: ', err);
   });
-};
-
-/*** FUNCTIONS */
-const refactorValuesForDb = async (equipment: EquipmentHandler) => {
-  equipment.exercises = await reformatExerciseValues(equipment.exercises);
-  return equipment;
-};
-
-const reformatExerciseValues = async (selectedExercises) => {
-  if (!selectedExercises){ return null; }
-
-  //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(selectedExercises) === 'string') {
-    selectedExercises = [selectedExercises]; 
-  }
-  //Fetches all the chronic exercises to pair with their names
-  const _exerciseNames = await ExerciseHandler.getAllNames();
-
-  let refactoredExercises: ExerciseIdAndName[] = [];
-  selectedExercises.forEach(exerciseId => 
-    {
-      if (!exerciseId) return; //skips empty selections
-
-      const exerciseObject: ExerciseIdAndName = {
-        exerciseId: new ObjectId(exerciseId),
-        exerciseName: _exerciseNames.find(c => c._id === exerciseId)?.name || 'Name not available'
-      };
-
-      refactoredExercises.push(exerciseObject);
-    });
-  
-  return refactoredExercises;
 };
