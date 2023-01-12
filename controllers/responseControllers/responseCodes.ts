@@ -1,4 +1,4 @@
-/** List of constant responses */
+/** List of reusable responses for apis*/
 export const ADDED_SUCCESSFULLY = (): IResponse =>  {
     return responseObject(SUCCEED, "success", "Document added successfully to the database.");
 };
@@ -19,6 +19,17 @@ export const FETCHED_SUCCESSFULLY = (body: any): IResponse => {
     return responseObject(SUCCEED, "success", "Document(s) fetched successfully.", body);
 }
 
+export const LOGGED_OUT_SUCCESSFULLY = (): IResponse =>  {
+    return responseObject(SUCCEED, "success", "User logged out successfully");
+};
+
+export const TOKEN_SENT_SUCCESSFULLY = (): IResponse =>  {
+    return responseObject(SUCCEED, "success", "Reset token sent to email successfully.");
+};
+
+export const USER_AUTHENTICATED_SUCCESSFULLY = (): IResponse =>  {
+    return responseObject(SUCCEED, "success", "User authenticated successfully.");
+};
 /**  */
 export const responseObject = (isSuccess: boolean, status: string, message: string, body: any = null): IResponse => {
     return { isSuccess, status, message, body };

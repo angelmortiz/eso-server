@@ -24,78 +24,29 @@ export default class UserAuthHandler implements IUser {
     Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
   }
 
-  save() {
-    return new UserAuthModel(this)
-      .save()
-      .then((result) => {
-        console.log('New document inserted successfully.');
-        return result._id.toString();
-      })
-      .catch((error) => {
-        console.log('There was an error trying to insert new document.', error);
-        return error;
-      });
+  async save() {
+    return await new UserAuthModel(this).save();
   }
 
-  update() {
-    return UserAuthModel
-    .updateOne({_id: this._id}, this)
-    .then((result) => {
-      console.log('Document updated successfully.', result);
-      return result;
-    })
-    .catch((error) => {
-      console.log('There was an error trying to update the document.', error);
-      return error;
-    });
+  async update() {
+    return await UserAuthModel.updateOne({ _id: this._id }, this);
   }
 
-  static fetchById(id: string | ObjectId) {
-    return UserAuthModel
-    .findById(id)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  static async fetchById(id: string | ObjectId): Promise<any> {
+    return await UserAuthModel.findById(id);
+
   }
 
-  static fetchByEmail(email: string) {
-    return UserAuthModel
-    .findOne({email})
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  static async fetchByEmail(email: string): Promise<any> {
+    return await UserAuthModel.findOne({email});
   }
 
-  static fetchByResetToken(passwordResetToken: string) {
-    return UserAuthModel
-    .findOne({passwordResetToken})
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  static async fetchByResetToken(passwordResetToken: string) {
+    return await UserAuthModel.findOne({passwordResetToken});
   }
 
-  static deleteById(id: string | ObjectId) {
-    return UserAuthModel
-    .findByIdAndDelete(id)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  static async deleteById(id: string | ObjectId) {
+    return await UserAuthModel.findByIdAndDelete(id);
   }
 }
 
