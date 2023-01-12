@@ -24,7 +24,7 @@ export const apiGetExerciseById = catchAsync(async (req: Request, res: Response,
   res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(exercise));
 });
 
-export const apiGetExerciseTypes = async (req: Request, res: Response) => {
+export const apiGetExerciseTypes = (req: Request, res: Response) => {
   const types = ExerciseHandler.exercisesStaticValues.types;
   res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(types));
 };
@@ -36,12 +36,12 @@ export const apiAddExercise = catchAsync(async (req: Request, res: Response) => 
   res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
 });
 
-export const apiUpdateExercise = async (req: Request, res: Response) => {
+export const apiUpdateExercise = catchAsync(async (req: Request, res: Response) => {
   let exerciseHandler = new ExerciseHandler(req.body);
 
   await exerciseHandler.update();
   res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
-};
+});
 
 export const apiDeleteExercise = catchAsync(async (req: Request, res: Response) => {
   const exerciseId: string = req.params.exerciseId;
