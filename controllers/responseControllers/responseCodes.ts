@@ -16,7 +16,7 @@ export const DELETE_FAILED = (): IResponse =>  {
 };
 
 export const FETCHED_SUCCESSFULLY = (body: any): IResponse => {
-    return responseObject(SUCCEED, "success", "Document fetched successfully.", body);
+    return responseObject(SUCCEED, "success", "Document(s) fetched successfully.", body);
 }
 
 //DELETE

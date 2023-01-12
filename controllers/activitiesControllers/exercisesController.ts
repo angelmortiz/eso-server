@@ -7,11 +7,13 @@ import AppError from '../../util/errors/appError';
 
 /** APIS */
 export const apiGetExercises = catchAsync(async (req: Request, res: Response) => {
-    res.status(RESPONSE_CODE.OK).json(await ExerciseHandler.fetchAll());
+  const exercises = await ExerciseHandler.fetchAll();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(exercises));
 });
 
 export const apiGetExerciseNames = catchAsync(async (req: Request, res: Response) => {
-    res.status(RESPONSE_CODE.OK).json(await ExerciseHandler.fetchAllNames());
+  const exerciseNames = await ExerciseHandler.fetchAllNames();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(exerciseNames));
 });
 
 export const apiGetExerciseById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -23,21 +25,22 @@ export const apiGetExerciseById = catchAsync(async (req: Request, res: Response,
 });
 
 export const apiGetExerciseTypes = async (req: Request, res: Response) => {
-    res.json(ExerciseHandler.exercisesStaticValues.types);
+  const types = ExerciseHandler.exercisesStaticValues.types;
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(types));
 };
 
 export const apiAddExercise = catchAsync(async (req: Request, res: Response) => {
   let exerciseHandler = new ExerciseHandler(req.body);
   
   await exerciseHandler.save();
-  res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.ADDED_SUCCESSFULLY());
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
 });
 
 export const apiUpdateExercise = async (req: Request, res: Response) => {
   let exerciseHandler = new ExerciseHandler(req.body);
-  
-  //TODO: Implement an error catcher
-  exerciseHandler.update().then( _ => res.json(RESPONSE.UPDATED_SUCCESSFULLY()) );
+
+  await exerciseHandler.update();
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
 };
 
 export const apiDeleteExercise = catchAsync(async (req: Request, res: Response) => {
@@ -46,5 +49,5 @@ export const apiDeleteExercise = catchAsync(async (req: Request, res: Response) 
   await ExerciseHandler.deleteById(exerciseId);
   //removes the exercise from exercises list (cached ids and names)
   ExerciseHandler.removeNameById(exerciseId);
-  res.json(RESPONSE.DELETED_SUCCESSFULLY());
+  res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
 });
