@@ -38,7 +38,7 @@ const PhysicalConditionSubSchema = new Schema({
 export default new Schema({
   name: {
     type: String,
-    required: true
+    required: [true, "Exercise name is a required field."]
   },
   alternativeName: {
     type: String,
@@ -54,11 +54,11 @@ export default new Schema({
   },
   compoundMovement: {
     type: Boolean,
-    required: true
+    required: [true, "Compound movement option is a required field."]
   },
   mainMuscle: {
     type: MuscleSubSchema,
-    required: true
+    required: [true, "Main muscle name is a required field."]
   },
   secondaryMuscles: {
     type: [MuscleSubSchema],

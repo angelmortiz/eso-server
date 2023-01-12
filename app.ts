@@ -15,7 +15,7 @@ import apisUserRouter from './routes/apisUserRouter';
 
 
 import { protectRoute, restrictAccessTo }  from './controllers/authController';
-import { globalErrorHandler } from './controllers/errorControllers/errorController';
+import { globalErrorResponse } from './controllers/responseControllers/errorController';
 // import hpp from 'hpp';
 
 const app = express(); //initializing express framework
@@ -63,7 +63,7 @@ app.use('*', (req: Request, res: Response, next: NextFunction) => {
     next(new AppError(`'${req.originalUrl}' is an invalid address on this server.`, 404));
 });
 
-//error handling
-app.use(globalErrorHandler);
+//global error handling
+app.use(globalErrorResponse);
 
 export default app;

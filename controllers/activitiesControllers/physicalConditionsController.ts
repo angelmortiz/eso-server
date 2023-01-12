@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import  *  as ResponseCodes from '../errorControllers/responseCodes';
+import  *  as ResponseCodes from '../responseControllers/responseCodes';
 import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
 
 /** APIS */

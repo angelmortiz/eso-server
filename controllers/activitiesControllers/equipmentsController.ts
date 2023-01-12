@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import  *  as ResponseCodes from '../errorControllers/responseCodes';
+import  *  as ResponseCodes from '../responseControllers/responseCodes';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
 
 /** APIS */
