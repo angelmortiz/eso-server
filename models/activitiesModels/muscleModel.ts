@@ -7,131 +7,79 @@ import mongoose from 'mongoose';
 const MuscleModel = mongoose.model('Muscle', MuscleSchema);
 
 export default class MuscleHandler implements IMuscle {
-    id: ObjectId | string;
-    name: string;
-    alternativeName: string;
-    type: string;
-    exercises: ExerciseIdAndName[] | null;
-    linkToImage: string;
+  id: ObjectId | string;
+  name: string;
+  alternativeName: string;
+  type: string;
+  exercises: ExerciseIdAndName[] | null;
+  linkToImage: string;
 
-    static _names: IdAndName[];
+  static _names: IdAndName[];
 
-    constructor(inputValues) {
-        if (!inputValues) return; //if no values were provided, ignore the rest of the logic
-        this.mapValues(inputValues);
-    }
-    
-    mapValues(inputValues){
-        Object.keys(inputValues).map(key => this[key] = inputValues[key]);
-    }
+  constructor(inputValues) {
+    if (!inputValues) return; //if no values were provided, ignore the rest of the logic
+    this.mapValues(inputValues);
+  }
 
-    save() {
-        return new MuscleModel(this)
-        .save()
-        .then((response) => {
-            console.log('New document inserted successfully.');
-            return response._id.toString();
-        })
-        .catch((error) => {
-            console.log('There was an error trying to insert new document.', error);
-            return error;
-        });
-    }
+  mapValues(inputValues) {
+    Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
+  }
 
-    update() {
-      return MuscleModel
-      .updateOne({_id: this.id}, this)
-      .then((result) => {
-        console.log('Document updated successfully.', result);
-        return result;
-      })
-      .catch((error) => {
-        console.log('There was an error trying to update the document.', error);
-        return error;
-      });
-    }
+  async save() {
+    return await new MuscleModel(this).save();
+  }
 
-    static fetchByName(name: string) {
-        return MuscleModel
-        .findOne({name: name})
-        .then((response) => {
-        return response;
-        })
-        .catch((error) => {
-        console.log(error);
-        return error;
-        });
-    }
+  async update() {
+    return await MuscleModel.updateOne({ _id: this.id }, this);
+  }
 
-    static fetchById(id: string | ObjectId) {
-        return MuscleModel
-        .findById(id)
-        .then((response) => {
-        return response;
-        })
-        .catch((error) => {
-        console.log(error);
-        return error;
-        });
+  static async fetchByName(name: string) {
+    return await MuscleModel.findOne({ name: name });
+  }
+
+  static async fetchById(id: string | ObjectId) {
+    return await MuscleModel.findById(id);
+  }
+
+  static async fetchAll() {
+    return await MuscleModel.find();
+  }
+
+  //extracts id and name properties and creates a new object with {id, name}
+  static async fetchAllNames() {
+    return await MuscleModel.find({}, 'name');
+  }
+
+  static async deleteById(id: string | ObjectId) {
+    return await MuscleModel.findByIdAndDelete(id);
+  }
+
+  static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
+    //forces to fetch all names if a new muscles has been added to the db
+    if (objectId) {
+      const index: number = this._names?.findIndex(
+        (obj) => obj._id.toString() === objectId
+      );
+      if (index === -1) forceFetch = true;
     }
 
-    static fetchAll() {
-        return MuscleModel
-        .find()
-        .then((responses) => {
-        return responses;
-        })
-        .catch((error) => {
-        console.log(error);
-        return error;
-        });
+    //Only fetches names the first time or when it's forced
+    if (!this._names || forceFetch) {
+      await MuscleHandler.fetchAllNames().then(
+        (fetchedNames) => (this._names = fetchedNames)
+      );
     }
 
-    //extracts id and name properties and creates a new object with {id, name}
-    static fetchAllNames()  {
-        return MuscleModel
-        .find({}, 'name')
-        .then((responses) => {
-          return responses;
-        })
-        .catch((error) => {
-          console.log(error);
-          return error;
-        });
+    return this._names;
+  }
+
+  //removes food from the list of names once it's been deleted
+  static removeNameById(objectId: string) {
+    const index: number = this._names?.findIndex(
+      (obj) => obj._id.toString() === objectId
+    );
+    if (index > -1) {
+      this._names.splice(index, 1);
     }
-
-    static deleteById(id: string | ObjectId) {
-        return MuscleModel
-        .findByIdAndDelete(id)
-        .then((response) => {
-          return response;
-        })
-        .catch((error) => {
-          console.log(error);
-          return error;
-        });
-      }
-
-      static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
-        //forces to fetch all names if a new muscles has been added to the db
-        if (objectId) {
-          const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
-          if (index === -1) forceFetch = true;
-        }
-    
-        //Only fetches names the first time or when it's forced
-        if (!this._names || forceFetch) {
-          await MuscleHandler.fetchAllNames().then(fetchedNames => this._names = fetchedNames);
-        }
-    
-        return this._names;
-      } 
-    
-      //removes food from the list of names once it's been deleted
-      static removeNameById(objectId: string){
-        const index: number = this._names?.findIndex(obj => obj._id.toString() === objectId);
-        if (index > -1){
-          this._names.splice(index, 1);
-        }
-      }
-};
+  }
+}

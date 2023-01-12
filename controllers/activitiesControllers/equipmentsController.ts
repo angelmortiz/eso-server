@@ -1,34 +1,48 @@
-import { Request, Response } from 'express';
-import  *  as ResponseCodes from '../responseControllers/responseCodes';
+import { NextFunction, Request, Response } from 'express';
+import { catchAsync } from '../../util/errors/catchAsync';
+import { RESPONSE_CODE } from '../responseControllers/responseCodes';
+import * as RESPONSE from '../responseControllers/responseCodes';
 import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
+import AppError from '../../util/errors/appError';
 
 /** APIS */
-export const apiGetEquipments = async (req: Request, res: Response) => {
-  res.json(await EquipmentHandler.getAllNames());
-};
+export const apiGetEquipments = catchAsync(async (req: Request, res: Response) => {
+  const equipments = await EquipmentHandler.getAllNames();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(equipments));
+});
 
 export const apiGetEquipmentNames = async (req: Request, res: Response) => {
-  res.json(await EquipmentHandler.fetchAllNames());
+  const equipmentNames = await EquipmentHandler.fetchAllNames();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(equipmentNames));
 };
+
+export const apiGetEquipmentById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const equipmentId: string = req.params.equipmentId;
+  const equipment = await EquipmentHandler.fetchById(equipmentId);
+
+  if (!equipment) { return next(new AppError(`No equipment found using id '${equipmentId}'.`, 404)); }
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(equipment));
+});
 
 export const apiAddEquipment = async (req: Request, res: Response) => {
   let equipmentHandler = new EquipmentHandler(req.body);
-
-  //TODO: Implement an error catcher
-  equipmentHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
+  
+  await equipmentHandler.save();
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
 };
+
+export const apiUpdateEquipment = catchAsync(async (req: Request, res: Response) => {
+  let equipmentHandler = new EquipmentHandler(req.body);
+
+  await equipmentHandler.update();
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
+});
 
 export const apiDeleteEquipment = async (req: Request, res: Response) => {
   const equipmentId: string = req.params.equipmentId;
 
-  EquipmentHandler.deleteById(equipmentId)
-  .then( deleteResponse => {
-    //removes the equipment from equipments dropdown
-    EquipmentHandler.removeNameById(equipmentId);
-    console.log(`'${deleteResponse.name}' physical equipment deleted successfully.`);
-    res.redirect(`/activities/equipment/`);
-  })
-  .catch(err => {
-    console.log('Error while deleting Equipment: ', err);
-  });
+  await EquipmentHandler.deleteById(equipmentId);
+  //removes the equipment from equipment list (cached ids and names)
+  EquipmentHandler.removeNameById(equipmentId);
+  res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
 };
