@@ -33,91 +33,33 @@ export default class FoodHandler implements IFood {
     Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
   }
 
-  save() {
-    return new FoodModel(this)
-    .save()
-    .then((result) => {
-      console.log('New document inserted successfully.');
-      return result._id.toString();
-    })
-    .catch((error) => {
-      console.log('There was an error trying to insert new document.', error);
-      return error;
-    });
+  async save() {
+    return await new FoodModel(this).save();
   }
 
-  update() {
-    return FoodModel
-    .updateOne({_id: this.id}, this)
-    .then((result) => {
-      console.log('Document updated successfully.', result);
-      return result;
-    })
-    .catch((error) => {
-      console.log('There was an error trying to update the document.', error);
-      return error;
-    });
-  }
-  
-  static fetchByName(name: string) {
-    return FoodModel
-    .findOne({name: name})
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  async update() {
+    return await FoodModel.updateOne({ _id: this.id }, this);
   }
 
-  static fetchById(id: string | ObjectId) {
-    return FoodModel
-    .findById(id)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  static async fetchByName(name: string) {
+    return await FoodModel.findOne({ name: name });
   }
 
-  static fetchAll() {
-    return FoodModel
-    .find()
-    .then((responses) => {
-      return responses;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  static async fetchById(id: string | ObjectId) {
+    return await FoodModel.findById(id);
+  }
+
+  static async fetchAll() {
+    return await FoodModel.find();
   }
 
   //extracts id and name properties and creates a new object with {id, name}
-  static fetchAllNames() {
-    return FoodModel
-    .find({}, 'name')
-    .then((responses) => {
-      return responses;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  static async fetchAllNames() {
+    return await FoodModel.find({}, 'name');
   }
 
-  static deleteById(id: string | ObjectId) {
-    return FoodModel
-    .findByIdAndDelete(id)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      return error;
-    });
+  static async deleteById(id: string | ObjectId) {
+    return await FoodModel.findByIdAndDelete(id);
   }
 
   static async getAllNames(objectId: string = '', forceFetch: boolean = false) {

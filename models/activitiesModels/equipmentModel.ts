@@ -25,93 +25,34 @@ export default class EquipmentHandler implements IEquipment {
         Object.keys(inputValues).map(key => this[key] = inputValues[key]);
     }
 
-    save() {
-        return new EquipmentModel(this)
-        .save()
-        .then((response) => {
-            console.log('New document inserted successfully.');
-            return response._id.toString();
-        })
-        .catch((error) => {
-            console.log('There was an error trying to insert new document.', error);
-            return error;
-        });
+    async save() {
+        return await new EquipmentModel(this).save();
     }
 
-    update() {
-      return EquipmentModel
-      .updateOne({_id: this.id}, this)
-      .then((result) => {
-        console.log('Document updated successfully.', result);
-        return result;
-      })
-      .catch((error) => {
-        console.log('There was an error trying to update the document.', error);
-        return error;
-      });
+    async update() {
+      return await EquipmentModel.updateOne({_id: this.id}, this);
     }
 
-    static fetchByName(name: string) {
-        return EquipmentModel
-        .findOne({name: name})
-        .then((response) => {
-        return response;
-        })
-        .catch((error) => {
-        console.log(error);
-        return error;
-        });
+    static async fetchByName(name: string) {
+        return await EquipmentModel.findOne({name: name});
     }
 
-    static fetchById(id: string | ObjectId) {
-        return EquipmentModel
-        .findById(id)
-        .then((response) => {
-        return response;
-        })
-        .catch((error) => {
-        console.log(error);
-        return error;
-        });
+    static async fetchById(id: string | ObjectId) {
+        return await EquipmentModel.findById(id);
     }
 
-    static fetchAll() {
-        return EquipmentModel
-        .find()
-        .then((responses) => {
-        return responses;
-        })
-        .catch((error) => {
-        console.log(error);
-        return error;
-        });
+    static async fetchAll() {
+        return await EquipmentModel.find()
     }
 
     //extracts id and name properties and creates a new object with {id, name}
-    static fetchAllNames()  {
-        return EquipmentModel
-        .find({}, 'name')
-        .then((responses) => {
-          return responses;
-        })
-        .catch((error) => {
-          console.log(error);
-          return error;
-        });
+    static async fetchAllNames()  {
+        return await EquipmentModel.find({}, 'name');
     }
 
-    static deleteById(id: string | ObjectId) {
-        return EquipmentModel
-        .findByIdAndDelete(id)
-        .then((response) => {
-          return response;
-        })
-        .catch((error) => {
-          console.log(error);
-          return error;
-        });
-      }
-
+    static async deleteById(id: string | ObjectId) {
+      return await EquipmentModel.findByIdAndDelete(id);
+    }
 
     static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
       //forces to fetch all names if a new equipments has been added to the db

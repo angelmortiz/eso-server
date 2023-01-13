@@ -1,29 +1,28 @@
-import { NextFunction, Request, Response } from "express";
-import { IUser } from "../util/interfaces/userInterfaces";
+import { NextFunction, Request, Response } from 'express';
+import { catchAsync } from '../util/errors/catchAsync';
+import { RESPONSE_CODE } from './responseControllers/responseCodes';
+import * as RESPONSE from './responseControllers/responseCodes';
 import UserHandler from '../models/userModels/userAuthModel';
+import AppError from '../util/errors/appError';
 
-export const getCurrentUser = async (req: Request, res: Response) => {
+export const getCurrentUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const userId = res.locals.user.id;
 
-    const user: IUser = await UserHandler.fetchById(userId);
+    const user = await UserHandler.fetchById(userId);
     if (!user) {
-        res.status(404).json({
-            status: 'failed',
-            message: 'User not found.'
-        });
-        return;
+      return next(new AppError(`No user found using id '${userId}'.`, 404));
     }
+    
+    const userInfo = {
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      imageLink: user.imageLink,
+    };
 
-    res.status(200).json({
-        status: 'success',
-        message: 'User fetched successfully',
-        userInfo: {
-            id: user._id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            role: user.role,
-            imageLink: user.imageLink
-        }
-    });
-};
+    res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(userInfo));
+  }
+);

@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson';
-import { ConditionIdAndName, DietIdAndName, FoodIdAndName } from '../types/Types';
+import { ConditionIdAndName, DietIdAndName, FoodIdAndName } from '../types/types';
 
 export interface IFood {
     id: ObjectId | string;

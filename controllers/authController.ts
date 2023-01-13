@@ -1,98 +1,64 @@
+import { ObjectID } from 'bson';
+import { NextFunction, Request, Response } from 'express';
+import { CookieOptions } from '../util/types/types';
+import { catchAsync } from '../util/errors/catchAsync';
+import { RESPONSE_CODE } from './responseControllers/responseCodes';
+import * as RESPONSE from './responseControllers/responseCodes';
 import util from 'util';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import sendEmail from '../util/email';
 import UserAuthHandler from '../models/userModels/userAuthModel';
-import { ObjectID } from 'bson';
-import { NextFunction, Request, Response } from 'express';
-import { CookieOptions } from '../util/types/types';
+import AppError from '../util/errors/appError';
 
-//TODO: Implement the catchAsync function to catch errors
 //TODO: Send confirmation email to check the email provided is valid
-export const signup = async (req: Request, res: Response) => {
+export const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const {firstName, lastName, email, password, passwordConfirmation, imageLink} = req.body;
 
     if (!firstName || !lastName || !email || !password || !passwordConfirmation) {
-        res.status(400).json({
-            status: 'failed',
-            message: 'One or more required fields missing.'
-        });
-        return;
+        return next(new AppError(`One or more required fields missing.`, 400));
     }
     
     if (password !== passwordConfirmation){
-        res.status(400).json({
-            status: 'failed',
-            message: 'Password and password confirmation are not the same.'
-        });
-        return;
+        return next(new AppError(`Password and password confirmation are not the same.`, 400));
     }
 
     const userInfo = {firstName, lastName, email, password, imageLink, passwordChangedAt: Date.now()}
-
     const userAuthHandler = new UserAuthHandler(userInfo); 
-    const userId = await userAuthHandler.save();
-    const user = await UserAuthHandler.fetchById(userId);
+    await userAuthHandler.save();
 
-    res.status(201).json({
-        status: 'success',
-        message: 'User signed up successfully',
-        user: {
-            userId: user._id
-        }
-    });
-}
+    res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
+});
 
-export const login = async (req: Request, res: Response) => {
+export const login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const {email, password} = req.body;
     
     if (!email || !password) {
-        res.status(400).json({
-            status: 'failed',
-            message: 'One or more required fields are missing.'
-        });
-        return;
+        return next(new AppError(`One or more required fields missing.`, 400));
     }
 
     const user = await UserAuthHandler.fetchByEmail(email);
     const isPasswordCorrect = await user?.validatePassword(password);
 
     if (!user || !isPasswordCorrect) {
-        res.status(401).json({
-            status: 'failed',
-            message: 'Incorrect email or password.'
-        });
-        return;
+        return next(new AppError(`Incorrect email or password.`, 401));
     }
 
-    sendResponse(user._id, 200, res, 'User logged in successfully.');
-}
+    sendResponseWithCookie(user._id.toString(), RESPONSE_CODE.OK, res, 'User logged in successfully.');
+});
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = (req: Request, res: Response) => {
     res.clearCookie('_accessToken');
-    res.status(200).json({
-        status: 'success',
-        message: 'User logged out successfully'
-    });
+    res.status(RESPONSE_CODE.OK).json(RESPONSE.LOGGED_OUT_SUCCESSFULLY());
 }
 
-export const protectRoute = async (req: Request, res: Response, next: NextFunction) => {
+export const protectRoute = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const {  cookie: cookies  } = req.headers;
     
-    //getting authentication token from cookies
-    let token: string | undefined;
-    const arrCookies = cookies?.split('; ') || [];
-    token = arrCookies.length > 1 ? arrCookies.find(c => c.startsWith('_accessToken=')) : arrCookies[0];
-    token = token?.split('=')[1];
+    const token = getTokenFromCookies(cookies);
 
     if (!token) {
-        //TODO: Implement a global error handler
-        console.log('No authorization token found.');
-        res.status(401).json({
-            status: 'failed',
-            message: 'No authorization token found.'
-        })
-        return;
+        return next(new AppError(`No authorization token found.`, 401));
     }
 
     const jwtVerify = util.promisify(jwt.verify); //converts node.js callback function to promise
@@ -100,74 +66,42 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
 
     const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);
     if (!currentUser) {
-        //TODO: Implement a global error handler
-        console.log('User deleted.');
-        res.status(401).json({
-            status: 'failed',
-            message: 'User deleted.'
-        })
-        return;
+        return next(new AppError(`User not found.`, 404));
     }
 
     if (currentUser.hasChangedPasswordAfterJwtCreation(decodedJwt.iat)){
-         //TODO: Implement a global error handler
-         console.log('Password changed after JWT creation.');
-         res.status(401).json({
-            status: 'failed',
-            message: 'Password changed after JWT creation.'
-        })
-         return;
+         return next(new AppError('Password changed after JWT creation.', 401));
     }
 
     res.locals.user = currentUser;
     next();
-}
+});
 
 export const restrictAccessTo = (...roles) => {
  return (req: Request, res: Response, next: NextFunction) => {
     if (!roles.includes(res.locals.user?.role)) {
-        //TODO: Implement a global error handler
-        console.log('Current user does not have permission for this action.');
-        res.status(403).json({
-           status: 'failed',
-           message: 'Current user does not have permission for this action.'
-       })
-       return;
+       return next(new AppError('Current user does not have permission for this action.', 403));
     }
-
     next();
  }
-}
+};
     
-export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const forgotPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { email } = req.body;
 
     if (!email) {
-        //TODO: Implement a global error handler
-        console.log('An email must be provided to reset password.');
-        res.status(400).json({
-        status: 'failed',
-        message: 'An email must be provided to reset password.'
-        })
-        return;
+        return next(new AppError('An email must be provided to reset password.', 400));
     }
 
     const user = await UserAuthHandler.fetchByEmail(email);
     if (!user) {
-        //TODO: Implement a global error handler
-        console.log('User not found.');
-        res.status(404).json({
-        status: 'failed',
-        message: 'User not found.'
-        })
-        return;
+       return next(new AppError('User not found.', 404));
     }
     
     const resetToken = user.createResetToken();
     await user.save(); //saves resetToken and expiresAt after setting the values in schema.
 
-    //TODO: Change to final url once final version is completed and tested
-    const resetURL = `${req.protocol}://localhost:3001/auth/resetPassword?token=${resetToken}`;
+    const resetURL = `${req.protocol}://${process.env.CLIENT_ADDRESS}:${process.env.CLIENT_PORT}/auth/resetPassword?token=${resetToken}`;
     const message = `Forgot your password? Submit a request with your new password and confirmation password.\nUse the following url: ${resetURL}\nIf this wasn't you, please ignore this email.`
 
     try {
@@ -182,65 +116,32 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         user.passwordResetExpiresAt = undefined;
         await user.save();
 
-        //TODO: Implement a global error handler
-        console.log('Email count not be sent. Error: ', error);
-        res.status(404).json({
-        status: 'failed',
-        message: `Email count not be sent. Error: ${error}`
-        })
-        return;
+        return next(new AppError(`Email count not be sent. Error: ${error}`, 404));
     }
 
-    res.status(200).json({
-        status: 'success',
-        message: 'Reset token sent to email successfully.'
-    });
-}
+    res.status(RESPONSE_CODE.OK).json(RESPONSE.TOKEN_SENT_SUCCESSFULLY());
+});
 
-export const resetPassword = async (req: Request, res: Response, NextFunction) => {
+export const resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { password, passwordConfirmation, resetToken } = req.body;
 
     if (!password || !passwordConfirmation || !resetToken) {
-        //TODO: Implement a global error handler
-        console.log('Missing required values to reset password.');
-        res.status(400).json({
-        status: 'failed',
-        message: `Missing required values to reset password.`
-        })
-        return;
+        return next(new AppError('Missing required values to reset password.', 400));
     }
 
     if (password !== passwordConfirmation) {
-        //TODO: Implement a global error handler
-        console.log('Passwords do not match.');
-        res.status(400).json({
-        status: 'failed',
-        message: `Passwords do not match.`
-        })
-        return;
+        return next(new AppError('Passwords do not match.', 400));
     }
 
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     const user = await UserAuthHandler.fetchByResetToken(hashedToken);
 
     if (!user) {
-        //TODO: Implement a global error handler
-        console.log('User not found.');
-        res.status(404).json({
-        status: 'failed',
-        message: `User not found.`
-        })
-        return;
+        return next(new AppError('User not found.', 404));
     }
 
-    if (user.passwordResetExpiresAt < Date.now()){
-        //TODO: Implement a global error handler
-        console.log('Reset token has expired.');
-        res.status(400).json({
-        status: 'failed',
-        message: `Reset token has expired.`
-        })
-        return;
+    if (user.passwordResetExpiresAt && user.passwordResetExpiresAt?.getTime() < Date.now()){
+        return next(new AppError('Reset token has expired.', 404));
     }
 
     user.password = password;
@@ -248,65 +149,43 @@ export const resetPassword = async (req: Request, res: Response, NextFunction) =
     user.passwordResetExpiresAt = undefined;
     await user.save();
 
-    sendResponse(user._id, 200, res, 'Password reset successfully.');
-}
+    sendResponseWithCookie(user?.id, RESPONSE_CODE.OK, res, 'Password reset successfully.');
+});
 
-export const changePassword = async (req: Request, res: Response) => {
+export const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { currentPassword, newPassword, passwordConfirmation } = req.body;
     const userId = res.locals.user.id;
     
-    //IMPROVE: consider creating a middleware for the schema to make this verification automatically
     if (newPassword !== passwordConfirmation) {
-        //TODO: Implement a global error handler
-        console.log('Passwords do not match.');
-        res.status(400).json({
-        status: 'failed',
-        message: `Passwords do not match.`
-        })
-        return;
+        return next(new AppError('Passwords do not match.', 400));
     }
 
     const user = await UserAuthHandler.fetchById(userId);
     if (!user) {
-        res.status(404).json({
-            status: 'failed',
-            message: 'User not found.'
-        });
-        return;
+        return next(new AppError('User not found.', 404));
     }
 
     const isPasswordCorrect = await user.validatePassword(currentPassword);
     if (!isPasswordCorrect) {
-        res.status(401).json({
-            status: 'failed',
-            message: 'Incorrect password.'
-        });
-        return;
+        return next(new AppError('Incorrect password.', 401));
     }
 
     user.password = newPassword;
     await user.save();
 
-    sendResponse(user._id, 201, res, 'User password changed successfully.');
-}
+    sendResponseWithCookie(user._id, RESPONSE_CODE.ACCEPTED, res, 'User password changed successfully.');
+});
 
-//FIXME: This logic is the same as protectRoute. This should be either eliminated or merged after protectRoute is using global errors
-export const isAuthenticationValid = async (req: Request, res: Response) => {
-    const {  cookie: cookies  } = req.headers;
+export const isAuthenticationValid = catchAsync(async (req: Request, res: Response) => {
+    const { cookie: cookies } = req.headers;
     
-    //getting authentication token from cookies
-    let token: string | undefined;
-    const arrCookies = cookies?.split('; ') || [];
-    token = arrCookies.length > 1 ? arrCookies.find(c => c.startsWith('_accessToken=')) : arrCookies[0];
-    token = token?.split('=')[1];
+    const token = getTokenFromCookies(cookies);
 
     if (!token) {
-        //TODO: Implement a global error handler
         console.log('No authorization token found.');
-        res.status(202).json({
-            status: 'failed',
-            message: 'No authorization token found.'
-        });
+        res.status(RESPONSE_CODE.ACCEPTED).json(
+            RESPONSE.USER_AUTHENTICATION_RESPONSE(false, 'No authorization token found.')
+        );
         return;
     }
 
@@ -315,30 +194,34 @@ export const isAuthenticationValid = async (req: Request, res: Response) => {
 
     const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);
     if (!currentUser) {
-        //TODO: Implement a global error handler
         console.log('User deleted.');
-        res.status(202).json({
-            status: 'failed',
-            message: 'User deleted.'
-        });
+        res.status(RESPONSE_CODE.ACCEPTED).json(
+            RESPONSE.USER_AUTHENTICATION_RESPONSE(false, 'User deleted.')
+        );
         return;
+        
     }
 
     if (currentUser.hasChangedPasswordAfterJwtCreation(decodedJwt.iat)){
-        //TODO: Implement a global error handler
         console.log('Password changed after JWT creation.');
-        res.status(202).json({
-            status: 'failed',
-            message: 'Password changed after JWT creation.'
-        });
+        res.status(RESPONSE_CODE.ACCEPTED).json(
+            RESPONSE.USER_AUTHENTICATION_RESPONSE(false, 'Password changed after JWT creation.')
+        );
         return;
     }
 
-    res.status(200).json({
-        status: 'success',
-        message: 'User authenticated successfully'
-    })
-}
+    res.status(RESPONSE_CODE.OK).json(RESPONSE.USER_AUTHENTICATION_RESPONSE(true, 'User authenticated successfully.'));
+});
+
+const getTokenFromCookies = (cookies: string | undefined) => {
+    //getting authentication token from cookies
+    let token: string | undefined;
+    const arrCookies = cookies?.split('; ') || [];
+    token = arrCookies.length > 1 ? arrCookies.find(c => c.startsWith('_accessToken=')) : arrCookies[0];
+    token = token?.split('=')[1];
+    return token;
+};
+    
 
 const getToken = (id: string | ObjectID) => {
     return jwt.sign({id},  process.env.JWT_SECRET, {
@@ -346,7 +229,7 @@ const getToken = (id: string | ObjectID) => {
     });
 }
 
-const sendResponse = (userId: string, statusCode: number, res: Response, message: string) => {
+const sendResponseWithCookie = (userId: string, statusCode: RESPONSE_CODE, res: Response, message: string) => {
     const token = getToken(userId);
     const cookieOptions: CookieOptions = {
         expires: new Date(Date.now() + (parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000)),
@@ -356,11 +239,5 @@ const sendResponse = (userId: string, statusCode: number, res: Response, message
     if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
     res.cookie('_accessToken', token, cookieOptions);
-    res.status(statusCode).json({
-        status: 'success',
-        message,
-        user: {
-            userId
-        }
-    });
+    res.status(statusCode).json(RESPONSE.responseObject(true, 'success', message, {user: userId}));
 }

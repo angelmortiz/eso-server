@@ -1,58 +1,48 @@
-import {Request, Response} from 'express';
-import { ObjectId } from 'mongodb';
-import { ConditionIdAndName } from '../../util/types/types';
-import ChronicConditionHandler from '../../models/nutritionModels/chronicConditionModel';
+import { NextFunction, Request, Response } from 'express';
+import { catchAsync } from '../../util/errors/catchAsync';
+import { RESPONSE_CODE } from '../responseControllers/responseCodes';
+import * as RESPONSE from '../responseControllers/responseCodes';
+import AppError from '../../util/errors/appError';
 import DietHandler from '../../models/nutritionModels/dietModel';
 
 /** APIS */
 export const apiGetDiets = async (req: Request, res: Response) => {
-  res.json(await DietHandler.getAllNames());
+  const muscles = await DietHandler.getAllNames();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(muscles));
 };
 
-export const apiDeleteDiet = (req: Request, res: Response) => {
-  const dietId: string = req.params.dietId;
-
-  DietHandler.deleteById(dietId)
-  .then( deleteResponse => {
-    //removes the diet from diets dropdown
-    DietHandler.removeNameById(dietId);
-    console.log(`'${deleteResponse.name}' diet deleted successfully.`);
-    res.redirect(`/nutrition/diet/`);
-  })
-  .catch(err => {
-    console.log('Error while deleting Diet: ', err);
-  });
+export const apiGetDietNames = async (req: Request, res: Response) => {
+  const muscleNames = await DietHandler.fetchAllNames();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(muscleNames));
 };
 
-/*** FUNCTIONS */
-const refactorValuesForDb = async (diet: DietHandler) => {
-  diet.safeForConditions = await refactorChronicConditions(diet.safeForConditions);
-  return diet;
-};
+export const apiGetDietById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const muscleId: string = req.params.muscleId;
+  const muscle = await DietHandler.fetchById(muscleId);
 
-const refactorChronicConditions = async (selectedConditions) => {
-  if (!selectedConditions){ return null; }
+  if (!muscle) { return next(new AppError(`No muscle found using id '${muscleId}'.`, 404)); }
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(muscle));
+});
 
-  //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(selectedConditions) === 'string') {
-    selectedConditions = [selectedConditions]; 
-  }
-  //Fetches all the chronic conditions to pair with their names
-  const _conditionNames = await ChronicConditionHandler.getAllNames();
-
-  let refactoredConditions: ConditionIdAndName[] = [];
-  selectedConditions.forEach(conditionId => 
-    {
-      if (!conditionId) return; //skips empty selections
-
-      const conditionObject: ConditionIdAndName = {
-        conditionId: new ObjectId(conditionId),
-        conditionName: _conditionNames.find(
-          c => c._id.toString() === conditionId.toString())?.name || 'Nombre no disponible'
-      };
-
-      refactoredConditions.push(conditionObject);
-    });
+export const apiAddDiet = async (req: Request, res: Response) => {
+  let muscleHandler = new DietHandler(req.body);
   
-  return refactoredConditions;
+  await muscleHandler.save();
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
 };
+
+export const apiUpdateDiet = catchAsync(async (req: Request, res: Response) => {
+  let muscleHandler = new DietHandler(req.body);
+
+  await muscleHandler.update();
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
+});
+
+export const apiDeleteDiet = catchAsync(async (req: Request, res: Response) => {
+  const muscleId: string = req.params.muscleId;
+
+  await DietHandler.deleteById(muscleId);
+  //removes the muscle from muscles list (cached ids and names)
+  DietHandler.removeNameById(muscleId);
+  res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
+});

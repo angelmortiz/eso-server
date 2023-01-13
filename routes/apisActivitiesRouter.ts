@@ -23,22 +23,28 @@ router.delete('/exercise/:exerciseId', exercisesController.apiDeleteExercise);
 //APIs
 router.get('/muscles', musclesController.apiGetMuscles);
 router.get('/muscleNames', musclesController.apiGetMuscleNames);
+router.get('/muscle/:muscleId', musclesController.apiGetMuscleById);
 router.post('/muscle', musclesController.apiAddMuscle);
+router.put('/muscle/:muscleId', musclesController.apiUpdateMuscle);
 router.delete('/muscle/:muscleId', musclesController.apiDeleteMuscle);
 
 /* EQUIPMENT */
 //APIs
 router.get('/equipments', equipmentsController.apiGetEquipments);
 router.get('/equipmentNames', equipmentsController.apiGetEquipmentNames);
+router.get('/equipment/:equipmentId', equipmentsController.apiGetEquipmentById);
 router.post('/equipment', equipmentsController.apiAddEquipment);
+router.put('/equipment/:equipmentId', equipmentsController.apiUpdateEquipment);
 router.delete('/equipment/:equipmentId', equipmentsController.apiDeleteEquipment);
 
 /* PHYSICAL CONDITION */
 //APIs
 router.get('/physicalConditions', physicalConditionsController.apiGetPhysicalConditions);
-router.get('/physicalConditionNames', physicalConditionsController.apiGetPhysicalConditionNames);
-router.post('/physicalCondition', physicalConditionsController.apiAddPhysicalCondition);
-router.delete('/physicalCondition/:physicalConditionId', physicalConditionsController.apiDeletePhysicalCondition);
+router.get('/physicalconditionNames', physicalConditionsController.apiGetPhysicalConditionNames);
+router.get('/physicalcondition/:physicalconditionId', physicalConditionsController.apiGetPhysicalConditionById);
+router.post('/physicalcondition', physicalConditionsController.apiAddPhysicalCondition);
+router.put('/physicalcondition/:physicalconditionId', physicalConditionsController.apiUpdatePhysicalCondition);
+router.delete('/physicalcondition/:physicalconditionId', physicalConditionsController.apiDeletePhysicalCondition);
 
 //exports
 export default router;

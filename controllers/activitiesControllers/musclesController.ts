@@ -1,74 +1,48 @@
-import {ObjectId} from 'bson';
-import {Request, Response} from 'express';
-import {ExerciseIdAndName} from '../../util/types/types';
-import  *  as ResponseCodes from '../general/responseCodes';
-import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
+import { NextFunction, Request, Response } from 'express';
+import { catchAsync } from '../../util/errors/catchAsync';
+import { RESPONSE_CODE } from '../responseControllers/responseCodes';
+import * as RESPONSE from '../responseControllers/responseCodes';
 import MuscleHandler from '../../models/activitiesModels/muscleModel';
+import AppError from '../../util/errors/appError';
 
 /** APIS */
 export const apiGetMuscles = async (req: Request, res: Response) => {
-  res.json(await MuscleHandler.getAllNames());
+  const muscles = await MuscleHandler.getAllNames();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(muscles));
 };
 
 export const apiGetMuscleNames = async (req: Request, res: Response) => {
-  res.json(await MuscleHandler.fetchAllNames());
+  const muscleNames = await MuscleHandler.fetchAllNames();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(muscleNames));
 };
 
-export const apiAddMuscle = (req: Request, res: Response) => {
+export const apiGetMuscleById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const muscleId: string = req.params.muscleId;
+  const muscle = await MuscleHandler.fetchById(muscleId);
+
+  if (!muscle) { return next(new AppError(`No muscle found using id '${muscleId}'.`, 404)); }
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(muscle));
+});
+
+export const apiAddMuscle = async (req: Request, res: Response) => {
+  let muscleHandler = new MuscleHandler(req.body);
+  
+  await muscleHandler.save();
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
+};
+
+export const apiUpdateMuscle = catchAsync(async (req: Request, res: Response) => {
   let muscleHandler = new MuscleHandler(req.body);
 
-  console.log('muscleHandler: ', muscleHandler);
-  //TODO: Implement an error catcher
-  muscleHandler.save().then( response => {
-    res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY());
-    console.log('response: ', response);
-  });
-};
+  await muscleHandler.update();
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
+});
 
-export const apiDeleteMuscle = (req: Request, res: Response) => {
+export const apiDeleteMuscle = catchAsync(async (req: Request, res: Response) => {
   const muscleId: string = req.params.muscleId;
 
-  MuscleHandler.deleteById(muscleId)
-  .then( deleteResponse => {
-    //removes the muscle from muscles 
-    MuscleHandler.removeNameById(muscleId);
-    console.log(`'${deleteResponse.name}' physical muscle deleted successfully.`);
-    res.redirect(`/activities/muscle/`);
-  })
-  .catch(err => {
-    console.log('Error while deleting Muscle: ', err);
-  });
-};
-
-/*** FUNCTIONS */
-const refactorValuesForDb = async (muscle: MuscleHandler) => {
-  muscle.exercises = await reformatExerciseValues(muscle.exercises);
-  return muscle;
-};
-
-const reformatExerciseValues = async (selectedExercises) => {
-  if (!selectedExercises){ return null; }
-
-  //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(selectedExercises) === 'string') {
-    selectedExercises = [selectedExercises]; 
-  }
-  //Fetches all the chronic exercises to pair with their names
-  const _exerciseNames = await ExerciseHandler.getAllNames();
-
-  let refactoredExercises: ExerciseIdAndName[] = [];
-  selectedExercises.forEach(exerciseId => 
-    {
-      if (!exerciseId) return; //skips empty selections
-
-      const exerciseObject: ExerciseIdAndName = {
-        exerciseId: new ObjectId(exerciseId),
-        exerciseName: _exerciseNames.find(
-          e => e._id.toString() === exerciseId.toString())?.name || 'Nombre no disponible'
-      };
-
-      refactoredExercises.push(exerciseObject);
-    });
-  
-  return refactoredExercises;
-};
+  await MuscleHandler.deleteById(muscleId);
+  //removes the muscle from muscles list (cached ids and names)
+  MuscleHandler.removeNameById(muscleId);
+  res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
+});

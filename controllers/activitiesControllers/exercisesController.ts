@@ -1,195 +1,53 @@
-import { ObjectId } from 'bson';
-import { Request, Response } from 'express';
-import { ConditionIdAndName, EquipmentIdAndName, MuscleIdAndName } from '../../util/types/types';
-import  *  as ResponseCodes from '../general/responseCodes';
+import { NextFunction, Request, Response } from 'express';
+import { catchAsync } from '../../util/errors/catchAsync';
+import { RESPONSE_CODE } from '../responseControllers/responseCodes';
+import * as RESPONSE from '../responseControllers/responseCodes';
 import ExerciseHandler from '../../models/activitiesModels/exerciseModel';
-import MuscleHandler from '../../models/activitiesModels/muscleModel';
-import EquipmentHandler from '../../models/activitiesModels/equipmentModel';
-import PhysicalConditionHandler from '../../models/activitiesModels/physicalConditionModel';
+import AppError from '../../util/errors/appError';
 
 /** APIS */
-export const apiGetExercises = async (req: Request, res: Response) => {
-    res.json(await ExerciseHandler.fetchAll());
-};
+export const apiGetExercises = catchAsync(async (req: Request, res: Response) => {
+  const exercises = await ExerciseHandler.fetchAll();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(exercises));
+});
 
-export const apiGetExerciseNames = async (req: Request, res: Response) => {
-    res.json(await ExerciseHandler.fetchAllNames());
-};
+export const apiGetExerciseNames = catchAsync(async (req: Request, res: Response) => {
+  const exerciseNames = await ExerciseHandler.fetchAllNames();
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(exerciseNames));
+});
 
-export const apiGetExerciseById = async (req: Request, res: Response) => {
+export const apiGetExerciseById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const exerciseId: string = req.params.exerciseId;
+  const exercise = await ExerciseHandler.fetchById(exerciseId);
 
-  res.json(await ExerciseHandler.fetchById(exerciseId));
-};
+  if (!exercise) { return next(new AppError(`No exercise found using id '${exerciseId}'.`, 404)); }
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(exercise));
+});
 
 export const apiGetExerciseTypes = (req: Request, res: Response) => {
-    res.json(ExerciseHandler.exercisesStaticValues.types);
+  const types = ExerciseHandler.exercisesStaticValues.types;
+  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(types));
 };
 
-export const apiAddExercise = async (req: Request, res: Response) => {
-  let exerciseHandler = new ExerciseHandler(req.body);
-
-  //TODO: Implement an error catcher
-  exerciseHandler.save().then( _ => res.json(ResponseCodes.RESPONSE_ADDED_SUCCESSFULLY()) );
-};
-
-export const apiUpdateExercise = async (req: Request, res: Response) => {
+export const apiAddExercise = catchAsync(async (req: Request, res: Response) => {
   let exerciseHandler = new ExerciseHandler(req.body);
   
-  //TODO: Implement an error catcher
-  exerciseHandler.update().then( _ => res.json(ResponseCodes.RESPONSE_UPDATED_SUCCESSFULLY()) );
-};
+  await exerciseHandler.save();
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
+});
 
-export const apiDeleteExercise = (req: Request, res: Response) => {
+export const apiUpdateExercise = catchAsync(async (req: Request, res: Response) => {
+  let exerciseHandler = new ExerciseHandler(req.body);
+
+  await exerciseHandler.update();
+  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
+});
+
+export const apiDeleteExercise = catchAsync(async (req: Request, res: Response) => {
   const exerciseId: string = req.params.exerciseId;
 
-  ExerciseHandler.deleteById(exerciseId)
-  .then( deleteResponse => {
-    //removes the exercise from exercises dropdown
-    //removes the food from foods dropdown
-    ExerciseHandler.removeNameById(exerciseId);
-    console.log(`'${deleteResponse.name}' exercise deleted successfully.`);
-    res.json(ResponseCodes.RESPONSE_DELETED_SUCCESSFULLY())
-  })
-  .catch(err => {
-    console.log('Error while deleting Exercise: ', err);
-    res.json(ResponseCodes.RESPONSE_DELETE_FAILED())
-  });
-};
-
-/*** FUNCTIONS */
-const refactorValuesForDb = async (exercise: ExerciseHandler) => {
-    exercise.compoundMovement = refactorCompoundMovement(exercise.compoundMovement);
-    console.log("here 1");
-    exercise.mainMuscle = await refactorMainMuscle(exercise.mainMuscle);
-    console.log("here 2");
-    exercise.secondaryMuscles = await refactorSecondaryMuscles(exercise.secondaryMuscles);
-    exercise.types = refactorTypes(exercise.types);
-    exercise.equipments = await refactorEquipments(exercise.equipments);
-    exercise.safeForConditions = await refactorPhysicalConditions(exercise.safeForConditions);
-    exercise.notRecommendedForConditions = await refactorPhysicalConditions(exercise.notRecommendedForConditions);
-  exercise.recommendedForCyclePhases = refactorCyclePhases(exercise.recommendedForCyclePhases);
-  return exercise;
-};
-
-const refactorCompoundMovement = (movement) => {
-    return movement === 'yes';
-};
-
-const refactorMainMuscle = async (muscleId) => {
-    if (!muscleId) {return null; }
-    
-    //Fetches all the muscles to pair with their names
-    const _muscleNames = await MuscleHandler.getAllNames();
-
-    const muscleObject: MuscleIdAndName = {
-        muscleId: new ObjectId(muscleId),
-        muscleName: _muscleNames.find(c => c._id === muscleId)?.name || 'Nombre no disponible'
-    };
-
-    return muscleObject;
-};
-
-const refactorSecondaryMuscles = async (muscles) => {
-    if (!muscles){ return null; }
-  
-    //Handles cases when the user only chooses one option and form returns a string
-    if (typeof(muscles) === 'string') {
-      muscles = [muscles]; 
-    }
-
-   //Fetches all the muscles to pair with their names
-   const _muscleNames = await MuscleHandler.getAllNames();
-  
-    let refactoredMuscles: MuscleIdAndName[] = [];
-    muscles.forEach(muscleId => 
-      {
-        if (!muscleId) return; //skips empty selections
-  
-        const muscleObject: MuscleIdAndName = {
-          muscleId: new ObjectId(muscleId),
-          muscleName: _muscleNames.find(c => c._id === muscleId)?.name || 'Nombre no disponible'
-        };
-  
-        refactoredMuscles.push(muscleObject);
-      });
-    
-    return refactoredMuscles;
-  };
-
-const refactorTypes = (types) => {
-    if (!types){ return null; }
-
-    //Handles cases when the user only chooses one option and form returns a string
-    if (typeof(types) === 'string') {
-        types = [types]; 
-    }
-
-    return types;
-};
-
-//TODO: Create one reusable and abstract method to handle similar refactors functionns
-const refactorEquipments = async (equipments) => {
-    if (!equipments){ return null; }
-
-  //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(equipments) === 'string') {
-    equipments = [equipments]; 
-  }
-  //Fetches all the equipments to pair with their names
-  const _equipmentNames = await EquipmentHandler.getAllNames();
-
-  let refactoredEquipments: EquipmentIdAndName[] = [];
-  equipments.forEach(equipmentId => 
-    {
-      if (!equipmentId) return; //skips empty selections
-
-      const equipmentObject: EquipmentIdAndName = {
-        equipmentId: new ObjectId(equipmentId),
-        equipmentName: _equipmentNames.find(c => c._id === equipmentId)?.name || 'Nombre no disponible'
-      };
-
-      refactoredEquipments.push(equipmentObject);
-    });
-  
-  return refactoredEquipments;
-}
-
-const refactorPhysicalConditions = async (selectedConditions) => {
-  if (!selectedConditions){ return null; }
-
-  //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(selectedConditions) === 'string') {
-    selectedConditions = [selectedConditions]; 
-  }
-  //Fetches all the physical conditions to pair with their names
-  const _conditionNames = await PhysicalConditionHandler.getAllNames();
-
-  let refactoredConditions: ConditionIdAndName[] = [];
-  selectedConditions.forEach(conditionId => 
-    {
-      if (!conditionId) return; //skips empty selections
-
-      const conditionObject: ConditionIdAndName = {
-        conditionId: new ObjectId(conditionId),
-        conditionName: _conditionNames.find(c => c._id === conditionId)?.name || 'Nombre no disponible'
-      };
-
-      refactoredConditions.push(conditionObject);
-    });
-  
-  return refactoredConditions;
-};
-
-const refactorCyclePhases = (selectedPhases) => {
-  if (!selectedPhases) { return null; }
-
-  //Handles cases when the user only chooses one option and form returns a string
-  if (typeof(selectedPhases) === 'string')
-  {
-    selectedPhases = [selectedPhases];
-  }
-  
-  //removes all empty options if necessary.
-  return selectedPhases.filter(p => p);
-};
+  await ExerciseHandler.deleteById(exerciseId);
+  //removes the exercise from exercises list (cached ids and names)
+  ExerciseHandler.removeNameById(exerciseId);
+  res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
+});
