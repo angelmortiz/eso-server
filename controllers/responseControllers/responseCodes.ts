@@ -12,7 +12,7 @@ export const DELETED_SUCCESSFULLY = (): IResponse =>  {
 };
 
 export const DELETE_FAILED = (): IResponse =>  {
-    return responseObject(FAILED, "fail", "Document could not be deleted from the database.");
+    return responseObject(FAILED, "failed", "Document could not be deleted from the database.");
 };
 
 export const FETCHED_SUCCESSFULLY = (body: any): IResponse => {
@@ -27,11 +27,15 @@ export const TOKEN_SENT_SUCCESSFULLY = (): IResponse =>  {
     return responseObject(SUCCEED, "success", "Reset token sent to email successfully.");
 };
 
-export const USER_AUTHENTICATED_SUCCESSFULLY = (): IResponse =>  {
-    return responseObject(SUCCEED, "success", "User authenticated successfully.");
+export const USER_AUTHENTICATION_RESPONSE = (isUserAuthenticated: boolean, message: string): IResponse =>  {
+    //**Note: this function is used to notify the client-side whether the user authentication is valid or not. 
+    //It always responds with a isSuccess=true because we only care about the isUserAuthenticated value.
+    //Whether isUserAuthenticated is true or false, the response should be isSuccess=true either way.
+    return responseObject(SUCCEED, isUserAuthenticated ? "success" : "failed", message, { isUserAuthenticated });
 };
+
 /**  */
-export const responseObject = (isSuccess: boolean, status: string, message: string, body: any = null): IResponse => {
+export const responseObject = (isSuccess: boolean, status: StatusType, message: string, body: any = null): IResponse => {
     return { isSuccess, status, message, body };
 }
 
@@ -52,3 +56,5 @@ export interface IResponse {
     message: string,
     body: any | null
 }
+
+type StatusType = 'success' | 'failed' | 'error';
