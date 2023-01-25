@@ -22,7 +22,7 @@ const ExercisePlanSchema = new Schema({
     type: [Number],
     required: false,
   },
-  restTime: {
+  rest: {
     type: [Number],
     required: [true, 'Rest time is required.'],
   },
@@ -71,4 +71,4 @@ export default new Schema({
     type: [ExercisePlanSchema],
     required: false
   }
-});
+}, { collection: 'activities.workouts' });

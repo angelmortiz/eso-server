@@ -55,4 +55,4 @@ export default new Schema({
     type: [WorkoutPlanSchema],
     required: false
   }
-});
+}, { collection: 'activities.programs' });
