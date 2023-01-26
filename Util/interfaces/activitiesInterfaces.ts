@@ -50,7 +50,7 @@ export interface IWorkout {
 export interface IExercisePlan {
   id: ObjectId | string;
   exerciseId: ObjectId | string;
-  type: number[];
+  sets: number[];
   reps: number[];
   tempo?: number[];
   rir?: number[];
