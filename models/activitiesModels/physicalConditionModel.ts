@@ -34,7 +34,7 @@ export default class PhysicalConditionHandler implements IPhysicalCondition {
   }
 
   async update() {
-    return await PhysicalConditionModel.updateOne({ _id: this.id }, this);
+    return await PhysicalConditionModel.updateOne({ _id: this.id }, this, {runValidators: true});
   }
 
   static async fetchByName(name: string) {

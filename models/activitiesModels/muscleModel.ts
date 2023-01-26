@@ -30,7 +30,7 @@ export default class MuscleHandler implements IMuscle {
   }
 
   async update() {
-    return await MuscleModel.updateOne({ _id: this.id }, this);
+    return await MuscleModel.updateOne({ _id: this.id }, this, {runValidators: true});
   }
 
   static async fetchByName(name: string) {

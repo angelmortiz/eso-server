@@ -31,7 +31,7 @@ export default class ProgramHandler implements IProgram {
   }
 
   async update() {
-    return await ProgramModel.updateOne({ _id: this.id }, this);
+    return await ProgramModel.updateOne({ _id: this.id }, this, {runValidators: true});
   }
 
   static async fetchByName(name: string) {

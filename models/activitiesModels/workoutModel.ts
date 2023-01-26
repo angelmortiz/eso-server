@@ -38,7 +38,7 @@ export default class WorkoutHandler implements IWorkout {
   }
 
   async update() {
-    return await WorkoutModel.updateOne({ _id: this.id }, this);
+    return await WorkoutModel.updateOne({ _id: this.id }, this, {runValidators: true});
   }
 
   static async fetchByName(name: string) {
