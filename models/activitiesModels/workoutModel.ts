@@ -22,6 +22,7 @@ export default class WorkoutHandler implements IWorkout {
     | 'Front Muscles'
     | 'Back Muscles'
     | undefined;
+  linkToImage?: string;
   exercises?: IExercisePlan[] | undefined;
 
   constructor(inputValues) {
@@ -38,7 +39,9 @@ export default class WorkoutHandler implements IWorkout {
   }
 
   async update() {
-    return await WorkoutModel.updateOne({ _id: this.id }, this, {runValidators: true});
+    return await WorkoutModel.updateOne({ _id: this.id }, this, {
+      runValidators: true,
+    });
   }
 
   static async fetchByName(name: string) {

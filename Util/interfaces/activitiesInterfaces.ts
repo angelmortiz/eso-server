@@ -7,13 +7,14 @@ import {
 } from '../types/types';
 
 export interface IProgram {
-    id: ObjectId | string;
-    name: string;
-    description?: string;
-    type: 'Strength' | 'Hypertrophy' | 'Endurance' | 'Mixed';
-    sequence: 'Weekly' | 'Cycle';
-    duration?: string;
-    workouts?: IProgramPlan[];
+  id: ObjectId | string;
+  name: string;
+  description?: string;
+  type: 'Strength' | 'Hypertrophy' | 'Endurance' | 'Mixed';
+  sequence: 'Weekly' | 'Cycle';
+  duration?: string;
+  linkToImage?: string;
+  workouts?: IProgramPlan[];
 }
 
 export interface IProgramPlan {
@@ -28,7 +29,6 @@ export interface IProgramPlan {
     | 'Friday'
     | 'Saturday'
     | 'Sunday';
-
 }
 
 export interface IWorkout {
@@ -44,6 +44,7 @@ export interface IWorkout {
     | 'Front Muscles'
     | 'Back Muscles'
     | 'Mixed';
+  linkToImage?: string;
   exercises?: IExercisePlan[];
 }
 

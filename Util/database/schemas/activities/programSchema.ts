@@ -51,6 +51,10 @@ export default new Schema({
     type: String,
     required: false
   },
+  linkToImage: {
+    type: String,
+    required: false
+  },
   workouts: {
     type: [WorkoutPlanSchema],
     required: false

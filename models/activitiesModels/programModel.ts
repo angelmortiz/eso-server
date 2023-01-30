@@ -15,6 +15,7 @@ export default class ProgramHandler implements IProgram {
   type: 'Mixed' | 'Strength' | 'Hypertrophy' | 'Endurance';
   sequence: 'Weekly' | 'Cycle';
   duration?: string | undefined;
+  linkToImage?: string;
   workouts?: IProgramPlan[] | undefined;
 
   constructor(inputValues) {
