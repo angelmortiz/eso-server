@@ -6,6 +6,10 @@ const ExercisePlanSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: [true, 'Exercise id is required.'],
   },
+  name: {
+    type: String,
+    required: [true, 'Exercise name is required.'],
+  },
   sets: {
     type: [Number],
     required: [true, 'Sets value is required.'],

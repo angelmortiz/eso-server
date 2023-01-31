@@ -6,6 +6,10 @@ const WorkoutPlanSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: [true, 'Workout id is required.'],
   },
+  name: {
+    type: String,
+    required: [true, 'Workout name is required.'],
+  },
   dayNumber: {
     type: Number,
     required: false,

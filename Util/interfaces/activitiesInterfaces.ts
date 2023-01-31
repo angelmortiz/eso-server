@@ -19,6 +19,7 @@ export interface IProgram {
 
 export interface IProgramPlan {
   id: ObjectId | string;
+  name: string;
   workoutId: ObjectId | string;
   dayNumber?: number;
   dayOfTheWeek?:
@@ -50,6 +51,7 @@ export interface IWorkout {
 
 export interface IExercisePlan {
   id: ObjectId | string;
+  name: string;
   exerciseId: ObjectId | string;
   sets: number[];
   reps: number[];
