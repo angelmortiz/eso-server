@@ -52,8 +52,8 @@ export default new Schema({
     ],
   },
   duration: {
-    type: String,
-    required: false
+    type: Number,
+    required: true
   },
   linkToImage: {
     type: String,

@@ -14,7 +14,7 @@ export default class ProgramHandler implements IProgram {
   description?: string | undefined;
   type: 'Mixed' | 'Strength' | 'Hypertrophy' | 'Endurance';
   sequence: 'Weekly' | 'Cycle';
-  duration?: string | undefined;
+  duration: number;
   linkToImage?: string;
   workouts?: IProgramPlan[] | undefined;
 

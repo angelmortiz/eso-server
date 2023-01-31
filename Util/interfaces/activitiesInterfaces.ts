@@ -12,7 +12,7 @@ export interface IProgram {
   description?: string;
   type: 'Strength' | 'Hypertrophy' | 'Endurance' | 'Mixed';
   sequence: 'Weekly' | 'Cycle';
-  duration?: string;
+  duration: number;
   linkToImage?: string;
   workouts?: IProgramPlan[];
 }
