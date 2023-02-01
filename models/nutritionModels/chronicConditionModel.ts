@@ -34,7 +34,7 @@ export default class ChronicConditionHandler implements IChronicCondition {
   }
 
   async update() {
-    return await ChronicConditionModel.updateOne({ _id: this.id }, this);
+    return await ChronicConditionModel.updateOne({ _id: this.id }, this, {runValidators: true});
   }
 
   static async fetchByName(name: string) {
