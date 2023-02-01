@@ -24,6 +24,10 @@ export default new Schema({
     },
     type: {
         type: String,
+        enum: [
+            'Big',
+            'Small'
+        ],
         required: false
     },
     exercises: {

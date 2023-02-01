@@ -7,7 +7,7 @@ import AppError from '../../util/errors/appError';
 
 /** APIS */
 export const apiGetEquipments = catchAsync(async (req: Request, res: Response) => {
-  const equipments = await EquipmentHandler.getAllNames();
+  const equipments = await EquipmentHandler.fetchAll();
   res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(equipments));
 });
 

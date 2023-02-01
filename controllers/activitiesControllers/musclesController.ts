@@ -7,7 +7,7 @@ import AppError from '../../util/errors/appError';
 
 /** APIS */
 export const apiGetMuscles = async (req: Request, res: Response) => {
-  const muscles = await MuscleHandler.getAllNames();
+  const muscles = await MuscleHandler.fetchAll();
   res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(muscles));
 };
 
