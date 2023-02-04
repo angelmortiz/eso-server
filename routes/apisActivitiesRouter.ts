@@ -3,12 +3,22 @@ import { Router } from 'express';
 const router = Router();
 
 //Controllers imports
+import * as programHistoriesController from '../controllers/activitiesControllers/programHistoriesController';
 import * as programsController from '../controllers/activitiesControllers/programsController';
 import * as workoutsController from '../controllers/activitiesControllers/workoutsController';
 import * as exercisesController from '../controllers/activitiesControllers/exercisesController';
 import * as musclesController from '../controllers/activitiesControllers/musclesController';
 import * as equipmentsController from '../controllers/activitiesControllers/equipmentsController';
 import * as physicalConditionsController from '../controllers/activitiesControllers/physicalConditionsController';
+
+/* PROGRAM HISTORY*/
+//APIs
+router.get('/programHistories', programHistoriesController.apiGetProgramHistories);
+router.get('/programHistory/:programHistoryId', programHistoriesController.apiGetProgramHistoryById);
+router.get('/programHistoriesByAssignedTo/:assignedTo', programHistoriesController.apiGetProgramHistoriesByAssignedTo);
+router.post('/programHistory', programHistoriesController.apiAddProgramHistory);
+router.put('/programHistory/:programHistoryId', programHistoriesController.apiUpdateProgramHistory);
+router.delete('/programHistory/:programHistoryId', programHistoriesController.apiDeleteProgramHistory);
 
 /* PROGRAM */
 //APIs

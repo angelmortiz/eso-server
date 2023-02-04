@@ -6,6 +6,42 @@ import {
   MuscleIdAndName,
 } from '../types/types';
 
+export interface IProgramHistory {
+  id: ObjectId | string;
+  programId: ObjectId | string;
+  assignedTo: ObjectId | string;
+  assignedOn: Date;
+  assignedBy: ObjectId | string;
+  isStarted: boolean;
+  startedOn?: Date;
+  isCompleted: boolean;
+  completedOn?: Date;
+  workoutLogs?: IWorkoutLogs[];
+}
+
+export interface IWorkoutLogs {
+  workoutId: ObjectId | string;
+  isCompleted: boolean;
+  completedOn?: Date;
+  notes?: string;
+  exercises?: IExerciseLogs[];
+}
+
+interface IExerciseLogs {
+  exerciseId: ObjectId | string;
+  isCompleted: boolean;
+  completedOn?: Date;
+  notes?: string;
+  sets?: ISetLogs[];
+}
+
+interface ISetLogs {
+  setNumber: number;
+  weight: number;
+  reps: number;
+  rir?: number;
+}
+
 export interface IProgram {
   id: ObjectId | string;
   name: string;
