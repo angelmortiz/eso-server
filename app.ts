@@ -14,7 +14,7 @@ import apisAuthRouter from './routes/apisAuthRouter';
 import apisUserRouter from './routes/apisUserRouter';
 
 
-import { protectRoute, restrictAccessTo }  from './controllers/authController';
+import { protectRoute, restrictAccessTo }  from './controllers/userControllers/userAuthController';
 import { globalErrorResponse } from './controllers/responseControllers/errorController';
 // import hpp from 'hpp';
 

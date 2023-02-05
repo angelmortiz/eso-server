@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { catchAsync } from '../util/errors/catchAsync';
-import { RESPONSE_CODE } from './responseControllers/responseCodes';
-import * as RESPONSE from './responseControllers/responseCodes';
-import UserHandler from '../models/userModels/userAuthModel';
-import AppError from '../util/errors/appError';
+import { catchAsync } from '../../util/errors/catchAsync';
+import { RESPONSE_CODE } from '../responseControllers/responseCodes';
+import * as RESPONSE from '../responseControllers/responseCodes';
+import UserHandler from '../../models/userModels/userAuthModel';
+import AppError from '../../util/errors/appError';
 
 export const getCurrentUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

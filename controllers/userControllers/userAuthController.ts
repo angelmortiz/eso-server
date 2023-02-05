@@ -1,15 +1,15 @@
 import { ObjectID } from 'bson';
 import { NextFunction, Request, Response } from 'express';
-import { CookieOptions } from '../util/types/types';
-import { catchAsync } from '../util/errors/catchAsync';
-import { RESPONSE_CODE } from './responseControllers/responseCodes';
-import * as RESPONSE from './responseControllers/responseCodes';
+import { CookieOptions } from '../../util/types/types';
+import { catchAsync } from '../../util/errors/catchAsync';
+import { RESPONSE_CODE } from '../responseControllers/responseCodes';
+import * as RESPONSE from '../responseControllers/responseCodes';
 import util from 'util';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import sendEmail from '../util/email';
-import UserAuthHandler from '../models/userModels/userAuthModel';
-import AppError from '../util/errors/appError';
+import sendEmail from '../../util/email';
+import UserAuthHandler from '../../models/userModels/userAuthModel';
+import AppError from '../../util/errors/appError';
 
 //TODO: Send confirmation email to check the email provided is valid
 export const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

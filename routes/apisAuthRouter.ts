@@ -1,27 +1,27 @@
 import express from 'express';
-import * as authController from '../controllers/authController';
+import * as userAuthController from '../controllers/userControllers/userAuthController';
 
 const router = express.Router();
 
 //Sign-Up
-router.post('/signup', authController.signup);
+router.post('/signup', userAuthController.signup);
 
 //Log in
-router.post('/login', authController.login);
+router.post('/login', userAuthController.login);
 
 //Log out
-router.post('/logout', authController.logout);
+router.post('/logout', userAuthController.logout);
 
 //Forgot password
-router.post('/forgotPassword', authController.forgotPassword);
+router.post('/forgotPassword', userAuthController.forgotPassword);
 
 //Reset password
-router.patch('/resetPassword', authController.resetPassword);
+router.patch('/resetPassword', userAuthController.resetPassword);
 
 //Change password
-router.post('/changePassword', authController.protectRoute, authController.changePassword);
+router.post('/changePassword', userAuthController.protectRoute, userAuthController.changePassword);
 
 //Check user authentication
-router.post('/isAuthenticationValid', authController.isAuthenticationValid);
+router.post('/isAuthenticationValid', userAuthController.isAuthenticationValid);
 
 export default router;

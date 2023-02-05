@@ -1,12 +1,12 @@
 import { ObjectId } from 'mongodb';
-import { IUser } from '../../util/interfaces/userInterfaces';
+import { IUserAuth } from '../../util/interfaces/userInterfaces';
 import UserAuthSchema from '../../util/database/schemas/users/userAuthSchema';
 import mongoose from 'mongoose';
 
 const UserAuthModel = mongoose.model('UserAuth', UserAuthSchema);
 
-export default class UserAuthHandler implements IUser {
-  _id: string | ObjectId;
+export default class UserAuthHandler implements IUserAuth {
+  id: string | ObjectId;
   firstName: string;
   lastName: string;
   email: string;
@@ -29,7 +29,7 @@ export default class UserAuthHandler implements IUser {
   }
 
   async update() {
-    return await UserAuthModel.updateOne({ _id: this._id }, this);
+    return await UserAuthModel.updateOne({ _id: this.id }, this);
   }
 
   static async fetchById(id: string | ObjectId): Promise<any> {
