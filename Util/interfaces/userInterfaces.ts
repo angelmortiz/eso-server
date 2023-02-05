@@ -14,8 +14,6 @@ export interface IUserAuth {
 export interface IUserInfo {
     id: ObjectId | string;
     userAuthId: ObjectId | string;
-    firstName: string;
-    lastName: string;
     mainGoal: string;
     basicInfo: IUserBasicInfo;
 }

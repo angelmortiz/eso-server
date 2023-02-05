@@ -17,23 +17,16 @@ const UserBasicInfo = new Schema({
   sex: {
     type: String,
     required: false,
-    enum: ['Male, Female, Other'],
+    enum: ['Male', 'Female', 'Other'],
   },
-});
+}, {_id: false});
 
 export default new Schema(
   {
     userAuthId: {
       type: Schema.Types.ObjectId,
       required: [true, 'User Auth ID is required.'],
-    },
-    firstName: {
-      type: String,
-      required: [true, 'First name is required.'],
-    },
-    lastName: {
-      type: String,
-      required: [true, 'Last name is required.'],
+      unique: true
     },
     basicInfo: {
       type: UserBasicInfo,

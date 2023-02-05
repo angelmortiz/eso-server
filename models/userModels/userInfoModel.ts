@@ -11,8 +11,6 @@ const UserInfoModel = mongoose.model('UserInfo', UserInfoSchema);
 export default class UserInfoHandler implements IUserInfo {
   id: string | ObjectId;
   userAuthId: string | ObjectId;
-  firstName: string;
-  lastName: string;
   mainGoal: string;
   basicInfo: IUserBasicInfo;
 

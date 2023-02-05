@@ -2,90 +2,102 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 //TODO: Add references to other schemas once they're added
-const MuscleSubSchema = new Schema({
-  muscleId: {
-    type: Schema.Types.ObjectId,
-    required: true
+const MuscleSubSchema = new Schema(
+  {
+    muscleId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    muscleName: {
+      type: String,
+      required: true,
+    },
   },
-  muscleName: {
-    type: String,
-    required: true
-  }
-}, {_id: false});
+  { _id: false }
+);
 
-const EquipmentSubSchema = new Schema({
-  equipmentId: {
-    type: Schema.Types.ObjectId,
-    required: true
+const EquipmentSubSchema = new Schema(
+  {
+    equipmentId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    equipmentName: {
+      type: String,
+      required: true,
+    },
   },
-  equipmentName: {
-    type: String,
-    required: true
-  }
-}, {_id: false});
+  { _id: false }
+);
 
-const PhysicalConditionSubSchema = new Schema({
-  conditionId: {
-    type: Schema.Types.ObjectId,
-    required: true
+const PhysicalConditionSubSchema = new Schema(
+  {
+    conditionId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    conditionName: {
+      type: String,
+      required: true,
+    },
   },
-  conditionName: {
-    type: String,
-    required: true
-  }
-}, {_id: false});
+  { _id: false }
+);
 
-export default new Schema({
-  name: {
-    type: String,
-    required: [true, "Exercise name is a required field."]
+export default new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Exercise name is a required field.'],
+    },
+    alternativeName: {
+      type: String,
+      required: false,
+    },
+    difficulty: {
+      type: String,
+      required: false,
+    },
+    types: {
+      type: [String],
+      required: false,
+    },
+    compoundMovement: {
+      type: Boolean,
+      required: [true, 'Compound movement option is a required field.'],
+    },
+    mainMuscle: {
+      type: MuscleSubSchema,
+      required: [true, 'Main muscle name is a required field.'],
+    },
+    secondaryMuscles: {
+      type: [MuscleSubSchema],
+      required: false,
+    },
+    equipments: {
+      type: [EquipmentSubSchema],
+      required: false,
+    },
+    safeForConditions: {
+      type: [PhysicalConditionSubSchema],
+      required: false,
+    },
+    notRecommendedForConditions: {
+      type: [PhysicalConditionSubSchema],
+      required: false,
+    },
+    recommendedForCyclePhases: {
+      type: [String],
+      required: false,
+    },
+    linkToVideo: {
+      type: String,
+      required: false,
+    },
+    linkToImage: {
+      type: String,
+      required: false,
+    },
   },
-  alternativeName: {
-    type: String,
-    required: false
-  },
-  difficulty: {
-    type: String,
-    required: false
-  },
-  types: {
-    type: [String],
-    required: false
-  },
-  compoundMovement: {
-    type: Boolean,
-    required: [true, "Compound movement option is a required field."]
-  },
-  mainMuscle: {
-    type: MuscleSubSchema,
-    required: [true, "Main muscle name is a required field."]
-  },
-  secondaryMuscles: {
-    type: [MuscleSubSchema],
-    required: false
-  },
-  equipments:{
-    type: [EquipmentSubSchema],
-    required: false
-  },
-  safeForConditions:{
-    type: [PhysicalConditionSubSchema],
-    required: false
-  },
-  notRecommendedForConditions: {
-    type: [PhysicalConditionSubSchema],
-    required: false
-  },
-  recommendedForCyclePhases: {
-    type: [String],
-    required: false
-  },
-  linkToVideo: {
-    type: String,
-    required: false
-  },
-  linkToImage: {
-    type: String,
-    required: false
-  }
-  }, { collection: 'activities.exercises' });
+  { collection: 'activities.exercises' }
+);

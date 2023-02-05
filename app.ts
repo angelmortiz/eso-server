@@ -10,8 +10,8 @@ import rootDir from './util/path';// importing utility to create paths
 import AppError from './util/errors/appError';
 import apisNutritionRouter from './routes/apisNutritionRouter';
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
-import apisAuthRouter from './routes/apisAuthRouter';
-import apisUserRouter from './routes/apisUserRouter';
+import apisUserAuthRouter from './routes/apisUserAuthRouter';
+import apisUserInfoRouter from './routes/apisUserInfoRouter';
 
 
 import { protectRoute, restrictAccessTo }  from './controllers/userControllers/userAuthController';
@@ -53,8 +53,8 @@ app.use(xss());
 //uploads public files (css) to client
 app.use(express.static(path.join(rootDir, 'public'))); 
 
-app.use('/api/auth', apisAuthRouter);
-app.use('/api/user', protectRoute, apisUserRouter);
+app.use('/api/auth', apisUserAuthRouter);
+app.use('/api/user', protectRoute, apisUserInfoRouter);
 app.use('/api/nutrition', protectRoute, apisNutritionRouter);
 app.use('/api/activities', protectRoute, apisActivitiesRouter);
 
