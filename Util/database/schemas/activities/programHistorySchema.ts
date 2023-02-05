@@ -108,4 +108,4 @@ export default new Schema({
     type: [WorkoutLogs],
     required: false,
   },
-});
+}, { collection: 'activities.programHistory' });
