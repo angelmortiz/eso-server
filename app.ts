@@ -54,7 +54,7 @@ app.use(xss());
 app.use(express.static(path.join(rootDir, 'public'))); 
 
 app.use('/api/auth', apisUserAuthRouter);
-app.use('/api/user', protectRoute, apisUserInfoRouter);
+app.use('/api/users', protectRoute, apisUserInfoRouter);
 app.use('/api/nutrition', protectRoute, apisNutritionRouter);
 app.use('/api/activities', protectRoute, apisActivitiesRouter);
 

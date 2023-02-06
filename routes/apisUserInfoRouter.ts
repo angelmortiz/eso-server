@@ -3,11 +3,11 @@ import * as userController from '../controllers/userControllers/userInfoControll
 
 const router = express.Router();
 
-router.get('/', userController.apiGetUserInfo);
-router.get('/users', userController.apiGetAllUsers);
-router.get('/:userId', userController.apiGetUserInfoById);
-router.post('/', userController.apiAddUserInfo);
-router.put('/:userId', userController.apiUpdateUserInfo);
-router.delete('/:userId', userController.apiDeleteUserInfo);
+router.get('/', userController.apiGetAllUsers);
+router.get('/user', userController.apiGetUserInfo);
+router.get('/user/:userId', userController.apiGetUserInfoById);
+router.post('/user', userController.apiAddUserInfo);
+router.put('/user/:userId', userController.apiUpdateUserInfo);
+router.delete('/user/:userId', userController.apiDeleteUserInfo);
 
 export default router;
