@@ -4,6 +4,7 @@ import * as userController from '../controllers/userControllers/userInfoControll
 const router = express.Router();
 
 router.get('/', userController.apiGetUserInfo);
+router.get('/users', userController.apiGetAllUsers);
 router.get('/:userId', userController.apiGetUserInfoById);
 router.post('/', userController.apiAddUserInfo);
 router.put('/:userId', userController.apiUpdateUserInfo);

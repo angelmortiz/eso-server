@@ -45,6 +45,10 @@ export default class UserAuthHandler implements IUserAuth {
     return await UserAuthModel.findOne({passwordResetToken});
   }
 
+  static async fetchAllNames()  {
+    return await UserAuthModel.find({}, 'firstName lastName');
+  }
+
   static async deleteById(id: string | ObjectId) {
     return await UserAuthModel.findByIdAndDelete(id);
   }

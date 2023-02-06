@@ -3,8 +3,8 @@ import { catchAsync } from '../../util/errors/catchAsync';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
 import UserAuthHandler from '../../models/userModels/userAuthModel';
-import AppError from '../../util/errors/appError';
 import UserInfoHandler from '../../models/userModels/userInfoModel';
+import AppError from '../../util/errors/appError';
 
 export const apiGetUserInfo = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -12,9 +12,11 @@ export const apiGetUserInfo = catchAsync(
 
     const userAuth = await UserAuthHandler.fetchById(userId);
     if (!userAuth) {
-      return next(new AppError(`No user auth found using id '${userId}'.`, 404));
+      return next(
+        new AppError(`No user auth found using id '${userId}'.`, 404)
+      );
     }
-    
+
     const userInfo = await UserInfoHandler.fetchByUserAuthId(userId);
 
     const userInfoVals = {
@@ -25,42 +27,67 @@ export const apiGetUserInfo = catchAsync(
       role: userAuth.role,
       imageLink: userAuth.imageLink,
       basicInfo: userInfo?.basicInfo,
-      mainGoal: userInfo?.mainGoal
+      mainGoal: userInfo?.mainGoal,
     };
 
-    res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(userInfoVals));
+    res
+      .status(RESPONSE_CODE.OK)
+      .json(RESPONSE.FETCHED_SUCCESSFULLY(userInfoVals));
   }
 );
 
-export const apiGetUserInfoById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const userId: string = req.params.userId;
-  const userInfo = await UserInfoHandler.fetchById(userId);
+export const apiGetAllUsers = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { role } = res.locals.user;
 
-  if (!userInfo) { return next(new AppError(`No user found using id '${userId}'.`, 404)); }
-  res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(userInfo));
-});
+    if (role !== 'admin') {
+      return next(new AppError(`Current user do not have admin rights.`, 403));
+    }
 
-export const apiAddUserInfo = catchAsync(async (req: Request, res: Response) => {
-  //defaults to current user auth id if no id is provided as part of the request
-  if (!req.body.userAuthId) {
-    req.body.userAuthId= res.locals.user.id
-  } 
-  let userInfoHandler = new UserInfoHandler(req.body);
-  
-  await userInfoHandler.save();
-  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
-});
+    const userNames = await UserAuthHandler.fetchAllNames();
+    res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(userNames));
+  }
+);
 
-export const apiUpdateUserInfo = catchAsync(async (req: Request, res: Response) => {
-  let userInfoHandler = new UserInfoHandler(req.body);
-  
-  await userInfoHandler.update();
-  res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
-});
+export const apiGetUserInfoById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId: string = req.params.userId;
+    const userInfo = await UserInfoHandler.fetchById(userId);
 
-export const apiDeleteUserInfo = catchAsync(async (req: Request, res: Response) => {
-  const userId: string = req.params.userId;
+    if (!userInfo) {
+      return next(new AppError(`No user found using id '${userId}'.`, 404));
+    }
+    res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(userInfo));
+  }
+);
 
-  await UserInfoHandler.deleteById(userId);
-  res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
-});
+export const apiAddUserInfo = catchAsync(
+  async (req: Request, res: Response) => {
+    //defaults to current user auth id if no id is provided as part of the request
+    if (!req.body.userAuthId) {
+      req.body.userAuthId = res.locals.user.id;
+    }
+    let userInfoHandler = new UserInfoHandler(req.body);
+
+    await userInfoHandler.save();
+    res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
+  }
+);
+
+export const apiUpdateUserInfo = catchAsync(
+  async (req: Request, res: Response) => {
+    let userInfoHandler = new UserInfoHandler(req.body);
+
+    await userInfoHandler.update();
+    res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
+  }
+);
+
+export const apiDeleteUserInfo = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId: string = req.params.userId;
+
+    await UserInfoHandler.deleteById(userId);
+    res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
+  }
+);
