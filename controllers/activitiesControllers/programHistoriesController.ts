@@ -12,7 +12,11 @@ export const apiGetProgramHistories = catchAsync(async (req: Request, res: Respo
 });
 
 export const apiGetProgramHistoriesByAssignedTo = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const {userId, filter} = req.params;
+    let {userId, filter} = req.params;
+    if (!userId) {
+      userId = res.locals.user.id;
+    }
+    
     const programHistories = await ProgramHistoryHandler.fetchByAssignedTo(userId, filter === "completed");
 
     if (!programHistories) { return next(new AppError(`No program histories found using id '${userId}'.`, 404)); }

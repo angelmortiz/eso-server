@@ -24,12 +24,17 @@ router.get(
   programHistoriesController.apiGetProgramHistoryById
 );
 router.get(
-  '/programHistories/assignedTo/:userId',
+  '/programHistories/assignedTo/currentUser/:filter',
   restrictAccessTo('admin', 'editor'),
   programHistoriesController.apiGetProgramHistoriesByAssignedTo
 );
 router.get(
-  '/programHistories/assignedTo/:userId/:filter',
+  '/programHistories/assignedTo/user/:userId',
+  restrictAccessTo('admin', 'editor'),
+  programHistoriesController.apiGetProgramHistoriesByAssignedTo
+);
+router.get(
+  '/programHistories/assignedTo/user/:userId/:filter',
   restrictAccessTo('admin', 'editor'),
   programHistoriesController.apiGetProgramHistoriesByAssignedTo
 );

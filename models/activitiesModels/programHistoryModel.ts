@@ -54,7 +54,7 @@ export default class ProgramHistoryHandler implements IProgramHistory {
   }
 
   static async fetchByAssignedTo(assignedToId: string, filter: boolean) {
-    //aggregates values for program name and user names
+    //aggregates values for program and user info
     return await ProgramHistoryModel.aggregate([
       {
         $match: {
@@ -69,7 +69,7 @@ export default class ProgramHistoryHandler implements IProgramHistory {
           from: 'activities.programs',
           localField: 'programId',
           foreignField: '_id',
-          as: 'programName',
+          as: 'programInfo',
         },
       },
       {
@@ -90,9 +90,17 @@ export default class ProgramHistoryHandler implements IProgramHistory {
       },
       {
         $set: {
-          programName: { $arrayElemAt: ['$programName.name', 0] },
+          programInfo: { $arrayElemAt: ['$programInfo', 0] },
           assignedToName: { $arrayElemAt: ['$assignedToName.fullName', 0] },
           assignedByName: { $arrayElemAt: ['$assignedByName.fullName', 0] },
+        },
+      },
+      {
+        $project: { 'programInfo.workouts': 0 },
+      },
+      {
+        $sort: {
+          assignedOn: -1,
         },
       },
     ]);
