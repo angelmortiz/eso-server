@@ -9,6 +9,7 @@ export default class UserAuthHandler implements IUserAuth {
   id: string | ObjectId;
   firstName: string;
   lastName: string;
+  fullName: string;
   email: string;
   password: string;
   passwordChangedAt: Date;
@@ -46,7 +47,7 @@ export default class UserAuthHandler implements IUserAuth {
   }
 
   static async fetchAllNames()  {
-    return await UserAuthModel.find({}, 'firstName lastName');
+    return await UserAuthModel.find({}, 'fullName');
   }
 
   static async deleteById(id: string | ObjectId) {

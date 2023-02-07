@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { catchAsync } from '../../util/errors/catchAsync';
+import { ObjectID } from 'bson';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
 import UserAuthHandler from '../../models/userModels/userAuthModel';
@@ -38,13 +39,8 @@ export const apiGetUserInfo = catchAsync(
 
 export const apiGetAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { role } = res.locals.user;
-
-    if (role !== 'admin') {
-      return next(new AppError(`Current user do not have admin rights.`, 403));
-    }
-
     const userNames = await UserAuthHandler.fetchAllNames();
+
     res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(userNames));
   }
 );

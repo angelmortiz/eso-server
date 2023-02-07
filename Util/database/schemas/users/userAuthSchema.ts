@@ -13,6 +13,10 @@ const UserAuthSchema = new Schema({
         type: String,
         required: [true, 'Last name field is required']
     },
+    fullName:{
+        type: String,
+        required: [true, 'Full name field is required']
+    },
     email:  {
         type: String,
         required: [true, 'Email field is required'],

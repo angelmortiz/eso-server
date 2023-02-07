@@ -1,4 +1,5 @@
 //imports
+import { restrictAccessTo } from '../controllers/userControllers/userAuthController';
 import { Router } from 'express';
 const router = Router();
 
@@ -11,14 +12,41 @@ import * as musclesController from '../controllers/activitiesControllers/muscles
 import * as equipmentsController from '../controllers/activitiesControllers/equipmentsController';
 import * as physicalConditionsController from '../controllers/activitiesControllers/physicalConditionsController';
 
-/* PROGRAM HISTORY*/
+/* PROGRAM HISTORY */
 //APIs
-router.get('/programHistories', programHistoriesController.apiGetProgramHistories);
-router.get('/programHistory/:programHistoryId', programHistoriesController.apiGetProgramHistoryById);
-router.get('/programHistoriesByAssignedTo/:assignedTo', programHistoriesController.apiGetProgramHistoriesByAssignedTo);
-router.post('/programHistory', programHistoriesController.apiAddProgramHistory);
-router.put('/programHistory/:programHistoryId', programHistoriesController.apiUpdateProgramHistory);
-router.delete('/programHistory/:programHistoryId', programHistoriesController.apiDeleteProgramHistory);
+router.get(
+  '/programHistories',
+  restrictAccessTo('admin', 'editor'),
+  programHistoriesController.apiGetProgramHistories
+);
+router.get(
+  '/programHistory/:programHistoryId',
+  programHistoriesController.apiGetProgramHistoryById
+);
+router.get(
+  '/programHistories/assignedTo/:userId',
+  restrictAccessTo('admin', 'editor'),
+  programHistoriesController.apiGetProgramHistoriesByAssignedTo
+);
+router.get(
+  '/programHistories/assignedTo/:userId/:filter',
+  restrictAccessTo('admin', 'editor'),
+  programHistoriesController.apiGetProgramHistoriesByAssignedTo
+);
+router.post(
+  '/programHistory',
+  restrictAccessTo('admin', 'editor'),
+  programHistoriesController.apiAddProgramHistory
+);
+router.put(
+  '/programHistory/:programHistoryId',
+  programHistoriesController.apiUpdateProgramHistory
+);
+router.delete(
+  '/programHistory/:programHistoryId',
+  restrictAccessTo('admin', 'editor'),
+  programHistoriesController.apiDeleteProgramHistory
+);
 
 /* PROGRAM */
 //APIs
@@ -64,16 +92,37 @@ router.get('/equipmentNames', equipmentsController.apiGetEquipmentNames);
 router.get('/equipment/:equipmentId', equipmentsController.apiGetEquipmentById);
 router.post('/equipment', equipmentsController.apiAddEquipment);
 router.put('/equipment/:equipmentId', equipmentsController.apiUpdateEquipment);
-router.delete('/equipment/:equipmentId', equipmentsController.apiDeleteEquipment);
+router.delete(
+  '/equipment/:equipmentId',
+  equipmentsController.apiDeleteEquipment
+);
 
 /* PHYSICAL CONDITION */
 //APIs
-router.get('/physicalConditions', physicalConditionsController.apiGetPhysicalConditions);
-router.get('/physicalconditionNames', physicalConditionsController.apiGetPhysicalConditionNames);
-router.get('/physicalcondition/:physicalconditionId', physicalConditionsController.apiGetPhysicalConditionById);
-router.post('/physicalcondition', physicalConditionsController.apiAddPhysicalCondition);
-router.put('/physicalcondition/:physicalconditionId', physicalConditionsController.apiUpdatePhysicalCondition);
-router.delete('/physicalcondition/:physicalconditionId', physicalConditionsController.apiDeletePhysicalCondition);
+router.get(
+  '/physicalConditions',
+  physicalConditionsController.apiGetPhysicalConditions
+);
+router.get(
+  '/physicalconditionNames',
+  physicalConditionsController.apiGetPhysicalConditionNames
+);
+router.get(
+  '/physicalcondition/:physicalconditionId',
+  physicalConditionsController.apiGetPhysicalConditionById
+);
+router.post(
+  '/physicalcondition',
+  physicalConditionsController.apiAddPhysicalCondition
+);
+router.put(
+  '/physicalcondition/:physicalconditionId',
+  physicalConditionsController.apiUpdatePhysicalCondition
+);
+router.delete(
+  '/physicalcondition/:physicalconditionId',
+  physicalConditionsController.apiDeletePhysicalCondition
+);
 
 //exports
 export default router;

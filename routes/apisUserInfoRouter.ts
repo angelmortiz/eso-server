@@ -1,13 +1,15 @@
 import express from 'express';
+import { restrictAccessTo } from '../controllers/userControllers/userAuthController';
 import * as userController from '../controllers/userControllers/userInfoController';
 
 const router = express.Router();
 
-router.get('/', userController.apiGetAllUsers);
+router.get('/', restrictAccessTo('admin'),userController.apiGetAllUsers);
 router.get('/user', userController.apiGetUserInfo);
 router.get('/user/:userId', userController.apiGetUserInfoById);
-router.post('/user', userController.apiAddUserInfo);
-router.put('/user/:userId', userController.apiUpdateUserInfo);
-router.delete('/user/:userId', userController.apiDeleteUserInfo);
+/** Deactivated routes  */
+// router.post('/user', userController.apiAddUserInfo);
+// router.put('/user/:userId', userController.apiUpdateUserInfo);
+// router.delete('/user/:userId', userController.apiDeleteUserInfo);
 
 export default router;

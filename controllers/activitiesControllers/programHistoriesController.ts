@@ -12,10 +12,10 @@ export const apiGetProgramHistories = catchAsync(async (req: Request, res: Respo
 });
 
 export const apiGetProgramHistoriesByAssignedTo = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const assignedToId: string = req.params.assignedToId;
-    const programHistories = await ProgramHistoryHandler.fetchByAssignedTo(assignedToId);
-  
-    if (!programHistories) { return next(new AppError(`No program histories found using id '${assignedToId}'.`, 404)); }
+    const {userId, filter} = req.params;
+    const programHistories = await ProgramHistoryHandler.fetchByAssignedTo(userId, filter === "completed");
+
+    if (!programHistories) { return next(new AppError(`No program histories found using id '${userId}'.`, 404)); }
     res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(programHistories));
   });
 
@@ -28,6 +28,12 @@ export const apiGetProgramHistoryById = catchAsync(async (req: Request, res: Res
 });
 
 export const apiAddProgramHistory = catchAsync(async (req: Request, res: Response) => {
+  //defaults to current user id if no assignedBy id was provided
+  if (!req.body.assignedBy) {
+    req.body.assignedBy = res.locals.user.id;
+  }
+
+  req.body.assignedOn = Date.now();
   let programHistoryHandler = new ProgramHistoryHandler(req.body);
   
   await programHistoryHandler.save();

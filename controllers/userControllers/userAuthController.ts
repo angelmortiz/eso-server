@@ -23,7 +23,8 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
         return next(new AppError(`Password and password confirmation are not the same.`, 400));
     }
 
-    const userInfo = {firstName, lastName, email, password, imageLink, passwordChangedAt: Date.now()}
+    const fullName = firstName.concat(' ', lastName);
+    const userInfo = {firstName, lastName, fullName, email, password, imageLink, passwordChangedAt: Date.now()}
     const userAuthHandler = new UserAuthHandler(userInfo); 
     await userAuthHandler.save();
 
