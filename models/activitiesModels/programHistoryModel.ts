@@ -50,7 +50,50 @@ export default class ProgramHistoryHandler implements IProgramHistory {
   }
 
   static async fetchById(id: string | ObjectId) {
-    return await ProgramHistoryModel.findById(id);
+    //return await ProgramHistoryModel.findById(id);
+    /** //IMPROVE: Look for a better way to join collections
+     * at the schema level instead of repeating the aggregate logic. */
+    return await ProgramHistoryModel.aggregate([
+      {
+        $match: {
+          _id: new ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: 'activities.programs',
+          localField: 'programId',
+          foreignField: '_id',
+          as: 'programInfo',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users.auth',
+          localField: 'assignedTo',
+          foreignField: '_id',
+          as: 'assignedToName',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users.auth',
+          localField: 'assignedBy',
+          foreignField: '_id',
+          as: 'assignedByName',
+        },
+      },
+      {
+        $set: {
+          programInfo: { $arrayElemAt: ['$programInfo', 0] },
+          assignedToName: { $arrayElemAt: ['$assignedToName.fullName', 0] },
+          assignedByName: { $arrayElemAt: ['$assignedByName.fullName', 0] },
+        },
+      },
+      {
+        $project: { 'programInfo.workouts': 0 },
+      },
+    ]);
   }
 
   static async fetchByAssignedTo(assignedToId: string, filter: boolean) {

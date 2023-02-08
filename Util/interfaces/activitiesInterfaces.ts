@@ -21,6 +21,8 @@ export interface IProgramHistory {
 
 export interface IWorkoutLogs {
   workoutId: ObjectId | string;
+  isStarted: boolean;
+  startedOn?: Date;
   isCompleted: boolean;
   completedOn?: Date;
   notes?: string;
@@ -29,6 +31,8 @@ export interface IWorkoutLogs {
 
 interface IExerciseLogs {
   exerciseId: ObjectId | string;
+  isStarted: boolean;
+  startedOn?: Date;
   isCompleted: boolean;
   completedOn?: Date;
   notes?: string;
@@ -40,6 +44,10 @@ interface ISetLogs {
   weight: number;
   reps: number;
   rir?: number;
+  isStarted: boolean;
+  startedOn?: Date;
+  isCompleted: boolean;
+  completedOn?: Date;
 }
 
 export interface IProgram {

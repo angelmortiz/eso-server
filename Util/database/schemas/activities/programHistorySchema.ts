@@ -19,8 +19,25 @@ const SetLogs = new Schema(
       type: Number,
       required: false,
     },
-  },
-  { _id: false }
+    isStarted: {
+      type: Boolean,
+      required: [true, 'Set "isStarted" flag is required'],
+      default: false,
+    },
+    startedOn: {
+      type: Date,
+      required: false,
+    },
+    isCompleted: {
+      type: Boolean,
+      required: [true, 'Set "isCompleted" flag is required'],
+      default: false,
+    },
+    completedOn: {
+      type: Date,
+      required: false,
+    }
+  }
 );
 
 const ExerciseLogs = new Schema(
@@ -28,6 +45,15 @@ const ExerciseLogs = new Schema(
     exerciseId: {
       type: Schema.Types.ObjectId,
       required: [true, 'Exercise id is required.'],
+    },
+    isStarted: {
+      type: Boolean,
+      required: [true, 'ExerciseLogs "isStarted" flag is required'],
+      default: false,
+    },
+    startedOn: {
+      type: Date,
+      required: false,
     },
     isCompleted: {
       type: Boolean,
@@ -46,33 +72,43 @@ const ExerciseLogs = new Schema(
       type: [SetLogs],
       required: false,
     },
-  },
-  { _id: false }
+  }
 );
 
-const WorkoutLogs = new Schema({
-  workoutId: {
-    type: Schema.Types.ObjectId,
-    required: [true, 'Workout id is required.'],
-  },
-  isCompleted: {
-    type: Boolean,
-    required: [true, 'WorkoutLogs "isCompleted" flag is required'],
-    default: false,
-  },
-  completedOn: {
-    type: Date,
-    required: false,
-  },
-  notes: {
-    type: String,
-    required: false,
-  },
-  exercises: {
-    type: [ExerciseLogs],
-    required: false,
-  },
-}, {_id: false});
+const WorkoutLogs = new Schema(
+  {
+    workoutId: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'Workout id is required.'],
+    },
+    isStarted: {
+      type: Boolean,
+      required: [true, 'WorkoutLogs "isStarted" flag is required'],
+      default: false,
+    },
+    startedOn: {
+      type: Date,
+      required: false,
+    },
+    isCompleted: {
+      type: Boolean,
+      required: [true, 'WorkoutLogs "isCompleted" flag is required'],
+      default: false,
+    },
+    completedOn: {
+      type: Date,
+      required: false,
+    },
+    notes: {
+      type: String,
+      required: false,
+    },
+    exercises: {
+      type: [ExerciseLogs],
+      required: false,
+    },
+  }
+);
 
 export default new Schema(
   {
