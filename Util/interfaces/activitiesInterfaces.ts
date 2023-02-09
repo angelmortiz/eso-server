@@ -62,6 +62,7 @@ export interface IProgram {
 }
 
 export interface IProgramPlan {
+  _id: ObjectId | string;
   id: ObjectId | string;
   name: string;
   workoutId: ObjectId | string;

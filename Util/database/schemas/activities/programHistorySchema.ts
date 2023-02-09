@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const SetLogs = new Schema(
+const SetLogsSchema = new Schema(
   {
     setNumber: {
       type: Number,
@@ -40,7 +40,7 @@ const SetLogs = new Schema(
   }
 );
 
-const ExerciseLogs = new Schema(
+const ExerciseLogsSchema = new Schema(
   {
     exerciseId: {
       type: Schema.Types.ObjectId,
@@ -69,13 +69,13 @@ const ExerciseLogs = new Schema(
       required: false,
     },
     sets: {
-      type: [SetLogs],
+      type: [SetLogsSchema],
       required: false,
     },
   }
 );
 
-const WorkoutLogs = new Schema(
+const WorkoutLogsSchema = new Schema(
   {
     workoutId: {
       type: Schema.Types.ObjectId,
@@ -104,7 +104,7 @@ const WorkoutLogs = new Schema(
       required: false,
     },
     exercises: {
-      type: [ExerciseLogs],
+      type: [ExerciseLogsSchema],
       required: false,
     },
   }
@@ -148,7 +148,7 @@ export default new Schema(
       required: false,
     },
     workoutLogs: {
-      type: [WorkoutLogs],
+      type: [WorkoutLogsSchema],
       required: false,
     },
   },

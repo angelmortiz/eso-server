@@ -48,7 +48,7 @@ export default class WorkoutHandler implements IWorkout {
     return await WorkoutModel.findOne({ name: name });
   }
 
-  static async fetchById(id: string | ObjectId) {
+  static async fetchById(id: string | ObjectId): Promise<any> {
     return await WorkoutModel.findById(id);
   }
 

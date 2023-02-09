@@ -13,6 +13,8 @@ const WorkoutPlanSchema = new Schema({
   dayNumber: {
     type: Number,
     required: false,
+    min: 1,
+    max: 7
   },
   dayOfTheWeek: {
     type: String,
