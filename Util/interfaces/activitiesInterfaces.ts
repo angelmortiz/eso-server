@@ -29,7 +29,7 @@ export interface IWorkoutLogs {
   exercises?: IExerciseLogs[];
 }
 
-interface IExerciseLogs {
+export interface IExerciseLogs {
   exerciseId: ObjectId | string;
   isStarted: boolean;
   startedOn?: Date;
@@ -39,7 +39,7 @@ interface IExerciseLogs {
   sets?: ISetLogs[];
 }
 
-interface ISetLogs {
+export interface ISetLogs {
   setNumber: number;
   weight: number;
   reps: number;
