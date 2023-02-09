@@ -34,19 +34,21 @@ export default class UserAuthHandler implements IUserAuth {
   }
 
   static async fetchById(id: string | ObjectId): Promise<any> {
-    return await UserAuthModel.findById(id);
-
+    return await UserAuthModel.findById(
+      id,
+      'firstName lastName fullName email role imageLink'
+    ).populate('userInfo');
   }
 
   static async fetchByEmail(email: string): Promise<any> {
-    return await UserAuthModel.findOne({email});
+    return await UserAuthModel.findOne({ email });
   }
 
   static async fetchByResetToken(passwordResetToken: string) {
-    return await UserAuthModel.findOne({passwordResetToken});
+    return await UserAuthModel.findOne({ passwordResetToken });
   }
 
-  static async fetchAllNames()  {
+  static async fetchAllNames() {
     return await UserAuthModel.find({}, 'fullName');
   }
 
@@ -54,5 +56,3 @@ export default class UserAuthHandler implements IUserAuth {
     return await UserAuthModel.findByIdAndDelete(id);
   }
 }
-
-

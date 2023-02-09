@@ -114,11 +114,11 @@ export interface IExercise {
   difficulty: string;
   types: string[];
   compoundMovement: boolean;
-  mainMuscle: MuscleIdAndName | null;
-  secondaryMuscles: MuscleIdAndName[] | null;
-  equipments: EquipmentIdAndName[] | null;
-  safeForConditions: ConditionIdAndName[] | null;
-  notRecommendedForConditions: ConditionIdAndName[] | null;
+  mainMuscle: IMuscle;
+  secondaryMuscles: IMuscle[] | null;
+  equipments: IEquipment[] | null;
+  safeForConditions: IPhysicalCondition[] | null;
+  notRecommendedForConditions: IPhysicalCondition[] | null;
   recommendedForCyclePhases: string[];
   linkToVideo: string;
   linkToImage: string;
@@ -129,7 +129,6 @@ export interface IMuscle {
   name: string;
   alternativeName: string;
   type: string;
-  exercises: ExerciseIdAndName[] | null;
   linkToImage: string;
 }
 
@@ -138,7 +137,6 @@ export interface IEquipment {
   name: string;
   alternativeName: string;
   description: string;
-  exercises: ExerciseIdAndName[] | null;
   linkToImage: string;
 }
 

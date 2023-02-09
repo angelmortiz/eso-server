@@ -11,7 +11,6 @@ export default class MuscleHandler implements IMuscle {
   name: string;
   alternativeName: string;
   type: string;
-  exercises: ExerciseIdAndName[] | null;
   linkToImage: string;
 
   static _names: IdAndName[];

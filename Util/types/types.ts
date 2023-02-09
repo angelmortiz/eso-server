@@ -1,5 +1,6 @@
 import { ObjectId } from 'bson';
 
+//DELETE: All these id+name types when once they are not in used
 /** General */
 export type IdAndName = {
     _id: ObjectId | string,

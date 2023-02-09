@@ -23,11 +23,6 @@ const UserBasicInfo = new Schema({
 
 export default new Schema(
   {
-    userAuthId: {
-      type: Schema.Types.ObjectId,
-      required: [true, 'User Auth ID is required.'],
-      unique: true
-    },
     basicInfo: {
       type: UserBasicInfo,
       required: false,

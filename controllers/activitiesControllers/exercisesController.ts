@@ -47,7 +47,5 @@ export const apiDeleteExercise = catchAsync(async (req: Request, res: Response) 
   const exerciseId: string = req.params.exerciseId;
 
   await ExerciseHandler.deleteById(exerciseId);
-  //removes the exercise from exercises list (cached ids and names)
-  ExerciseHandler.removeNameById(exerciseId);
   res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
 });
