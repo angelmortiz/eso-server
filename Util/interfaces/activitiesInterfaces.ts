@@ -27,7 +27,7 @@ export interface IProgram {
 }
 
 export interface IWorkoutPlan {
-  id: ObjectId | string;
+  id?: ObjectId | string;
   workout: IWorkout;
   dayNumber?: number;
   dayOfTheWeek?:
@@ -42,10 +42,10 @@ export interface IWorkoutPlan {
 
 export interface IWorkout {
   id: ObjectId | string;
-  name: string;
+  name?: string;
   description?: string;
   variant?: string;
-  type: 'Strength' | 'Hypertrophy' | 'Endurance';
+  type?: 'Strength' | 'Hypertrophy' | 'Endurance';
   target?:
     | 'Full Body'
     | 'Upper Body'

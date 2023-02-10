@@ -114,13 +114,33 @@ const createWeeklyDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
 };
 
 const createCycleDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
-  programPlan.weeksPlan = Array.from(
-    { length: program.duration },
-    (_, index) => ({
-      weekNumber: index + 1,
-      workouts: program.workouts!,
-    })
-  );
+  if (!program?.workouts || program.workouts.length === 0) return [];
 
+  const numberOfWorkouts = program.workouts.length!;
+  programPlan.weeksPlan = [];
+
+  /**
+   * Creates a list of weeks based on 'program.duration'
+   * and assigns a workout to each day of the week based
+   * on the workoutPlan info.
+   */
+
+  //iterate throw weeks
+  for (let week = 1; week <= program.duration; week++) {
+    let weekPlan: IWeekPlan = { weekNumber: week, workouts: [] };
+
+    let count = 0;
+    //iterate throw days
+    for (let day = 1; day <= 7; day++) {
+      //resets count when reaches it gets to a higher number than #workouts
+      if (count >= numberOfWorkouts) count = 0;
+      let workout = program.workouts[count].workout;
+      let workoutPlan: IWorkoutPlan = { dayNumber: day, workout };
+      weekPlan.workouts?.push(workoutPlan);
+      count++;
+    }
+
+    programPlan.weeksPlan.push(weekPlan);
+  }
   return programPlan.weeksPlan;
 };

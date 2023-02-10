@@ -7,7 +7,6 @@ const WeekPlanSchema = new Schema({
     type: Number,
     required: [true, 'Week number is required.'],
     min: 1,
-    unique: true
   },
   workouts: {
     type: [WorkoutPlanSchema],
