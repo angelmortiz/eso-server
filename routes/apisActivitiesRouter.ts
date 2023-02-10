@@ -5,7 +5,6 @@ const router = Router();
 
 //Controllers imports
 import * as programPlanController from '../controllers/activitiesControllers/programPlanController';
-import * as programHistoriesController from '../controllers/activitiesControllers/programHistoriesController';
 import * as programsController from '../controllers/activitiesControllers/programsController';
 import * as workoutsController from '../controllers/activitiesControllers/workoutsController';
 import * as exercisesController from '../controllers/activitiesControllers/exercisesController';
@@ -13,7 +12,7 @@ import * as musclesController from '../controllers/activitiesControllers/muscles
 import * as equipmentsController from '../controllers/activitiesControllers/equipmentsController';
 import * as physicalConditionsController from '../controllers/activitiesControllers/physicalConditionsController';
 
-/* PROGRAM HISTORY */
+/* PROGRAM PLAN */
 router.get(
   '/programPlan/:programPlanId',
   programPlanController.apiGetProgramPlanById
@@ -22,48 +21,6 @@ router.post(
   '/programPlan',
   restrictAccessTo('admin', 'editor'),
   programPlanController.apiAddProgramPlan
-);
-
-
-/* PROGRAM HISTORY */
-//APIs
-router.get(
-  '/programHistories',
-  restrictAccessTo('admin', 'editor'),
-  programHistoriesController.apiGetProgramHistories
-);
-router.get(
-  '/programHistory/:programHistoryId',
-  programHistoriesController.apiGetProgramHistoryById
-);
-router.get(
-  '/programHistories/assignedTo/currentUser/:filter',
-  restrictAccessTo('admin', 'editor'),
-  programHistoriesController.apiGetProgramHistoriesByAssignedTo
-);
-router.get(
-  '/programHistories/assignedTo/user/:userId',
-  restrictAccessTo('admin', 'editor'),
-  programHistoriesController.apiGetProgramHistoriesByAssignedTo
-);
-router.get(
-  '/programHistories/assignedTo/user/:userId/:filter',
-  restrictAccessTo('admin', 'editor'),
-  programHistoriesController.apiGetProgramHistoriesByAssignedTo
-);
-router.post(
-  '/programHistory',
-  restrictAccessTo('admin', 'editor'),
-  programHistoriesController.apiAddProgramHistory
-);
-router.put(
-  '/programHistory/:programHistoryId',
-  programHistoriesController.apiUpdateProgramHistory
-);
-router.delete(
-  '/programHistory/:programHistoryId',
-  restrictAccessTo('admin', 'editor'),
-  programHistoriesController.apiDeleteProgramHistory
 );
 
 /* PROGRAM */

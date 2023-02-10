@@ -1,6 +1,6 @@
 import { ObjectId } from 'bson';
 import { IMuscle } from '../../util/interfaces/activitiesInterfaces';
-import { ExerciseIdAndName, IdAndName } from '../../util/types/types';
+import { IdAndName } from '../../util/types/types';
 import MuscleSchema from '../../util/database/schemas/activities/muscleSchema';
 import mongoose from 'mongoose';
 

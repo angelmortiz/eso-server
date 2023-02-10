@@ -1,6 +1,6 @@
 import { ObjectId } from 'bson';
 import { IEquipment } from '../../util/interfaces/activitiesInterfaces';
-import { ExerciseIdAndName, IdAndName } from '../../util/types/types';
+import { IdAndName } from '../../util/types/types';
 import EquipmentSchema from '../../util/database/schemas/activities/equipmentSchema';
 import mongoose from 'mongoose';
 
@@ -11,7 +11,6 @@ export default class EquipmentHandler implements IEquipment {
     name: string;
     alternativeName: string;
     description: string;
-    exercises: ExerciseIdAndName[] | null;
     linkToImage: string;
 
     static _names: IdAndName[];

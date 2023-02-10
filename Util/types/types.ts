@@ -24,25 +24,6 @@ export type ConditionIdAndName = {
     conditionId: ObjectId | string,
     conditionName: string
 };
-
-/** Exercises */
-export type ExerciseIdAndName = {
-    exerciseId: ObjectId | string,
-    exerciseName: string
-};
-
-/** Muscles */
-export type MuscleIdAndName = {
-    muscleId: ObjectId | string,
-    muscleName: string
-};
-
-/** Equipments */
-export type EquipmentIdAndName = {
-    equipmentId: ObjectId | string,
-    equipmentName: string
-};
-
 /** Cookie options */
 export type CookieOptions = {
     expires?: Date,

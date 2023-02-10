@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import ProgramSchema from '../../util/database/schemas/activities/programSchema';
 import {
   IProgram,
-  IProgramPlan,
+  IWorkoutPlan,
 } from '../../util/interfaces/activitiesInterfaces';
 
 const ProgramModel = mongoose.model('Program', ProgramSchema);
@@ -16,7 +16,7 @@ export default class ProgramHandler implements IProgram {
   sequence: 'Weekly' | 'Cycle';
   duration: number;
   linkToImage?: string;
-  workouts?: IProgramPlan[] | undefined;
+  workouts?: IWorkoutPlan[];
 
   constructor(inputValues) {
     if (!inputValues) return; //if no values were provided, ignore the rest of the logic

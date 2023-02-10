@@ -1,53 +1,31 @@
 import { ObjectId } from 'bson';
-import {
-  ConditionIdAndName,
-  EquipmentIdAndName,
-  ExerciseIdAndName,
-  MuscleIdAndName,
-} from '../types/types';
+import { IUserAuth } from './userInterfaces';
 
-export interface IProgramHistory {
+export interface IProgramPlan {
   id: ObjectId | string;
-  programId: ObjectId | string;
-  assignedTo: ObjectId | string;
+  program: IProgram;
+  assignedTo: IUserAuth;
   assignedOn: Date;
-  assignedBy: ObjectId | string;
-  isStarted: boolean;
-  startedOn?: Date;
-  isCompleted: boolean;
-  completedOn?: Date;
-  workoutLogs?: IWorkoutLogs[];
+  assignedBy: IUserAuth;
+  weeksPlan?: IWeekPlan[];
 }
 
-export interface IWorkoutLogs {
-  workoutId: ObjectId | string;
-  isStarted: boolean;
-  startedOn?: Date;
-  isCompleted: boolean;
-  completedOn?: Date;
-  notes?: string;
-  exercises?: IExerciseLogs[];
+export interface IWeekPlan {
+  weekNumber: number;
+  daysPlan?: IDayPlanSchema[];
 }
 
-export interface IExerciseLogs {
-  exerciseId: ObjectId | string;
-  isStarted: boolean;
-  startedOn?: Date;
-  isCompleted: boolean;
-  completedOn?: Date;
-  notes?: string;
-  sets?: ISetLogs[];
-}
-
-export interface ISetLogs {
-  setNumber: number;
-  weight: number;
-  reps: number;
-  rir?: number;
-  isStarted: boolean;
-  startedOn?: Date;
-  isCompleted: boolean;
-  completedOn?: Date;
+interface IDayPlanSchema {
+  dayNumber?: number;
+  dayOfTheWeek?:
+  | 'Monday'
+  | 'Tuesday'
+  | 'Wednesday'
+  | 'Thrusday'
+  | 'Friday'
+  | 'Saturday'
+  | 'Sunday';
+  workoutPlan?: IWorkout[];
 }
 
 export interface IProgram {
@@ -58,7 +36,21 @@ export interface IProgram {
   sequence: 'Weekly' | 'Cycle';
   duration: number;
   linkToImage?: string;
-  workouts?: IProgramPlan[];
+  workouts?: IWorkoutPlan[];
+}
+
+export interface IWorkoutPlan {
+  id: ObjectId | string;
+  workout: IWorkout;
+  dayNumber?: number;
+  dayOfTheWeek?:
+    | 'Monday'
+    | 'Tuesday'
+    | 'Wednesday'
+    | 'Thrusday'
+    | 'Friday'
+    | 'Saturday'
+    | 'Sunday';
 }
 
 export interface IWorkout {
@@ -77,22 +69,6 @@ export interface IWorkout {
   linkToImage?: string;
   exercises?: IExercisePlan[];
 }
-
-export interface IProgramPlan {
-  _id: ObjectId | string;
-  id: ObjectId | string;
-  workout: IWorkout;
-  dayNumber?: number;
-  dayOfTheWeek?:
-    | 'Monday'
-    | 'Tuesday'
-    | 'Wednesday'
-    | 'Thrusday'
-    | 'Friday'
-    | 'Saturday'
-    | 'Sunday';
-}
-
 
 export interface IExercise {
   id: ObjectId | string;
