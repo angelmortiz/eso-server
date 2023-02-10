@@ -19,7 +19,7 @@ router.get(
 );
 router.post(
   '/programPlan',
-  restrictAccessTo('admin', 'editor'),
+  restrictAccessTo('Admin', 'Editor'),
   programPlanController.apiAddProgramPlan
 );
 

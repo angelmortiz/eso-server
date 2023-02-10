@@ -1,12 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { catchAsync } from '../../util/errors/catchAsync';
+import {
+  IProgram,
+  IProgramPlan,
+  IWeekPlan,
+  IWorkoutPlan,
+} from '../../util/interfaces/activitiesInterfaces';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
 import ProgramPlanHandler from '../../models/activitiesModels/programPlanModel';
 import AppError from '../../util/errors/appError';
 import ProgramHandler from '../../models/activitiesModels/programModel';
-import UserAuthHandler from '../../models/userModels/userAuthModel';
-import WorkoutHandler from '../../models/activitiesModels/workoutModel';
 
 /** APIS */
 export const apiGetProgramPlanById = catchAsync(
@@ -32,18 +36,28 @@ export const apiAddProgramPlan = catchAsync(
 
     if (!program || !assignedTo || !assignedBy) {
       return next(
-        new AppError(`'programId' and 'assignedToId' are required fields.`, 400)
+        new AppError(
+          `'programId', 'assignedToId', 'assignedBy' are required fields.`,
+          400
+        )
       );
     }
 
-    let programPlan = {
+    const programAndWorkouts = await ProgramHandler.fetchAllChildrenInfo(
+      program
+    );
+    if (!programAndWorkouts) {
+      return next(new AppError(`No program found with id ${program}.`, 404));
+    }
+
+    let programPlan: IProgramPlan = {
       program,
       assignedTo,
-      assignedOn: Date.now(),
+      assignedOn: new Date(),
       assignedBy,
     };
 
-    programPlan = await createWeeksPlan(programPlan);
+    programPlan.weeksPlan = createWeeksPlan(programPlan, programAndWorkouts);
 
     await ProgramPlanHandler.save(programPlan);
     res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
@@ -68,24 +82,45 @@ export const apiDeleteProgramPlan = catchAsync(
   }
 );
 
-
 /** ADDITIONAL FUNCTIONS */
-const createWeeksPlan = async (programPlan) => {
-    const programObj = await ProgramHandler.fetchById(programPlan.program);
-    const arrWorkoutIds = programObj?.workouts?.map(workout => workout._id);
-    const setWorkoutsIds = new Set(arrWorkoutIds); //removes duplicates
+const createWeeksPlan = (
+  programPlan: IProgramPlan,
+  program: IProgram
+): IWeekPlan[] => {
+  switch (program.sequence) {
+    case 'Weekly':
+      return createWeeklyDaysPlan(programPlan, program);
+    case 'Cycle':
+      return createCycleDaysPlan(programPlan, program);
+  }
+};
 
-    const arrWorkoutObjs: any[] = [];
-    setWorkoutsIds.forEach(async woId => {
-        const workoutObj = null;//await WorkoutHandler.fetchById(woId);
-
-        let workout = {
-            workoutId: woId,
-            // exercises:  workoutObj?.exercises
-        };
-
-        arrWorkoutObjs.push(workout);
+/** extracts daily workouts from Program and creates a weekly
+ * plan with a workout for each day of the week.
+ */
+const createWeeklyDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
+  /** Creates an array of weeks from 1 to 'duration'.
+   * Each day of the week gets assigned a workout from program.
+   */
+  programPlan.weeksPlan = Array.from(
+    { length: program.duration },
+    (_, index) => ({
+      weekNumber: index + 1,
+      workouts: program.workouts!,
     })
+  );
 
-    return programPlan;
+  return programPlan.weeksPlan;
+};
+
+const createCycleDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
+  programPlan.weeksPlan = Array.from(
+    { length: program.duration },
+    (_, index) => ({
+      weekNumber: index + 1,
+      workouts: program.workouts!,
+    })
+  );
+
+  return programPlan.weeksPlan;
 };

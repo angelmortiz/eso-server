@@ -1,32 +1,6 @@
 import mongoose from 'mongoose';
+import { WorkoutPlanSchema } from './programSchema';
 const Schema = mongoose.Schema;
-
-const DayPlanSchema = new Schema({
-  dayNumber: {
-    type: Number,
-    required: false,
-    min: 1,
-    max: 7,
-  },
-  dayOfTheWeek: {
-    type: String,
-    enum: [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thrusday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ],
-    required: false,
-  },
-  workoutPlan: {
-    type: [Schema.Types.ObjectId],
-    ref: 'Workout',
-    required: false,
-  },
-});
 
 const WeekPlanSchema = new Schema({
   weekNumber: {
@@ -35,8 +9,8 @@ const WeekPlanSchema = new Schema({
     min: 1,
     unique: true
   },
-  daysPlan: {
-    type: [DayPlanSchema],
+  workouts: {
+    type: [WorkoutPlanSchema],
     required: false,
   },
 });

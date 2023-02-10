@@ -42,11 +42,28 @@ export default class ProgramHandler implements IProgram {
   }
 
   static async fetchById(id: string | ObjectId) {
-    return await ProgramModel.findById(id).populate('workouts.workout', 'name');
+    // return await ProgramModel.findById(id).populate('workouts.workout', 'name');
+    return await ProgramModel.findById(id).populate({
+      path: 'workouts.workout',
+      select: 'name exercises',
+      populate: {
+        path: 'exercises.exercise',
+        select: 'name alternativeName'
+      }
+    });
   }
 
-  static async fetchAllInfoById(id: string | ObjectId): Promise<any | null> {
-    return await ProgramModel.findById(id);
+  static async fetchAllChildrenInfo(
+    id: string | ObjectId
+  ): Promise<IProgram | null> {
+    return await ProgramModel.findById(id).populate({
+      path: 'workouts.workout',
+      select: 'name exercises',
+      populate: {
+        path: 'exercises.exercise',
+        select: 'name alternativeName'
+      }
+    });
   }
 
   static async fetchAll() {

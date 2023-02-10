@@ -2,7 +2,7 @@ import { ObjectId } from 'bson';
 import { IUserAuth } from './userInterfaces';
 
 export interface IProgramPlan {
-  id: ObjectId | string;
+  id?: ObjectId | string;
   program: IProgram;
   assignedTo: IUserAuth;
   assignedOn: Date;
@@ -12,20 +12,7 @@ export interface IProgramPlan {
 
 export interface IWeekPlan {
   weekNumber: number;
-  daysPlan?: IDayPlanSchema[];
-}
-
-interface IDayPlanSchema {
-  dayNumber?: number;
-  dayOfTheWeek?:
-  | 'Monday'
-  | 'Tuesday'
-  | 'Wednesday'
-  | 'Thrusday'
-  | 'Friday'
-  | 'Saturday'
-  | 'Sunday';
-  workoutPlan?: IWorkout[];
+  workouts?: IWorkoutPlan[];
 }
 
 export interface IProgram {

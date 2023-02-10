@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const WorkoutPlanSchema = new Schema({
+export const WorkoutPlanSchema = new Schema({
   workout: {
     type: Schema.Types.ObjectId,
     required: [true, 'Workout id is required.'],
