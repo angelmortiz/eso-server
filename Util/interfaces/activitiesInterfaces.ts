@@ -61,22 +61,6 @@ export interface IProgram {
   workouts?: IProgramPlan[];
 }
 
-export interface IProgramPlan {
-  _id: ObjectId | string;
-  id: ObjectId | string;
-  name: string;
-  workoutId: ObjectId | string;
-  dayNumber?: number;
-  dayOfTheWeek?:
-    | 'Monday'
-    | 'Tuesday'
-    | 'Wednesday'
-    | 'Thrusday'
-    | 'Friday'
-    | 'Saturday'
-    | 'Sunday';
-}
-
 export interface IWorkout {
   id: ObjectId | string;
   name: string;
@@ -94,18 +78,21 @@ export interface IWorkout {
   exercises?: IExercisePlan[];
 }
 
-export interface IExercisePlan {
+export interface IProgramPlan {
+  _id: ObjectId | string;
   id: ObjectId | string;
-  name: string;
-  exerciseId: ObjectId | string;
-  sets: number[];
-  reps: number[];
-  tempo?: number[];
-  rir?: number[];
-  rest: number[];
-  superset: boolean;
-  supersetExercise?: ObjectId | string;
+  workout: IWorkout;
+  dayNumber?: number;
+  dayOfTheWeek?:
+    | 'Monday'
+    | 'Tuesday'
+    | 'Wednesday'
+    | 'Thrusday'
+    | 'Friday'
+    | 'Saturday'
+    | 'Sunday';
 }
+
 
 export interface IExercise {
   id: ObjectId | string;
@@ -122,6 +109,18 @@ export interface IExercise {
   recommendedForCyclePhases: string[];
   linkToVideo: string;
   linkToImage: string;
+}
+
+export interface IExercisePlan {
+  id: ObjectId | string;
+  exercise: IExercise;
+  sets: number[];
+  reps: number[];
+  tempo?: number[];
+  rir?: number[];
+  rest: number[];
+  superset: boolean;
+  supersetExercise?: ObjectId | string;
 }
 
 export interface IMuscle {

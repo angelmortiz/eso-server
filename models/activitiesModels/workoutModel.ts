@@ -45,15 +45,18 @@ export default class WorkoutHandler implements IWorkout {
   }
 
   static async fetchByName(name: string) {
-    return await WorkoutModel.findOne({ name: name });
+    return await WorkoutModel.findOne({ name });
   }
 
   static async fetchById(id: string | ObjectId): Promise<any> {
-    return await WorkoutModel.findById(id);
+    return await WorkoutModel.findById(id).populate(
+      'exercises.exercise',
+      'name'
+    );
   }
 
   static async fetchAll() {
-    return await WorkoutModel.find();
+    return await WorkoutModel.find().populate('exercises.exercise', 'name');
   }
 
   //extracts id and name properties and creates a new object with {id, name}

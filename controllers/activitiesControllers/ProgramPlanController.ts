@@ -43,7 +43,7 @@ export const apiAddProgramPlan = catchAsync(
       assignedBy,
     };
 
-    programPlan = await createWeeksPlan(programPlan);
+    // programPlan = await createWeeksPlan(programPlan);
 
     await ProgramPlanHandler.save(programPlan);
     res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
@@ -71,22 +71,22 @@ export const apiDeleteProgramPlan = catchAsync(
 
 /** ADDITIONAL FUNCTIONS */
 
-const createWeeksPlan = async (programPlan) => {
-    const programObj = await ProgramHandler.fetchById(programPlan.program);
-    const arrWorkoutIds = programObj?.workouts?.map(workout => workout._id);
-    const setWorkoutsIds = new Set(arrWorkoutIds); //removes duplicates
+// const createWeeksPlan = async (programPlan) => {
+//     const programObj = await ProgramHandler.fetchById(programPlan.program);
+//     const arrWorkoutIds = programObj?.workouts?.map(workout => workout._id);
+//     const setWorkoutsIds = new Set(arrWorkoutIds); //removes duplicates
 
-    const arrWorkoutObjs: any[] = [];
-    setWorkoutsIds.forEach(async woId => {
-        const workoutObj = await WorkoutHandler.fetchById(woId);
+//     const arrWorkoutObjs: any[] = [];
+//     setWorkoutsIds.forEach(async woId => {
+//         const workoutObj = await WorkoutHandler.fetchById(woId);
 
-        let workout = {
-            workoutId: woId,
-            exercises:  workoutObj?.exercises
-        };
+//         let workout = {
+//             workoutId: woId,
+//             exercises:  workoutObj?.exercises
+//         };
 
-        arrWorkoutObjs.push(workout);
-    })
+//         arrWorkoutObjs.push(workout);
+//     })
 
-    return programPlan;
-};
+//     return programPlan;
+// };

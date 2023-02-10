@@ -19,7 +19,7 @@ export const apiGetProgramNames = catchAsync(async (req: Request, res: Response)
 export const apiGetProgramById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const programId: string = req.params.programId;
   const program = await ProgramHandler.fetchById(programId);
-
+  
   if (!program) { return next(new AppError(`No program found using id '${programId}'.`, 404)); }
   res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(program));
 });

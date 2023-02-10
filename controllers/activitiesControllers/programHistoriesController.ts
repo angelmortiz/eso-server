@@ -46,8 +46,8 @@ export const apiAddProgramHistory = catchAsync(async (req: Request, res: Respons
   const programHandler = await ProgramHandler.fetchById(req.body.programId);
   if (!programHandler) { return next(new AppError(`No program found using id '${req.body.programId}'.`, 404)); }
 
-  const programHistory = addWorkoutLogHolders(req.body, programHandler);
-  const programHistoryHandler = new ProgramHistoryHandler(programHistory);
+  // const programHistory = addWorkoutLogHolders(req.body, programHandler);
+  const programHistoryHandler = new ProgramHistoryHandler(programHandler);
 
   await programHistoryHandler.save();
   res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());

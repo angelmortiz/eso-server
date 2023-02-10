@@ -32,65 +32,25 @@ export default class ProgramHandler implements IProgram {
   }
 
   async update() {
-    return await ProgramModel.updateOne({ _id: this.id }, this, {runValidators: true});
+    return await ProgramModel.updateOne({ _id: this.id }, this, {
+      runValidators: true,
+    });
   }
 
   static async fetchByName(name: string) {
-    return await ProgramModel.findOne({ name: name });
+    return await ProgramModel.findOne({ name });
   }
 
-  static async fetchById(id: string | ObjectId): Promise<ProgramHandler | null> {
-    return await ProgramModel.findById(id);
+  static async fetchById(id: string | ObjectId) {
+    return await ProgramModel.findById(id).populate('workouts.workout', 'name');
   }
 
   static async fetchAllInfoById(id: string | ObjectId): Promise<any | null> {
-    /** //IMPROVE: Look for a better way to join collections
-     * at the schema level instead of repeating the aggregate logic. */
-    return await ProgramModel.aggregate([
-      {
-        $match: {
-          _id: new ObjectId(id),
-        },
-      },
-      {
-        $lookup: {
-          from: 'activities.exercises',
-          localField: 'workouts.workoutId',
-          foreignField: '_id',
-          as: 'workoutInfo',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users.auth',
-          localField: 'assignedTo',
-          foreignField: '_id',
-          as: 'assignedToName',
-        },
-      },
-      {
-        $lookup: {
-          from: 'users.auth',
-          localField: 'assignedBy',
-          foreignField: '_id',
-          as: 'assignedByName',
-        },
-      },
-      {
-        $set: {
-          programInfo: { $arrayElemAt: ['$programInfo', 0] },
-          assignedToName: { $arrayElemAt: ['$assignedToName.fullName', 0] },
-          assignedByName: { $arrayElemAt: ['$assignedByName.fullName', 0] },
-        },
-      },
-      {
-        $project: { 'programInfo.workouts': 0 },
-      },
-    ]);
+    return await ProgramModel.findById(id);
   }
 
   static async fetchAll() {
-    return await ProgramModel.find();
+    return await ProgramModel.find().populate('workouts.workout', 'name');
   }
 
   //extracts id and name properties and creates a new object with {id, name}
