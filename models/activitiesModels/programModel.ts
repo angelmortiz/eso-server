@@ -16,10 +16,6 @@ export default class ProgramHandler {
     });
   }
 
-  static async fetchByName(name: string) {
-    return await ProgramModel.findOne({ name });
-  }
-
   static async fetchById(id: string | ObjectId) {
     // return await ProgramModel.findById(id).populate('workouts.workout', 'name');
     return await ProgramModel.findById(id).populate({

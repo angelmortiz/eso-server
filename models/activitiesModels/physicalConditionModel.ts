@@ -19,10 +19,6 @@ export default class PhysicalConditionHandler {
     });
   }
 
-  static async fetchByName(name: string) {
-    return await PhysicalConditionModel.findOne({ name });
-  }
-
   static async fetchById(id: string | ObjectId) {
     return await PhysicalConditionModel.findById(id);
   }

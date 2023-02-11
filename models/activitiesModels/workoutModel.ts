@@ -16,10 +16,6 @@ export default class WorkoutHandler {
     });
   }
 
-  static async fetchByName(name: string) {
-    return await WorkoutModel.findOne({ name });
-  }
-
   static async fetchById(id: string | ObjectId) {
     return await WorkoutModel.findById(id).populate(
       'exercises.exercise',

@@ -16,10 +16,6 @@ export default class MuscleHandler {
     });
   }
 
-  static async fetchByName(name: string) {
-    return await MuscleModel.findOne({ name: name });
-  }
-
   static async fetchById(id: string | ObjectId) {
     return await MuscleModel.findById(id);
   }

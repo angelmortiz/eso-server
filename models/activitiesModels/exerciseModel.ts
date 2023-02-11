@@ -14,10 +14,6 @@ export default class ExerciseHandler {
     return await ExerciseModel.updateOne({ _id }, exercise);
   }
 
-  static async fetchByName(name: string) {
-    return await ExerciseModel.findOne({ name });
-  }
-
   static async fetchById(id: string | ObjectId) {
     return await ExerciseModel.findById(id)
       .populate('mainMuscle', 'name')

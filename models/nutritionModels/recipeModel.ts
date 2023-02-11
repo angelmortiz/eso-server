@@ -49,10 +49,6 @@ export default class RecipeHandler implements IRecipe {
     return await RecipeModel.updateOne({ _id: this.id }, this, {runValidators: true});
   }
 
-  static async fetchByName(name: string) {
-    return await RecipeModel.findOne({ name: name });
-  }
-
   static async fetchById(id: string | ObjectId) {
     return await RecipeModel.findById(id);
   }

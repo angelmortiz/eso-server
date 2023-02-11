@@ -15,10 +15,6 @@ export default class EquipmentHandler {
     return await EquipmentModel.updateOne({ _id }, equipment, {runValidators: true});
   }
 
-  static async fetchByName(name: string) {
-    return await EquipmentModel.findOne({ name });
-  }
-
   static async fetchById(id: string | ObjectId) {
     return await EquipmentModel.findById(id);
   }
