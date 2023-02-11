@@ -2,7 +2,6 @@ import { ObjectId } from 'bson';
 import { IUserAuth } from './userInterfaces';
 
 export interface IProgramPlan {
-  id?: ObjectId | string;
   program: IProgram;
   assignedTo: IUserAuth;
   assignedOn: Date;
@@ -16,7 +15,6 @@ export interface IWeekPlan {
 }
 
 export interface IProgram {
-  id: ObjectId | string;
   name: string;
   description?: string;
   type: 'Strength' | 'Hypertrophy' | 'Endurance' | 'Mixed';
@@ -27,7 +25,6 @@ export interface IProgram {
 }
 
 export interface IWorkoutPlan {
-  id?: ObjectId | string;
   workout: IWorkout;
   dayNumber?: number;
   dayOfTheWeek?:
@@ -41,7 +38,6 @@ export interface IWorkoutPlan {
 }
 
 export interface IWorkout {
-  id: ObjectId | string;
   name?: string;
   description?: string;
   variant?: string;
@@ -57,8 +53,18 @@ export interface IWorkout {
   exercises?: IExercisePlan[];
 }
 
+export interface IExercisePlan {
+  exercise: IExercise;
+  sets: number[];
+  reps: number[];
+  tempo?: number[];
+  rir?: number[];
+  rest: number[];
+  superset: boolean;
+  supersetExercise?: ObjectId | string;
+}
+
 export interface IExercise {
-  id: ObjectId | string;
   name: string;
   alternativeName: string;
   difficulty: string;
@@ -74,20 +80,8 @@ export interface IExercise {
   linkToImage: string;
 }
 
-export interface IExercisePlan {
-  id: ObjectId | string;
-  exercise: IExercise;
-  sets: number[];
-  reps: number[];
-  tempo?: number[];
-  rir?: number[];
-  rest: number[];
-  superset: boolean;
-  supersetExercise?: ObjectId | string;
-}
 
 export interface IMuscle {
-  id: ObjectId | string;
   name: string;
   alternativeName: string;
   type: string;
@@ -102,7 +96,6 @@ export interface IEquipment {
 }
 
 export interface IPhysicalCondition {
-  id: ObjectId | string;
   name: string;
   description: string;
   symptoms: string[];

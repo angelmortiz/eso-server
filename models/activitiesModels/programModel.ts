@@ -1,38 +1,17 @@
 import { ObjectId } from 'mongodb';
+import { IProgram } from '../../util/interfaces/activitiesInterfaces';
 import mongoose from 'mongoose';
 import ProgramSchema from '../../util/database/schemas/activities/programSchema';
-import {
-  IProgram,
-  IWorkoutPlan,
-} from '../../util/interfaces/activitiesInterfaces';
 
 const ProgramModel = mongoose.model('Program', ProgramSchema);
 
-export default class ProgramHandler implements IProgram {
-  id: string | ObjectId;
-  name: string;
-  description?: string | undefined;
-  type: 'Mixed' | 'Strength' | 'Hypertrophy' | 'Endurance';
-  sequence: 'Weekly' | 'Cycle';
-  duration: number;
-  linkToImage?: string;
-  workouts?: IWorkoutPlan[];
-
-  constructor(inputValues) {
-    if (!inputValues) return; //if no values were provided, ignore the rest of the logic
-    this.mapValues(inputValues);
+export default class ProgramHandler {
+  static async save(program: IProgram) {
+    return await new ProgramModel(program).save();
   }
 
-  mapValues(inputValues) {
-    Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
-  }
-
-  async save() {
-    return await new ProgramModel(this).save();
-  }
-
-  async update() {
-    return await ProgramModel.updateOne({ _id: this.id }, this, {
+  static async update(_id: string | ObjectId, program: IProgram) {
+    return await ProgramModel.updateOne({ _id }, program, {
       runValidators: true,
     });
   }
@@ -48,22 +27,22 @@ export default class ProgramHandler implements IProgram {
       select: 'name exercises',
       populate: {
         path: 'exercises.exercise',
-        select: 'name alternativeName'
-      }
+        select: 'name alternativeName',
+      },
     });
   }
 
-  static async fetchAllProgramInfo(
+  static async fetchProgramInfo(
     id: string | ObjectId
-  ): Promise<IProgram | null> {
+  ) {
     return await ProgramModel.findById(id).populate({
       path: 'workouts.workout',
       select: 'name exercises',
       populate: {
         path: 'exercises.exercise',
-        select: 'name alternativeName'
-      }
-    });
+        select: 'name alternativeName',
+      },
+    }) as IProgram;
   }
 
   static async fetchAll() {

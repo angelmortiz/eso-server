@@ -43,9 +43,7 @@ export const apiAddProgramPlan = catchAsync(
       );
     }
 
-    const programAndWorkouts = await ProgramHandler.fetchAllProgramInfo(
-      program
-    );
+    const programAndWorkouts = await ProgramHandler.fetchProgramInfo(program);
     if (!programAndWorkouts) {
       return next(new AppError(`No program found with id ${program}.`, 404));
     }

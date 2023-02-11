@@ -1,46 +1,17 @@
 import { ObjectId } from 'bson';
-import {
-  IEquipment,
-  IExercise,
-  IMuscle,
-  IPhysicalCondition,
-} from '../../util/interfaces/activitiesInterfaces';
+import { IExercise } from '../../util/interfaces/activitiesInterfaces';
 import ExerciseSchema from '../../util/database/schemas/activities/exerciseSchema';
 import mongoose from 'mongoose';
 
 const ExerciseModel = mongoose.model('Exercise', ExerciseSchema);
 
-export default class ExerciseHandler implements IExercise {
-  id: string | ObjectId;
-  name: string;
-  alternativeName: string;
-  difficulty: string;
-  types: string[];
-  compoundMovement: boolean;
-  mainMuscle: IMuscle;
-  secondaryMuscles: IMuscle[] | null;
-  equipments: IEquipment[] | null;
-  safeForConditions: IPhysicalCondition[] | null;
-  notRecommendedForConditions: IPhysicalCondition[] | null;
-  recommendedForCyclePhases: string[];
-  linkToVideo: string;
-  linkToImage: string;
-
-  constructor(inputValues) {
-    if (!inputValues) return; //if no values were provided, ignore the rest of the logic
-    this.mapValues(inputValues);
+export default class ExerciseHandler {
+  static async save(exercise: IExercise) {
+    return await new ExerciseModel(exercise).save();
   }
 
-  mapValues(inputValues) {
-    Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
-  }
-
-  async save() {
-    return await new ExerciseModel(this).save();
-  }
-
-  async update() {
-    return await ExerciseModel.updateOne({ _id: this.id }, this);
+  static async update(_id: string | ObjectId, exercise: IExercise) {
+    return await ExerciseModel.updateOne({ _id }, exercise);
   }
 
   static async fetchByName(name: string) {
