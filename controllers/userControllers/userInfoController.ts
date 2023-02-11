@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { catchAsync } from '../../util/errors/catchAsync';
-import { ObjectID } from 'bson';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
 import UserAuthHandler from '../../models/userModels/userAuthModel';
@@ -48,18 +47,20 @@ export const apiAddUserInfo = catchAsync(
     if (!req.body.userAuthId) {
       req.body.userAuthId = res.locals.user.id;
     }
-    let userInfoHandler = new UserInfoHandler(req.body);
 
-    await userInfoHandler.save();
+    await UserInfoHandler.save(req.body);
     res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
   }
 );
 
 export const apiUpdateUserInfo = catchAsync(
-  async (req: Request, res: Response) => {
-    let userInfoHandler = new UserInfoHandler(req.body);
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId: string = req.params.userId;
+    if (!userId) {
+      return next(new AppError(`No userId found in the parameters.`, 404));
+    }
 
-    await userInfoHandler.update();
+    await UserInfoHandler.update(userId, req.body);
     res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
   }
 );
