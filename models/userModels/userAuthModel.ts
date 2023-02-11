@@ -5,48 +5,31 @@ import mongoose from 'mongoose';
 
 const UserAuthModel = mongoose.model('UserAuth', UserAuthSchema);
 
-export default class UserAuthHandler implements IUserAuth {
-  id: string | ObjectId;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  email: string;
-  password: string;
-  passwordChangedAt: Date;
-  role: string;
-  imageLink: string;
-
-  constructor(inputValues) {
-    if (!inputValues) return; //if no values were provided, do not map
-    this.mapValues(inputValues);
+export default class UserAuthHandler {
+  static async save(user: IUserAuth) {
+    return await new UserAuthModel(user).save();
   }
 
-  mapValues(inputValues) {
-    Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
-  }
-
-  async save() {
-    return await new UserAuthModel(this).save();
-  }
-
-  async update() {
-    return await UserAuthModel.updateOne({ _id: this.id }, this);
+  static async update(_id: string | ObjectId, user: IUserAuth) {
+    return await UserAuthModel.updateOne({ _id }, user);
   }
 
   static async fetchById(id: string | ObjectId): Promise<any> {
-    return await UserAuthModel.findById(id);
-
+    return await UserAuthModel.findById(
+      id,
+      'firstName lastName fullName email role imageLink'
+    ).populate('userInfo');
   }
 
   static async fetchByEmail(email: string): Promise<any> {
-    return await UserAuthModel.findOne({email});
+    return await UserAuthModel.findOne({ email });
   }
 
   static async fetchByResetToken(passwordResetToken: string) {
-    return await UserAuthModel.findOne({passwordResetToken});
+    return await UserAuthModel.findOne({ passwordResetToken });
   }
 
-  static async fetchAllNames()  {
+  static async fetchAllNames() {
     return await UserAuthModel.find({}, 'fullName');
   }
 
@@ -54,5 +37,3 @@ export default class UserAuthHandler implements IUserAuth {
     return await UserAuthModel.findByIdAndDelete(id);
   }
 }
-
-

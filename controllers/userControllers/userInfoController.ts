@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { catchAsync } from '../../util/errors/catchAsync';
-import { ObjectID } from 'bson';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
 import UserAuthHandler from '../../models/userModels/userAuthModel';
@@ -10,35 +9,20 @@ import AppError from '../../util/errors/appError';
 export const apiGetUserInfo = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = res.locals.user.id;
+    const userInfo = await UserAuthHandler.fetchById(userId);
 
-    const userAuth = await UserAuthHandler.fetchById(userId);
-    if (!userAuth) {
+    if (!userInfo) {
       return next(
-        new AppError(`No user auth found using id '${userId}'.`, 404)
+        new AppError(`No user info found using id '${userId}'.`, 404)
       );
     }
 
-    const userInfo = await UserInfoHandler.fetchByUserAuthId(userId);
-
-    const userInfoVals = {
-      id: userAuth._id,
-      firstName: userAuth.firstName,
-      lastName: userAuth.lastName,
-      email: userAuth.email,
-      role: userAuth.role,
-      imageLink: userAuth.imageLink,
-      basicInfo: userInfo?.basicInfo,
-      mainGoal: userInfo?.mainGoal,
-    };
-
-    res
-      .status(RESPONSE_CODE.OK)
-      .json(RESPONSE.FETCHED_SUCCESSFULLY(userInfoVals));
+    res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(userInfo));
   }
 );
 
 export const apiGetAllUsers = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const userNames = await UserAuthHandler.fetchAllNames();
 
     res.status(RESPONSE_CODE.OK).json(RESPONSE.FETCHED_SUCCESSFULLY(userNames));
@@ -63,18 +47,20 @@ export const apiAddUserInfo = catchAsync(
     if (!req.body.userAuthId) {
       req.body.userAuthId = res.locals.user.id;
     }
-    let userInfoHandler = new UserInfoHandler(req.body);
 
-    await userInfoHandler.save();
+    await UserInfoHandler.save(req.body);
     res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
   }
 );
 
 export const apiUpdateUserInfo = catchAsync(
-  async (req: Request, res: Response) => {
-    let userInfoHandler = new UserInfoHandler(req.body);
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId: string = req.params.userId;
+    if (!userId) {
+      return next(new AppError(`No userId found in the parameters.`, 404));
+    }
 
-    await userInfoHandler.update();
+    await UserInfoHandler.update(userId, req.body);
     res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
   }
 );

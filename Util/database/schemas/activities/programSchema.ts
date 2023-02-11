@@ -1,14 +1,11 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const WorkoutPlanSchema = new Schema({
-  workoutId: {
+export const WorkoutPlanSchema = new Schema({
+  workout: {
     type: Schema.Types.ObjectId,
     required: [true, 'Workout id is required.'],
-  },
-  name: {
-    type: String,
-    required: [true, 'Workout name is required.'],
+    ref: "Workout"
   },
   dayNumber: {
     type: Number,

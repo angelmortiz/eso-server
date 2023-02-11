@@ -4,71 +4,87 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 const Schema = mongoose.Schema;
 
-const UserAuthSchema = new Schema({
+const UserAuthSchema = new Schema(
+  {
     firstName: {
-        type: String,
-        required: [true, 'First name field is required']
+      type: String,
+      required: [true, 'First name field is required'],
     },
     lastName: {
-        type: String,
-        required: [true, 'Last name field is required']
+      type: String,
+      required: [true, 'Last name field is required'],
     },
-    fullName:{
-        type: String,
-        required: [true, 'Full name field is required']
+    fullName: {
+      type: String,
+      required: [true, 'Full name field is required'],
     },
-    email:  {
-        type: String,
-        required: [true, 'Email field is required'],
-        unique: true,
-        lowercase: true,
-        validate: [validator.isEmail,  'Please, enter a valid email']
+    email: {
+      type: String,
+      required: [true, 'Email field is required'],
+      unique: true,
+      lowercase: true,
+      validate: [validator.isEmail, 'Please, enter a valid email'],
     },
     password: {
-        type: String,
-        required: [true, 'Password field is required']
+      type: String,
+      required: [true, 'Password field is required'],
     },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpiresAt: Date,
     role: {
-        type: String,
-        emun: ['user', 'editor', 'admin'],
-        default: 'user'
+      type: String,
+      emun: ['User', 'Editor', 'Admin'],
+      default: 'User',
     },
     imageLink: {
-        type: String,
-        required: false
-    }
-}, { collection: 'users.auth' });
+      type: String,
+      required: false,
+    },
+    userInfo: {
+      type: Schema.Types.ObjectId,
+      required: false,
+      unique: true,
+      ref: 'UserInfo',
+    },
+  },
+  { collection: 'users.auth' }
+);
 
 //Hashes passwords before saving into db
-UserAuthSchema.pre('save', async function(next) {
-    //only runs when the password has been modified
-    if (!this.isModified('password')) return next();
+UserAuthSchema.pre('save', async function (next) {
+  //only runs when the password has been modified
+  if (!this.isModified('password')) return next();
 
-    //hashing password before saving into the db
-    this.password = await bcrypt.hash(this.password, 12);
-    this.passwordChangedAt = new Date(Date.now() - 1000); //prevents problem with the time jwt is created
-    next();
+  //hashing password before saving into the db
+  this.password = await bcrypt.hash(this.password, 12);
+  this.passwordChangedAt = new Date(Date.now() - 1000); //prevents problem with the time jwt is created
+  next();
 });
 
-UserAuthSchema.methods.validatePassword = async function(inputPassword: string): Promise<boolean> {
-    return await bcrypt.compare(inputPassword, this.password);
-}
+UserAuthSchema.methods.validatePassword = async function (
+  inputPassword: string
+): Promise<boolean> {
+  return await bcrypt.compare(inputPassword, this.password);
+};
 
-UserAuthSchema.methods.hasChangedPasswordAfterJwtCreation = function(JwtTimestamp) {
-    if (!this.passwordChangedAt) return false;
+UserAuthSchema.methods.hasChangedPasswordAfterJwtCreation = function (
+  JwtTimestamp
+) {
+  if (!this.passwordChangedAt) return false;
 
-    const changedTimestamp = Math.round(this.passwordChangedAt.getTime()/1000);
-    return JwtTimestamp < changedTimestamp;
-}
+  const changedTimestamp = Math.round(this.passwordChangedAt.getTime() / 1000);
+  return JwtTimestamp < changedTimestamp;
+};
 
-UserAuthSchema.methods.createResetToken = function() {
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-    this.passwordResetExpiresAt = Date.now() + 15 * 60 * 1000; //15 mins
-    return resetToken;
-}
+UserAuthSchema.methods.createResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  this.passwordResetExpiresAt = Date.now() + 15 * 60 * 1000; //15 mins
+  return resetToken;
+};
 
 export default UserAuthSchema;

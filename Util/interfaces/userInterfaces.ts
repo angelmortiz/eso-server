@@ -1,7 +1,6 @@
 import { ObjectId } from 'bson';
 
 export interface IUserAuth {
-    id: ObjectId | string;
     firstName: string;
     lastName: string;
     fullName: string;
@@ -13,7 +12,6 @@ export interface IUserAuth {
 }
 
 export interface IUserInfo {
-    id: ObjectId | string;
     userAuthId: ObjectId | string;
     mainGoal: string;
     basicInfo: IUserBasicInfo;

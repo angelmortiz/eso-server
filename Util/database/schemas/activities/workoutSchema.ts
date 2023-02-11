@@ -2,13 +2,10 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const ExercisePlanSchema = new Schema({
-  exerciseId: {
+  exercise: {
     type: Schema.Types.ObjectId,
     required: [true, 'Exercise id is required.'],
-  },
-  name: {
-    type: String,
-    required: [true, 'Exercise name is required.'],
+    ref: "Exercise"
   },
   sets: {
     type: [Number],
@@ -38,6 +35,7 @@ const ExercisePlanSchema = new Schema({
   supersetExercise: {
     type: Schema.Types.ObjectId,
     required: false,
+    ref: "Exercise"
   },
 });
 

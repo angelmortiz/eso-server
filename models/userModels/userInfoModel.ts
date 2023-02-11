@@ -8,27 +8,14 @@ import mongoose from 'mongoose';
 
 const UserInfoModel = mongoose.model('UserInfo', UserInfoSchema);
 
-export default class UserInfoHandler implements IUserInfo {
-  id: string | ObjectId;
-  userAuthId: string | ObjectId;
-  mainGoal: string;
-  basicInfo: IUserBasicInfo;
+export default class UserInfoHandler {
 
-  constructor(inputValues) {
-    if (!inputValues) return; //if no values were provided, do not map
-    this.mapValues(inputValues);
+  static async save(user: IUserInfo) {
+    return await new UserInfoModel(user).save();
   }
 
-  mapValues(inputValues) {
-    Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
-  }
-
-  async save() {
-    return await new UserInfoModel(this).save();
-  }
-
-  async update() {
-    return await UserInfoModel.updateOne({ _id: this.id }, this);
+  static async update(_id: string | ObjectId, user: IUserInfo) {
+    return await UserInfoModel.updateOne({ _id }, user);
   }
 
   static async fetchById(id: string | ObjectId): Promise<any> {

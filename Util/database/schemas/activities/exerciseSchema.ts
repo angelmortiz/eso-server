@@ -1,49 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-//TODO: Add references to other schemas once they're added
-const MuscleSubSchema = new Schema(
-  {
-    muscleId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-    },
-    muscleName: {
-      type: String,
-      required: true,
-    },
-  },
-  { _id: false }
-);
-
-const EquipmentSubSchema = new Schema(
-  {
-    equipmentId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-    },
-    equipmentName: {
-      type: String,
-      required: true,
-    },
-  },
-  { _id: false }
-);
-
-const PhysicalConditionSubSchema = new Schema(
-  {
-    conditionId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-    },
-    conditionName: {
-      type: String,
-      required: true,
-    },
-  },
-  { _id: false }
-);
-
+//TODO: Add many-to-many references to other schemas (equipment, muscles)
 export default new Schema(
   {
     name: {
@@ -67,24 +25,29 @@ export default new Schema(
       required: [true, 'Compound movement option is a required field.'],
     },
     mainMuscle: {
-      type: MuscleSubSchema,
+      type: Schema.Types.ObjectId,
       required: [true, 'Main muscle name is a required field.'],
+      ref: "Muscle"
     },
     secondaryMuscles: {
-      type: [MuscleSubSchema],
+      type: [Schema.Types.ObjectId],
       required: false,
+      ref: "Muscle"
     },
     equipments: {
-      type: [EquipmentSubSchema],
+      type: [Schema.Types.ObjectId],
       required: false,
+      ref: "Equipment"
     },
     safeForConditions: {
-      type: [PhysicalConditionSubSchema],
+      type: [Schema.Types.ObjectId],
       required: false,
+      ref: "PhysicalCondition"
     },
     notRecommendedForConditions: {
-      type: [PhysicalConditionSubSchema],
+      type: [Schema.Types.ObjectId],
       required: false,
+      ref: "PhysicalCondition"
     },
     recommendedForCyclePhases: {
       type: [String],
