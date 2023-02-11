@@ -13,6 +13,24 @@ import AppError from '../../util/errors/appError';
 import ProgramHandler from '../../models/activitiesModels/programModel';
 
 /** APIS */
+export const apiGetAssignedProgramPlans = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    let { userId } = req.params;
+    if (!userId) {
+      userId = res.locals.user.id;
+    }
+
+    if (!userId) {
+      return next(new AppError(`No user Id found.`, 400));
+    }
+
+    const programPlans = await ProgramPlanHandler.fetchByAssignedTo(userId);
+    res
+    .status(RESPONSE_CODE.OK)
+    .json(RESPONSE.FETCHED_SUCCESSFULLY(programPlans));
+  }
+);
+
 export const apiGetProgramPlanById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const programPlanId: string = req.params.programPlanId;

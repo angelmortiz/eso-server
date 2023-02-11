@@ -25,7 +25,25 @@ export default class ProgramPlanHandler {
         path: 'weeksPlan.workouts',
         populate: {
           path: 'workout',
-          select: 'name exercises',
+          select: 'name target type exercises',
+          populate: {
+            path: 'exercises.exercise',
+            select: 'name alternativeName',
+          },
+        },
+      });
+  }
+
+  static async fetchByAssignedTo(assignedTo: string | ObjectId) {
+    return await ProgramPlanModel.find({ assignedTo })
+      .populate('program', '-workouts')
+      .populate('assignedTo', 'fullName')
+      .populate('assignedBy', 'fullName')
+      .populate({
+        path: 'weeksPlan.workouts',
+        populate: {
+          path: 'workout',
+          select: 'name target type exercises',
           populate: {
             path: 'exercises.exercise',
             select: 'name alternativeName',

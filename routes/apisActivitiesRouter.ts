@@ -4,7 +4,7 @@ import { Router } from 'express';
 const router = Router();
 
 //Controllers imports
-import * as programPlanController from '../controllers/activitiesControllers/programPlanController';
+import * as programPlansController from '../controllers/activitiesControllers/programPlanController';
 import * as programsController from '../controllers/activitiesControllers/programsController';
 import * as workoutsController from '../controllers/activitiesControllers/workoutsController';
 import * as exercisesController from '../controllers/activitiesControllers/exercisesController';
@@ -15,12 +15,30 @@ import * as physicalConditionsController from '../controllers/activitiesControll
 /* PROGRAM PLAN */
 router.get(
   '/programPlan/:programPlanId',
-  programPlanController.apiGetProgramPlanById
+  programPlansController.apiGetProgramPlanById
+);
+router.get(
+  '/programPlans/assignedTo/currentUser',
+  programPlansController.apiGetAssignedProgramPlans
+);
+router.get(
+  '/programPlans/assignedTo/:userId',
+  programPlansController.apiGetAssignedProgramPlans
 );
 router.post(
   '/programPlan',
   restrictAccessTo('Admin', 'Editor'),
-  programPlanController.apiAddProgramPlan
+  programPlansController.apiAddProgramPlan
+);
+router.put(
+  '/programPlan/:programPlanId',
+  restrictAccessTo('Admin', 'Editor'),
+  programsController.apiUpdateProgram
+);
+router.delete(
+  '/programPlan/:programPlanId',
+  restrictAccessTo('Admin', 'Editor'),
+  programsController.apiDeleteProgram
 );
 
 /* PROGRAM */
