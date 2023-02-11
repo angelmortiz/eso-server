@@ -1,26 +1,31 @@
 import { ObjectId } from 'bson';
-import {
-  ConditionIdAndName,
-  EquipmentIdAndName,
-  ExerciseIdAndName,
-  MuscleIdAndName,
-} from '../types/types';
+import { IUserAuth } from './userInterfaces';
+
+export interface IProgramPlan {
+  program: IProgram;
+  assignedTo: IUserAuth;
+  assignedOn: Date;
+  assignedBy: IUserAuth;
+  weeksPlan?: IWeekPlan[];
+}
+
+export interface IWeekPlan {
+  weekNumber: number;
+  workouts?: IWorkoutPlan[];
+}
 
 export interface IProgram {
-  id: ObjectId | string;
   name: string;
   description?: string;
   type: 'Strength' | 'Hypertrophy' | 'Endurance' | 'Mixed';
   sequence: 'Weekly' | 'Cycle';
   duration: number;
   linkToImage?: string;
-  workouts?: IProgramPlan[];
+  workouts?: IWorkoutPlan[];
 }
 
-export interface IProgramPlan {
-  id: ObjectId | string;
-  name: string;
-  workoutId: ObjectId | string;
+export interface IWorkoutPlan {
+  workout: IWorkout;
   dayNumber?: number;
   dayOfTheWeek?:
     | 'Monday'
@@ -33,11 +38,10 @@ export interface IProgramPlan {
 }
 
 export interface IWorkout {
-  id: ObjectId | string;
-  name: string;
+  name?: string;
   description?: string;
   variant?: string;
-  type: 'Strength' | 'Hypertrophy' | 'Endurance';
+  type?: 'Strength' | 'Hypertrophy' | 'Endurance';
   target?:
     | 'Full Body'
     | 'Upper Body'
@@ -50,9 +54,7 @@ export interface IWorkout {
 }
 
 export interface IExercisePlan {
-  id: ObjectId | string;
-  name: string;
-  exerciseId: ObjectId | string;
+  exercise: IExercise;
   sets: number[];
   reps: number[];
   tempo?: number[];
@@ -63,42 +65,37 @@ export interface IExercisePlan {
 }
 
 export interface IExercise {
-  id: ObjectId | string;
   name: string;
   alternativeName: string;
   difficulty: string;
   types: string[];
   compoundMovement: boolean;
-  mainMuscle: MuscleIdAndName | null;
-  secondaryMuscles: MuscleIdAndName[] | null;
-  equipments: EquipmentIdAndName[] | null;
-  safeForConditions: ConditionIdAndName[] | null;
-  notRecommendedForConditions: ConditionIdAndName[] | null;
+  mainMuscle: IMuscle;
+  secondaryMuscles: IMuscle[] | null;
+  equipments: IEquipment[] | null;
+  safeForConditions: IPhysicalCondition[] | null;
+  notRecommendedForConditions: IPhysicalCondition[] | null;
   recommendedForCyclePhases: string[];
   linkToVideo: string;
   linkToImage: string;
 }
 
+
 export interface IMuscle {
-  id: ObjectId | string;
   name: string;
   alternativeName: string;
   type: string;
-  exercises: ExerciseIdAndName[] | null;
   linkToImage: string;
 }
 
 export interface IEquipment {
-  id: ObjectId | string;
   name: string;
   alternativeName: string;
   description: string;
-  exercises: ExerciseIdAndName[] | null;
   linkToImage: string;
 }
 
 export interface IPhysicalCondition {
-  id: ObjectId | string;
   name: string;
   description: string;
   symptoms: string[];

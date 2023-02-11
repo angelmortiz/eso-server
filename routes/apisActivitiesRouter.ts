@@ -1,14 +1,27 @@
 //imports
+import { restrictAccessTo } from '../controllers/userControllers/userAuthController';
 import { Router } from 'express';
 const router = Router();
 
 //Controllers imports
+import * as programPlanController from '../controllers/activitiesControllers/programPlanController';
 import * as programsController from '../controllers/activitiesControllers/programsController';
 import * as workoutsController from '../controllers/activitiesControllers/workoutsController';
 import * as exercisesController from '../controllers/activitiesControllers/exercisesController';
 import * as musclesController from '../controllers/activitiesControllers/musclesController';
 import * as equipmentsController from '../controllers/activitiesControllers/equipmentsController';
 import * as physicalConditionsController from '../controllers/activitiesControllers/physicalConditionsController';
+
+/* PROGRAM PLAN */
+router.get(
+  '/programPlan/:programPlanId',
+  programPlanController.apiGetProgramPlanById
+);
+router.post(
+  '/programPlan',
+  restrictAccessTo('Admin', 'Editor'),
+  programPlanController.apiAddProgramPlan
+);
 
 /* PROGRAM */
 //APIs
@@ -54,16 +67,37 @@ router.get('/equipmentNames', equipmentsController.apiGetEquipmentNames);
 router.get('/equipment/:equipmentId', equipmentsController.apiGetEquipmentById);
 router.post('/equipment', equipmentsController.apiAddEquipment);
 router.put('/equipment/:equipmentId', equipmentsController.apiUpdateEquipment);
-router.delete('/equipment/:equipmentId', equipmentsController.apiDeleteEquipment);
+router.delete(
+  '/equipment/:equipmentId',
+  equipmentsController.apiDeleteEquipment
+);
 
 /* PHYSICAL CONDITION */
 //APIs
-router.get('/physicalConditions', physicalConditionsController.apiGetPhysicalConditions);
-router.get('/physicalconditionNames', physicalConditionsController.apiGetPhysicalConditionNames);
-router.get('/physicalcondition/:physicalconditionId', physicalConditionsController.apiGetPhysicalConditionById);
-router.post('/physicalcondition', physicalConditionsController.apiAddPhysicalCondition);
-router.put('/physicalcondition/:physicalconditionId', physicalConditionsController.apiUpdatePhysicalCondition);
-router.delete('/physicalcondition/:physicalconditionId', physicalConditionsController.apiDeletePhysicalCondition);
+router.get(
+  '/physicalConditions',
+  physicalConditionsController.apiGetPhysicalConditions
+);
+router.get(
+  '/physicalconditionNames',
+  physicalConditionsController.apiGetPhysicalConditionNames
+);
+router.get(
+  '/physicalcondition/:physicalconditionId',
+  physicalConditionsController.apiGetPhysicalConditionById
+);
+router.post(
+  '/physicalcondition',
+  physicalConditionsController.apiAddPhysicalCondition
+);
+router.put(
+  '/physicalcondition/:physicalconditionId',
+  physicalConditionsController.apiUpdatePhysicalCondition
+);
+router.delete(
+  '/physicalcondition/:physicalconditionId',
+  physicalConditionsController.apiDeletePhysicalCondition
+);
 
 //exports
 export default router;
