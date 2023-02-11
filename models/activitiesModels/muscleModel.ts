@@ -1,35 +1,19 @@
 import { ObjectId } from 'bson';
 import { IMuscle } from '../../util/interfaces/activitiesInterfaces';
-import { IdAndName } from '../../util/types/types';
 import MuscleSchema from '../../util/database/schemas/activities/muscleSchema';
 import mongoose from 'mongoose';
 
 const MuscleModel = mongoose.model('Muscle', MuscleSchema);
 
-export default class MuscleHandler implements IMuscle {
-  id: ObjectId | string;
-  name: string;
-  alternativeName: string;
-  type: string;
-  linkToImage: string;
-
-  static _names: IdAndName[];
-
-  constructor(inputValues) {
-    if (!inputValues) return; //if no values were provided, ignore the rest of the logic
-    this.mapValues(inputValues);
+export default class MuscleHandler {
+  static async save(muscle: IMuscle) {
+    return await new MuscleModel(muscle).save();
   }
 
-  mapValues(inputValues) {
-    Object.keys(inputValues).map((key) => (this[key] = inputValues[key]));
-  }
-
-  async save() {
-    return await new MuscleModel(this).save();
-  }
-
-  async update() {
-    return await MuscleModel.updateOne({ _id: this.id }, this, {runValidators: true});
+  static async update(_id: string | ObjectId, muscle: IMuscle) {
+    return await MuscleModel.updateOne({ _id }, muscle, {
+      runValidators: true,
+    });
   }
 
   static async fetchByName(name: string) {
@@ -51,34 +35,5 @@ export default class MuscleHandler implements IMuscle {
 
   static async deleteById(id: string | ObjectId) {
     return await MuscleModel.findByIdAndDelete(id);
-  }
-
-  static async getAllNames(objectId: string = '', forceFetch: boolean = false) {
-    //forces to fetch all names if a new muscles has been added to the db
-    if (objectId) {
-      const index: number = this._names?.findIndex(
-        (obj) => obj._id.toString() === objectId
-      );
-      if (index === -1) forceFetch = true;
-    }
-
-    //Only fetches names the first time or when it's forced
-    if (!this._names || forceFetch) {
-      await MuscleHandler.fetchAllNames().then(
-        (fetchedNames) => (this._names = fetchedNames)
-      );
-    }
-
-    return this._names;
-  }
-
-  //removes food from the list of names once it's been deleted
-  static removeNameById(objectId: string) {
-    const index: number = this._names?.findIndex(
-      (obj) => obj._id.toString() === objectId
-    );
-    if (index > -1) {
-      this._names.splice(index, 1);
-    }
   }
 }

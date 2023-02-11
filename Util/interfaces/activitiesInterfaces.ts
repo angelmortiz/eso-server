@@ -95,7 +95,6 @@ export interface IMuscle {
 }
 
 export interface IEquipment {
-  id: ObjectId | string;
   name: string;
   alternativeName: string;
   description: string;
