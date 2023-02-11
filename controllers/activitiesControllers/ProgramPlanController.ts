@@ -43,7 +43,7 @@ export const apiAddProgramPlan = catchAsync(
       );
     }
 
-    const programAndWorkouts = await ProgramHandler.fetchAllChildrenInfo(
+    const programAndWorkouts = await ProgramHandler.fetchAllProgramInfo(
       program
     );
     if (!programAndWorkouts) {
@@ -95,11 +95,13 @@ const createWeeksPlan = (
   }
 };
 
-/** extracts daily workouts from Program and creates a weekly
+/**
+ * Extracts daily workouts from Program and creates a weekly
  * plan with a workout for each day of the week.
  */
 const createWeeklyDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
-  /** Creates an array of weeks from 1 to 'duration'.
+  /**
+   * Creates an array of weeks from 1 to 'duration'.
    * Each day of the week gets assigned a workout from program.
    */
   programPlan.weeksPlan = Array.from(
@@ -116,7 +118,7 @@ const createWeeklyDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
 const createCycleDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
   if (!program?.workouts || program.workouts.length === 0) return [];
 
-  const numberOfWorkouts = program.workouts.length!;
+  const numberOfWorkouts = program.workouts.length;
   programPlan.weeksPlan = [];
 
   /**
@@ -129,15 +131,17 @@ const createCycleDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
   for (let week = 1; week <= program.duration; week++) {
     let weekPlan: IWeekPlan = { weekNumber: week, workouts: [] };
 
-    let count = 0;
     //iterate throw days
     for (let day = 1; day <= 7; day++) {
-      //resets count when reaches it gets to a higher number than #workouts
-      if (count >= numberOfWorkouts) count = 0;
-      let workout = program.workouts[count].workout;
+      /**
+       * '(day-1) % numberOfWorkouts' results in indexes that go from
+       * '0' to 'numberOfWorkouts - 1'. It makes it possible to cycle
+       * through all the workouts of a program and continue repeating them
+       * until the end of the programPlan [duration * 7].
+       */
+      let workout = program.workouts[(day - 1) % numberOfWorkouts].workout;
       let workoutPlan: IWorkoutPlan = { dayNumber: day, workout };
       weekPlan.workouts?.push(workoutPlan);
-      count++;
     }
 
     programPlan.weeksPlan.push(weekPlan);

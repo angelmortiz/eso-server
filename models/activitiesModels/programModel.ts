@@ -53,7 +53,7 @@ export default class ProgramHandler implements IProgram {
     });
   }
 
-  static async fetchAllChildrenInfo(
+  static async fetchAllProgramInfo(
     id: string | ObjectId
   ): Promise<IProgram | null> {
     return await ProgramModel.findById(id).populate({
