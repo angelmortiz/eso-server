@@ -2,9 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 import { catchAsync } from '../../util/errors/catchAsync';
 import {
   IProgram,
+  IWeekLog,
   IProgramPlan,
   IWeekPlan,
   IWorkoutPlan,
+  IWorkoutLog,
+  IStatusLog,
+  IExerciseLog,
+  ISetLog,
+  IProgramLog,
 } from '../../util/interfaces/activitiesInterfaces';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
@@ -74,8 +80,9 @@ export const apiAddProgramPlan = catchAsync(
     };
 
     programPlan.weeksPlan = createWeeksPlan(programPlan, programWithWorkouts);
+    programPlan.logs = createPlanLogs(programPlan, programWithWorkouts);
 
-    // await ProgramPlanHandler.save(programPlan);
+    await ProgramPlanHandler.save(programPlan);
     res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
   }
 );
@@ -99,6 +106,7 @@ export const apiDeleteProgramPlan = catchAsync(
 );
 
 /** ADDITIONAL FUNCTIONS */
+/**** Program Plan  */
 const createWeeksPlan = (
   programPlan: IProgramPlan,
   program: IProgram
@@ -163,4 +171,64 @@ const createCycleDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
     programPlan.weeksPlan.push(weekPlan);
   }
   return programPlan.weeksPlan;
+};
+
+/**** Program Logs  */
+const createPlanLogs = (
+  programPlan: IProgramPlan,
+  program: IProgram
+): IProgramLog => {
+  switch (program.sequence) {
+    case 'Weekly':
+      return createWeeklyPlanLogs(programPlan, program);
+    case 'Cycle':
+      return createCyclePlanLogs(programPlan, program);
+  }
+};
+
+const createWeeklyPlanLogs = (programPlan: IProgramPlan, program: IProgram) => {
+  const defaultLogValues: IStatusLog = {
+    isStarted: false,
+    isCompleted: false,
+    isSkipped: false,
+  };
+
+  programPlan.logs = {
+    log: { ...defaultLogValues },
+    weeksLog: [] as IWeekLog[],
+  };
+
+  programPlan.logs.weeksLog = Array.from(
+    { length: program.duration },
+    (_, index) => ({
+      weekNumber: index + 1,
+      workouts: program.workouts!.map((wo) => ({
+        workout: wo.workout,
+        dayOfTheWeek: wo.dayOfTheWeek,
+        log: { ...defaultLogValues },
+        exercises: wo.workout.exercises!.map((ex) => ({
+          exercise: ex.exercise,
+          log: { ...defaultLogValues },
+          sets: [] as ISetLog[],
+        })) as IExerciseLog[],
+      })) as IWorkoutLog[],
+    })
+  ) as IWeekLog[];
+
+  return programPlan.logs;
+};
+
+const createCyclePlanLogs = (programPlan: IProgramPlan, program: IProgram) => {
+  const defaultLogValues: IStatusLog = {
+    isStarted: false,
+    isCompleted: false,
+    isSkipped: false,
+  };
+
+  programPlan.logs = {
+    log: { ...defaultLogValues },
+    weeksLog: [] as IWeekLog[],
+  };
+
+  return programPlan.logs;
 };

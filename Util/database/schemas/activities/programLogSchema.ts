@@ -82,6 +82,25 @@ const WorkoutLogSchema = new Schema({
     type: [ExerciseLogSchema],
     required: false,
   },
+  dayNumber: {
+    type: Number,
+    required: false,
+    min: 1,
+    max: 7,
+  },
+  dayOfTheWeek: {
+    type: String,
+    enum: [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thrusday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ],
+    required: false,
+  },
 });
 
 const WeeksLogSchema = new Schema({

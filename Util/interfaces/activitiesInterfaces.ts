@@ -26,8 +26,17 @@ export interface IWeekLog {
 
 export interface IWorkoutLog {
   workout: IWorkout;
-  log: IStatusLog;
+  dayNumber?: number;
+  dayOfTheWeek?:
+    | 'Monday'
+    | 'Tuesday'
+    | 'Wednesday'
+    | 'Thrusday'
+    | 'Friday'
+    | 'Saturday'
+    | 'Sunday';
   exercises: IExerciseLog[];
+  log: IStatusLog;
 }
 
 export interface IExerciseLog {
