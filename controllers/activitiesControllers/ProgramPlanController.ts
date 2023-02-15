@@ -83,7 +83,7 @@ export const apiAddProgramPlan = catchAsync(
       return next(new AppError(`No workouts found in program id '${program}'.`, 400));
     }
 
-    programPlan.weeksPlan = createWeeksPlan(programPlan, programWithWorkouts);
+    programPlan.weeksPlan = createWeekPlans(programPlan, programWithWorkouts);
     programPlan.logs = createPlanLogs(programPlan, programWithWorkouts);
 
     await ProgramPlanHandler.save(programPlan);
@@ -111,15 +111,15 @@ export const apiDeleteProgramPlan = catchAsync(
 
 /** ADDITIONAL FUNCTIONS */
 /**** Program Plan  */
-const createWeeksPlan = (
+const createWeekPlans = (
   programPlan: IProgramPlan,
   program: IProgram
 ): IWeekPlan[] => {
   switch (program.sequence) {
     case 'Weekly':
-      return createWeeklyDaysPlan(programPlan, program);
+      return createWeeklyPlan(programPlan, program);
     case 'Cycle':
-      return createCycleDaysPlan(programPlan, program);
+      return createCyclePlan(programPlan, program);
   }
 };
 
@@ -127,7 +127,7 @@ const createWeeksPlan = (
  * Extracts daily workouts from Program and creates a weekly
  * plan with a workout for each day of the week.
  */
-const createWeeklyDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
+const createWeeklyPlan = (programPlan: IProgramPlan, program: IProgram) => {
   /**
    * Creates an array of weeks from 1 to 'duration'.
    * Each day of the week gets assigned a workout from program.
@@ -144,7 +144,7 @@ const createWeeklyDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
   return programPlan.weeksPlan;
 };
 
-const createCycleDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
+const createCyclePlan = (programPlan: IProgramPlan, program: IProgram) => {
   const numberOfWorkouts = program.workouts!.length;
   programPlan.weeksPlan = [];
 
@@ -183,13 +183,13 @@ const createPlanLogs = (
 ): IProgramLog => {
   switch (program.sequence) {
     case 'Weekly':
-      return createWeeklyPlanLogs(programPlan, program);
+      return createWeeklyLogs(programPlan, program);
     case 'Cycle':
-      return createCyclePlanLogs(programPlan, program);
+      return createCycleLogs(programPlan, program);
   }
 };
 
-const createWeeklyPlanLogs = (programPlan: IProgramPlan, program: IProgram) => {
+const createWeeklyLogs = (programPlan: IProgramPlan, program: IProgram) => {
   const defaultLogValues: IStatusLog = {
     isStarted: false,
     isCompleted: false,
@@ -226,7 +226,7 @@ const createWeeklyPlanLogs = (programPlan: IProgramPlan, program: IProgram) => {
   return programPlan.logs;
 };
 
-const createCyclePlanLogs = (programPlan: IProgramPlan, program: IProgram) => {
+const createCycleLogs = (programPlan: IProgramPlan, program: IProgram) => {
   const defaultLogValues: IStatusLog = {
     isStarted: false,
     isCompleted: false,
