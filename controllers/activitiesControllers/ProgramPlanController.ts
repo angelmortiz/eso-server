@@ -26,8 +26,8 @@ export const apiGetAssignedProgramPlans = catchAsync(
 
     const programPlans = await ProgramPlanHandler.fetchByAssignedTo(userId);
     res
-    .status(RESPONSE_CODE.OK)
-    .json(RESPONSE.FETCHED_SUCCESSFULLY(programPlans));
+      .status(RESPONSE_CODE.OK)
+      .json(RESPONSE.FETCHED_SUCCESSFULLY(programPlans));
   }
 );
 
@@ -61,8 +61,8 @@ export const apiAddProgramPlan = catchAsync(
       );
     }
 
-    const programAndWorkouts = await ProgramHandler.fetchProgramInfo(program);
-    if (!programAndWorkouts) {
+    const programWithWorkouts = await ProgramHandler.fetchProgramInfo(program);
+    if (!programWithWorkouts) {
       return next(new AppError(`No program found with id ${program}.`, 404));
     }
 
@@ -73,9 +73,9 @@ export const apiAddProgramPlan = catchAsync(
       assignedBy,
     };
 
-    programPlan.weeksPlan = createWeeksPlan(programPlan, programAndWorkouts);
+    programPlan.weeksPlan = createWeeksPlan(programPlan, programWithWorkouts);
 
-    await ProgramPlanHandler.save(programPlan);
+    // await ProgramPlanHandler.save(programPlan);
     res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
   }
 );
@@ -148,15 +148,15 @@ const createCycleDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
     let weekPlan: IWeekPlan = { weekNumber: week, workouts: [] };
 
     //iterate throw days
-    for (let day = 1; day <= 7; day++) {
+    for (let day = 0; day < 7; day++) {
       /**
-       * '(day-1) % numberOfWorkouts' results in indexes that go from
+       * '[day % numberOfWorkouts]' results in indexes that go from
        * '0' to 'numberOfWorkouts - 1'. It makes it possible to cycle
        * through all the workouts of a program and continue repeating them
        * until the end of the programPlan [duration * 7].
        */
-      let workout = program.workouts[(day - 1) % numberOfWorkouts].workout;
-      let workoutPlan: IWorkoutPlan = { dayNumber: day, workout };
+      let workout = program.workouts[day % numberOfWorkouts].workout;
+      let workoutPlan: IWorkoutPlan = { dayNumber: day + 1, workout };
       weekPlan.workouts?.push(workoutPlan);
     }
 

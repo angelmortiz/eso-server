@@ -7,11 +7,51 @@ export interface IProgramPlan {
   assignedOn: Date;
   assignedBy: IUserAuth;
   weeksPlan?: IWeekPlan[];
+  logs?: IProgramLog;
 }
 
 export interface IWeekPlan {
   weekNumber: number;
   workouts?: IWorkoutPlan[];
+}
+export interface IProgramLog {
+  log: IStatusLog;
+  weeksLog: IWeekLog[];
+}
+
+export interface IWeekLog {
+  weekNumber: number;
+  workouts?: IWorkoutLog[];
+}
+
+export interface IWorkoutLog {
+  workout: IWorkout;
+  log: IStatusLog;
+  exercises: IExerciseLog[];
+}
+
+export interface IExerciseLog {
+  exercise: IExercise;
+  log: IStatusLog;
+  sets?: ISetLog[];
+}
+
+export interface ISetLog {
+  setNumber: number;
+  log: ISetLog;
+  weight: number;
+  reps: number;
+  rir: number;
+}
+
+export interface IStatusLog {
+  isStarted?: boolean;
+  startedOn?: Date;
+  isCompleted?: boolean;
+  completedOn?: Date;
+  isSkipped?: boolean;
+  skippedOn?: Date;
+  notes?: string;
 }
 
 export interface IProgram {
@@ -79,7 +119,6 @@ export interface IExercise {
   linkToVideo: string;
   linkToImage: string;
 }
-
 
 export interface IMuscle {
   name: string;
