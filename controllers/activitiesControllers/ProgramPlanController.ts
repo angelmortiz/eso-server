@@ -79,6 +79,10 @@ export const apiAddProgramPlan = catchAsync(
       assignedBy,
     };
 
+    if (program?.workouts || program?.workouts?.length === 0) {
+      return next(new AppError(`No workouts found in program id '${program}'.`, 400));
+    }
+
     programPlan.weeksPlan = createWeeksPlan(programPlan, programWithWorkouts);
     programPlan.logs = createPlanLogs(programPlan, programWithWorkouts);
 
@@ -128,11 +132,12 @@ const createWeeklyDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
    * Creates an array of weeks from 1 to 'duration'.
    * Each day of the week gets assigned a workout from program.
    */
+
   programPlan.weeksPlan = Array.from(
     { length: program.duration },
     (_, index) => ({
       weekNumber: index + 1,
-      workouts: program.workouts!,
+      workouts: program.workouts,
     })
   );
 
@@ -140,9 +145,7 @@ const createWeeklyDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
 };
 
 const createCycleDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
-  if (!program?.workouts || program.workouts.length === 0) return [];
-
-  const numberOfWorkouts = program.workouts.length;
+  const numberOfWorkouts = program.workouts!.length;
   programPlan.weeksPlan = [];
 
   /**
@@ -163,7 +166,7 @@ const createCycleDaysPlan = (programPlan: IProgramPlan, program: IProgram) => {
        * through all the workouts of a program and continue repeating them
        * until the end of the programPlan [duration * 7].
        */
-      let workout = program.workouts[day % numberOfWorkouts].workout;
+      let workout = program.workouts![day % numberOfWorkouts].workout;
       let workoutPlan: IWorkoutPlan = { dayNumber: day + 1, workout };
       weekPlan.workouts?.push(workoutPlan);
     }
@@ -198,17 +201,22 @@ const createWeeklyPlanLogs = (programPlan: IProgramPlan, program: IProgram) => {
     weeksLog: [] as IWeekLog[],
   };
 
+  //**Sequence: Program -> weeks[] -> workouts[] (1 per day of the week) -> exercises[] -> sets[]
+  //creates an array of logs based on the number of weeks from program
   programPlan.logs.weeksLog = Array.from(
     { length: program.duration },
     (_, index) => ({
       weekNumber: index + 1,
+      //extracts the workout per day of the week and sets default log vals
       workouts: program.workouts!.map((wo) => ({
         workout: wo.workout,
         dayOfTheWeek: wo.dayOfTheWeek,
         log: { ...defaultLogValues },
+        //extracts the exercises per workout sets default log vals
         exercises: wo.workout.exercises!.map((ex) => ({
           exercise: ex.exercise,
           log: { ...defaultLogValues },
+          //prepares array for the set logs
           sets: [] as ISetLog[],
         })) as IExerciseLog[],
       })) as IWorkoutLog[],
@@ -229,6 +237,45 @@ const createCyclePlanLogs = (programPlan: IProgramPlan, program: IProgram) => {
     log: { ...defaultLogValues },
     weeksLog: [] as IWeekLog[],
   };
+
+  const numberOfWorkouts = program.workouts!.length;
+  programPlan.weeksPlan = [];
+
+  /**
+   * Creates a list of weeks based on 'program.duration'
+   * and assigns a workout log to each day of the week based
+   * on the workoutPlan info.
+   */
+
+  //iterate throw weeks
+  for (let week = 1; week <= program.duration; week++) {
+    let weekLog: IWeekLog = { weekNumber: week, workouts: [] as IWorkoutLog[] };
+
+    //iterate throw days
+    for (let day = 0; day < 7; day++) {
+      /**
+       * '[day % numberOfWorkouts]' results in indexes that go from
+       * '0' to 'numberOfWorkouts - 1'. It makes it possible to cycle
+       * through all the workouts of a program and continue repeating them
+       * until the end of the programPlan [duration * 7].
+       */
+      let workout = program.workouts![day % numberOfWorkouts].workout;
+      let workoutLog: IWorkoutLog = {
+        dayNumber: day + 1,
+        workout,
+        log: { ...defaultLogValues },
+        exercises: workout.exercises!.map((ex) => ({
+          exercise: ex.exercise,
+          log: { ...defaultLogValues },
+          //prepares array for the set logs
+          sets: [] as ISetLog[],
+        })) as IExerciseLog[],
+      };
+      weekLog.workouts?.push(workoutLog);
+    }
+
+    programPlan.logs.weeksLog.push(weekLog);
+  }
 
   return programPlan.logs;
 };
