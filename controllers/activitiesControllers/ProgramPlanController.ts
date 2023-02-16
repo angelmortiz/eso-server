@@ -21,16 +21,18 @@ import ProgramHandler from '../../models/activitiesModels/programModel';
 /** APIS */
 export const apiGetAssignedProgramPlans = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    let { userId } = req.params;
+    let { userId, filter } = req.params;
     if (!userId) {
       userId = res.locals.user.id;
     }
-
     if (!userId) {
       return next(new AppError(`No user Id found.`, 400));
     }
 
-    const programPlans = await ProgramPlanHandler.fetchByAssignedTo(userId);
+    const programPlans = await ProgramPlanHandler.fetchByAssignedTo(
+      userId,
+      filter === 'completed'
+    );
     res
       .status(RESPONSE_CODE.OK)
       .json(RESPONSE.FETCHED_SUCCESSFULLY(programPlans));
@@ -80,7 +82,9 @@ export const apiAddProgramPlan = catchAsync(
     };
 
     if (program?.workouts || program?.workouts?.length === 0) {
-      return next(new AppError(`No workouts found in program id '${program}'.`, 400));
+      return next(
+        new AppError(`No workouts found in program id '${program}'.`, 400)
+      );
     }
 
     programPlan.weeksPlan = createWeekPlans(programPlan, programWithWorkouts);
@@ -173,6 +177,7 @@ const createCyclePlan = (programPlan: IProgramPlan, program: IProgram) => {
 
     programPlan.weeksPlan.push(weekPlan);
   }
+
   return programPlan.weeksPlan;
 };
 
@@ -239,8 +244,6 @@ const createCycleLogs = (programPlan: IProgramPlan, program: IProgram) => {
   };
 
   const numberOfWorkouts = program.workouts!.length;
-  programPlan.weeksPlan = [];
-
   /**
    * Creates a list of weeks based on 'program.duration'
    * and assigns a workout log to each day of the week based

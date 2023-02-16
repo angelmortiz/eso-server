@@ -22,6 +22,10 @@ router.get(
   programPlansController.apiGetAssignedProgramPlans
 );
 router.get(
+  '/programPlans/assignedTo/currentUser/:filter',
+  programPlansController.apiGetAssignedProgramPlans
+);
+router.get(
   '/programPlans/assignedTo/:userId',
   programPlansController.apiGetAssignedProgramPlans
 );

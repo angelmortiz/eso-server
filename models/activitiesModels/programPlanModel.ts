@@ -34,8 +34,13 @@ export default class ProgramPlanHandler {
       });
   }
 
-  static async fetchByAssignedTo(assignedTo: string | ObjectId) {
-    return await ProgramPlanModel.find({ assignedTo })
+  static async fetchByAssignedTo(
+    assignedTo: string | ObjectId,
+    isCompletedFilter: boolean = false
+  ) {
+    return await ProgramPlanModel.find({
+      $and: [{ assignedTo }, { 'logs.log.isCompleted': isCompletedFilter }],
+    })
       .populate('program', '-workouts')
       .populate('assignedTo', 'fullName')
       .populate('assignedBy', 'fullName')
