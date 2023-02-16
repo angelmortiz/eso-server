@@ -87,8 +87,8 @@ export const apiAddProgramPlan = catchAsync(
       );
     }
 
-    programPlan.weeksPlan = createWeekPlans(programPlan, programWithWorkouts);
-    programPlan.logs = createPlanLogs(programPlan, programWithWorkouts);
+    createWeekPlans(programPlan, programWithWorkouts);
+    createPlanLogs(programPlan, programWithWorkouts);
 
     await ProgramPlanHandler.save(programPlan);
     res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
@@ -118,12 +118,14 @@ export const apiDeleteProgramPlan = catchAsync(
 const createWeekPlans = (
   programPlan: IProgramPlan,
   program: IProgram
-): IWeekPlan[] => {
+) => {
   switch (program.sequence) {
     case 'Weekly':
-      return createWeeklyPlan(programPlan, program);
+      createWeeklyPlan(programPlan, program);
+      break;
     case 'Cycle':
-      return createCyclePlan(programPlan, program);
+      createCyclePlan(programPlan, program);
+      break;
   }
 };
 
@@ -144,8 +146,6 @@ const createWeeklyPlan = (programPlan: IProgramPlan, program: IProgram) => {
       workouts: program.workouts,
     })
   );
-
-  return programPlan.weeksPlan;
 };
 
 const createCyclePlan = (programPlan: IProgramPlan, program: IProgram) => {
@@ -177,20 +177,20 @@ const createCyclePlan = (programPlan: IProgramPlan, program: IProgram) => {
 
     programPlan.weeksPlan.push(weekPlan);
   }
-
-  return programPlan.weeksPlan;
 };
 
 /**** Program Logs  */
 const createPlanLogs = (
   programPlan: IProgramPlan,
   program: IProgram
-): IProgramLog => {
+) => {
   switch (program.sequence) {
     case 'Weekly':
-      return createWeeklyLogs(programPlan, program);
+      createWeeklyLogs(programPlan, program);
+      break;
     case 'Cycle':
-      return createCycleLogs(programPlan, program);
+      createCycleLogs(programPlan, program);
+      break;
   }
 };
 
@@ -227,8 +227,6 @@ const createWeeklyLogs = (programPlan: IProgramPlan, program: IProgram) => {
       })) as IWorkoutLog[],
     })
   ) as IWeekLog[];
-
-  return programPlan.logs;
 };
 
 const createCycleLogs = (programPlan: IProgramPlan, program: IProgram) => {
@@ -279,6 +277,4 @@ const createCycleLogs = (programPlan: IProgramPlan, program: IProgram) => {
 
     programPlan.logs.weeksLog.push(weekLog);
   }
-
-  return programPlan.logs;
 };
