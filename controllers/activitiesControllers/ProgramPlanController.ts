@@ -55,6 +55,47 @@ export const apiGetProgramPlanById = catchAsync(
   }
 );
 
+export const apiGetProgramPlanLogsById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const programPlanId: string = req.params.programPlanId;
+    const programPlanLogs = await ProgramPlanHandler.fetchPlanLogsById(
+      programPlanId
+    );
+
+    if (!programPlanLogs) {
+      return next(
+        new AppError(`No programPlan found using id '${programPlanId}'.`, 404)
+      );
+    }
+    res
+      .status(RESPONSE_CODE.OK)
+      .json(RESPONSE.FETCHED_SUCCESSFULLY(programPlanLogs));
+  }
+);
+
+export const apiGetWorkoutLogsById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { programPlanId, workoutId } = req.params;
+
+    const workoutLogs = await ProgramPlanHandler.fetchWorkoutLogsById(
+      programPlanId,
+      workoutId
+    );
+
+    if (!workoutLogs) {
+      return next(
+        new AppError(
+          `No workout plan found using programPlanId '${programPlanId}' and workoutId ${workoutId}`,
+          404
+        )
+      );
+    }
+    res
+      .status(RESPONSE_CODE.OK)
+      .json(RESPONSE.FETCHED_SUCCESSFULLY(workoutLogs));
+  }
+);
+
 export const apiAddProgramPlan = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { program, assignedTo } = req.body;
@@ -115,10 +156,7 @@ export const apiDeleteProgramPlan = catchAsync(
 
 /** ADDITIONAL FUNCTIONS */
 /**** Program Plan  */
-const createWeekPlans = (
-  programPlan: IProgramPlan,
-  program: IProgram
-) => {
+const createWeekPlans = (programPlan: IProgramPlan, program: IProgram) => {
   switch (program.sequence) {
     case 'Weekly':
       createWeeklyPlan(programPlan, program);
@@ -180,10 +218,7 @@ const createCyclePlan = (programPlan: IProgramPlan, program: IProgram) => {
 };
 
 /**** Program Logs  */
-const createPlanLogs = (
-  programPlan: IProgramPlan,
-  program: IProgram
-) => {
+const createPlanLogs = (programPlan: IProgramPlan, program: IProgram) => {
   switch (program.sequence) {
     case 'Weekly':
       createWeeklyLogs(programPlan, program);

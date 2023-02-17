@@ -18,6 +18,14 @@ router.get(
   programPlansController.apiGetProgramPlanById
 );
 router.get(
+  '/programPlan/logs/:programPlanId',
+  programPlansController.apiGetProgramPlanLogsById
+);
+router.get(
+  '/programPlan/logs/:programPlanId/workout/:workoutId',
+  programPlansController.apiGetWorkoutLogsById
+);
+router.get(
   '/programPlans/assignedTo/currentUser',
   programPlansController.apiGetAssignedProgramPlans
 );
