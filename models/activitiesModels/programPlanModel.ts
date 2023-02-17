@@ -41,6 +41,7 @@ export default class ProgramPlanHandler {
     return await ProgramPlanModel.find({
       $and: [{ assignedTo }, { 'logs.log.isCompleted': isCompletedFilter }],
     })
+      .select('-logs.weeksLog') //filters out logs to improve efficiency
       .populate('program', '-workouts')
       .populate('assignedTo', 'fullName')
       .populate('assignedBy', 'fullName')
@@ -55,6 +56,38 @@ export default class ProgramPlanHandler {
           },
         },
       });
+  }
+
+  static async fetchPlanLogsById(id: string | ObjectId) {
+    return await ProgramPlanModel.findById(id)
+      .select('-weeksPlan')
+      .populate('program', '-workouts')
+      .populate('assignedTo', 'fullName')
+      .populate('assignedBy', 'fullName')
+      .populate('logs.weeksLog.workouts.workout', 'name')
+      .populate(
+        'logs.weeksLog.workouts.exercises.exercise',
+        'name alternativeName'
+      );
+  }
+
+  static async fetchWorkoutLogsById(
+    planId: string | ObjectId,
+    workoutId: string | ObjectId
+  ) {
+    return await ProgramPlanModel.findOne(
+      {
+        _id: planId,
+        'logs.weeksLog.workouts': { $elemMatch: { _id: workoutId } },
+      },
+      { 'logs.weeksLog.workouts.$': 1 }
+    );
+    // .select('logs.weeksLog.workouts')
+    // .populate('logs.weeksLog.workouts.workout', 'name')
+    // .populate(
+    //   'logs.weeksLog.workouts.exercises.exercise',
+    //   'name alternativeName'
+    // );
   }
 
   static async deleteById(id: string | ObjectId) {
