@@ -22,7 +22,7 @@ router.get(
   programPlansController.apiGetProgramPlanLogsById
 );
 router.get(
-  '/programPlan/logs/:programPlanId/workout/:workoutId',
+  '/programPlan/logs/:programPlanId/weekNumber/:weekNumber/workout/:workoutId',
   programPlansController.apiGetWorkoutLogsById
 );
 router.get(

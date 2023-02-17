@@ -17,6 +17,7 @@ import * as RESPONSE from '../responseControllers/responseCodes';
 import ProgramPlanHandler from '../../models/activitiesModels/programPlanModel';
 import AppError from '../../util/errors/appError';
 import ProgramHandler from '../../models/activitiesModels/programModel';
+import { ObjectId } from 'mongodb';
 
 /** APIS */
 export const apiGetAssignedProgramPlans = catchAsync(
@@ -75,24 +76,38 @@ export const apiGetProgramPlanLogsById = catchAsync(
 
 export const apiGetWorkoutLogsById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { programPlanId, workoutId } = req.params;
+    const { programPlanId, weekNumber, workoutId } = req.params;
 
-    const workoutLogs = await ProgramPlanHandler.fetchWorkoutLogsById(
-      programPlanId,
-      workoutId
+    const programPlanLogs = await ProgramPlanHandler.fetchWorkoutPlanLogs(
+      programPlanId
     );
 
-    if (!workoutLogs) {
+    if (!programPlanLogs) {
       return next(
         new AppError(
-          `No workout plan found using programPlanId '${programPlanId}' and workoutId ${workoutId}`,
+          `No workout plan found using programPlanId '${programPlanId}'.`,
           404
         )
       );
     }
+
+    //extracts workout plan section from the entire program plan object
+    const workoutPlanLog = programPlanLogs.logs?.weeksLog[
+      parseInt(weekNumber) - 1
+    ]?.workouts?.find((wo) => wo!._id!.equals(new ObjectId(workoutId)));
+
+    if (!workoutPlanLog) {
+      return next(
+        new AppError(
+          `No workout plan found using workoutId '${workoutId}'.`,
+          404
+        )
+      );
+    }
+
     res
       .status(RESPONSE_CODE.OK)
-      .json(RESPONSE.FETCHED_SUCCESSFULLY(workoutLogs));
+      .json(RESPONSE.FETCHED_SUCCESSFULLY(workoutPlanLog));
   }
 );
 

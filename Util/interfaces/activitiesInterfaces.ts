@@ -25,6 +25,7 @@ export interface IWeekLog {
 }
 
 export interface IWorkoutLog {
+  _id?: ObjectId;
   workout: IWorkout;
   dayNumber?: number;
   dayOfTheWeek?:
