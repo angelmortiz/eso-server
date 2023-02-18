@@ -59,29 +59,36 @@ export default class ProgramPlanHandler {
   }
 
   static async fetchPlanLogsById(id: string | ObjectId) {
-    return await ProgramPlanModel.findById(id)
-      .select('-weeksPlan')
-      .populate('program', '-workouts')
-      .populate('assignedTo', 'fullName')
-      .populate('assignedBy', 'fullName')
-      .populate('logs.weeksLog.workouts.workout', 'name')
-      .populate(
-        'logs.weeksLog.workouts.exercises.exercise',
-        'name alternativeName'
-      ) as IProgramPlan;
+    return await this.findProgramPlanLogs(
+      id,
+      'name',
+      'name alternativeName'
+    );
   }
 
   static async fetchWorkoutPlanLogs(id: string | ObjectId) {
-    return await ProgramPlanModel.findById(id)
+    return await this.findProgramPlanLogs(
+      id,
+      '',
+      'name alternativeName'
+    );
+  }
+
+  static async findProgramPlanLogs(
+    id: string | ObjectId,
+    workoutFilters: string,
+    exerciseFilters: string
+  ) {
+    return (await ProgramPlanModel.findById(id)
       .select('-weeksPlan')
       .populate('program', '-workouts')
       .populate('assignedTo', 'fullName')
       .populate('assignedBy', 'fullName')
-      .populate('logs.weeksLog.workouts.workout', 'name description variant type target')
+      .populate('logs.weeksLog.workouts.workout', workoutFilters)
       .populate(
         'logs.weeksLog.workouts.exercises.exercise',
-        'name alternativeName'
-      ) as IProgramPlan;
+        exerciseFilters
+      )) as IProgramPlan;
   }
 
   static async deleteById(id: string | ObjectId) {
