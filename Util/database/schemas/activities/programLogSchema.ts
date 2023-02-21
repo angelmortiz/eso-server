@@ -41,7 +41,10 @@ const SetLogSchema = new Schema({
     required: true,
     min: 1,
   },
-  log: StatusLogSchema,
+  log: {
+    type: StatusLogSchema,
+    required: true,
+  },
   weight: {
     type: Number,
     required: true,

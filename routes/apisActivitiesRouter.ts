@@ -45,12 +45,17 @@ router.post(
 router.put(
   '/programPlan/:programPlanId',
   restrictAccessTo('Admin', 'Editor'),
-  programsController.apiUpdateProgram
+  programPlansController.apiUpdateProgramPlan
+);
+router.patch(
+  '/programPlan/:programPlanId/weekPlan/:weekId/workoutPlan/:workoutPlanId/exercisePlan/:exercisePlanId',
+  restrictAccessTo('Admin', 'Editor'),
+  programPlansController.apiAddSetLog
 );
 router.delete(
   '/programPlan/:programPlanId',
   restrictAccessTo('Admin', 'Editor'),
-  programsController.apiDeleteProgram
+  programPlansController.apiDeleteProgramPlan
 );
 
 /* PROGRAM */

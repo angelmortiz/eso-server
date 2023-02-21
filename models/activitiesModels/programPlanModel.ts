@@ -1,5 +1,8 @@
 import { ObjectId } from 'mongodb';
-import { IProgramPlan } from '../../util/interfaces/activitiesInterfaces';
+import {
+  IProgramPlan,
+  ISetLog,
+} from '../../util/interfaces/activitiesInterfaces';
 import mongoose from 'mongoose';
 import ProgramPlanSchema from '../../util/database/schemas/activities/programPlanSchema';
 
@@ -14,6 +17,52 @@ export default class ProgramPlanHandler {
     return await ProgramPlanModel.updateOne({ _id }, programPlan, {
       runValidators: true,
     });
+  }
+
+  static async addSetLog(
+    params: {
+      programPlanId: string;
+      weekId: string;
+      workoutPlanId: string;
+      exercisePlanId: string;
+    },
+    setInfo: ISetLog
+  ) {
+    return await ProgramPlanModel.updateOne(
+      {
+        _id: params.programPlanId,
+      },
+      {
+        //pushes a new element to the sets array in the path:
+        //logs.weeksLog[].workouts[].exercise[].exercise.sets[]
+        $push: {
+          'logs.weeksLog.$[weekId].workouts.$[workoutId].exercises.$[exerciseId].sets':
+            {
+              ...setInfo,
+              log: {
+                isStarted: true,
+                startedOn: new Date(),
+                isCompleted: true,
+                completedOn: new Date()
+              }
+            },
+        },
+      },
+      {
+        //array filters help identify the right exercise to push the new setLog
+        arrayFilters: [
+          {
+            'weekId._id': new ObjectId(params.weekId),
+          },
+          {
+            'workoutId._id': new ObjectId(params.workoutPlanId),
+          },
+          {
+            'exerciseId._id': new ObjectId(params.exercisePlanId),
+          },
+        ],
+      }
+    );
   }
 
   static async fetchById(id: string | ObjectId) {
@@ -59,19 +108,11 @@ export default class ProgramPlanHandler {
   }
 
   static async fetchPlanLogsById(id: string | ObjectId) {
-    return await this.findProgramPlanLogs(
-      id,
-      'name',
-      'name alternativeName'
-    );
+    return await this.findProgramPlanLogs(id, 'name', 'name alternativeName');
   }
 
   static async fetchWorkoutPlanLogs(id: string | ObjectId) {
-    return await this.findProgramPlanLogs(
-      id,
-      '',
-      'name alternativeName'
-    );
+    return await this.findProgramPlanLogs(id, '', 'name alternativeName');
   }
 
   static async findProgramPlanLogs(

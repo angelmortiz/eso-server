@@ -48,7 +48,7 @@ export interface IExerciseLog {
 
 export interface ISetLog {
   setNumber: number;
-  log: ISetLog;
+  log: IStatusLog;
   weight: number;
   reps: number;
   rir: number;

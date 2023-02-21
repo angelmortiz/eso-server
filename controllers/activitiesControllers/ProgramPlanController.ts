@@ -160,6 +160,16 @@ export const apiUpdateProgramPlan = catchAsync(
   }
 );
 
+export const apiAddSetLog = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { programPlanId, weekId, workoutPlanId, exercisePlanId } = req.params;
+    const paramVals = {programPlanId, weekId, workoutPlanId, exercisePlanId}
+    
+    await ProgramPlanHandler.addSetLog(paramVals, req.body);
+    res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
+  }
+);
+
 export const apiDeleteProgramPlan = catchAsync(
   async (req: Request, res: Response) => {
     const programPlanId: string = req.params.programPlanId;
