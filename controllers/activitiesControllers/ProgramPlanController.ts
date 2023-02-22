@@ -9,8 +9,7 @@ import {
   IWorkoutLog,
   IStatusLog,
   IExerciseLog,
-  ISetLog,
-  IProgramLog,
+  ISetLog
 } from '../../util/interfaces/activitiesInterfaces';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
