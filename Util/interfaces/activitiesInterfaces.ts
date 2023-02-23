@@ -2,6 +2,7 @@ import { ObjectId } from 'bson';
 import { IUserAuth } from './userInterfaces';
 
 export interface IProgramPlan {
+  _id?: ObjectId;
   program: IProgram;
   assignedTo: IUserAuth;
   assignedOn: Date;
@@ -11,15 +12,18 @@ export interface IProgramPlan {
 }
 
 export interface IWeekPlan {
+  _id?: ObjectId;
   weekNumber: number;
   workouts?: IWorkoutPlan[];
 }
 export interface IProgramLog {
+  _id?: ObjectId;
   log: IStatusLog;
   weeksLog: IWeekLog[];
 }
 
 export interface IWeekLog {
+  _id?: ObjectId;
   weekNumber: number;
   workouts?: IWorkoutLog[];
 }
@@ -41,12 +45,14 @@ export interface IWorkoutLog {
 }
 
 export interface IExerciseLog {
+  _id?: ObjectId;
   exercise: IExercise;
   log: IStatusLog;
   sets?: ISetLog[];
 }
 
 export interface ISetLog {
+  _id?: ObjectId;
   setNumber: number;
   log: IStatusLog;
   weight: number;
@@ -55,6 +61,7 @@ export interface ISetLog {
 }
 
 export interface IStatusLog {
+  _id?: ObjectId;
   isStarted?: boolean;
   startedOn?: Date;
   isCompleted?: boolean;
@@ -65,6 +72,7 @@ export interface IStatusLog {
 }
 
 export interface IProgram {
+  _id?: ObjectId;
   name: string;
   description?: string;
   type: 'Strength' | 'Hypertrophy' | 'Endurance' | 'Mixed';
@@ -88,6 +96,7 @@ export interface IWorkoutPlan {
 }
 
 export interface IWorkout {
+  _id?: ObjectId;
   name?: string;
   description?: string;
   variant?: string;
@@ -104,6 +113,7 @@ export interface IWorkout {
 }
 
 export interface IExercisePlan {
+  _id?: ObjectId;
   exercise: IExercise;
   sets: number[];
   reps: number[];
@@ -115,6 +125,7 @@ export interface IExercisePlan {
 }
 
 export interface IExercise {
+  _id?: ObjectId;
   name: string;
   alternativeName: string;
   difficulty: string;
@@ -131,6 +142,7 @@ export interface IExercise {
 }
 
 export interface IMuscle {
+  _id?: ObjectId;
   name: string;
   alternativeName: string;
   type: string;
@@ -138,6 +150,7 @@ export interface IMuscle {
 }
 
 export interface IEquipment {
+  _id?: ObjectId;
   name: string;
   alternativeName: string;
   description: string;
@@ -145,6 +158,7 @@ export interface IEquipment {
 }
 
 export interface IPhysicalCondition {
+  _id?: ObjectId;
   name: string;
   description: string;
   symptoms: string[];

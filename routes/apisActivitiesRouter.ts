@@ -18,14 +18,6 @@ router.get(
   programPlansController.apiGetProgramPlanById
 );
 router.get(
-  '/programPlan/logs/:programPlanId',
-  programPlansController.apiGetProgramPlanLogsById
-);
-router.get(
-  '/programPlan/logs/:programPlanId/weekNumber/:weekNumber/workout/:workoutId',
-  programPlansController.apiGetWorkoutLogsById
-);
-router.get(
   '/programPlans/assignedTo/currentUser',
   programPlansController.apiGetAssignedProgramPlans
 );
@@ -47,15 +39,35 @@ router.put(
   restrictAccessTo('Admin', 'Editor'),
   programPlansController.apiUpdateProgramPlan
 );
-router.patch(
-  '/programPlan/:programPlanId/weekPlan/:weekId/workoutPlan/:workoutPlanId/exercisePlan/:exercisePlanId',
-  restrictAccessTo('Admin', 'Editor'),
-  programPlansController.apiAddSetLog
-);
 router.delete(
   '/programPlan/:programPlanId',
   restrictAccessTo('Admin', 'Editor'),
   programPlansController.apiDeleteProgramPlan
+);
+
+/* PROGRAM PLAN LOGS */
+router.get(
+  '/programPlan/logs/:programPlanId',
+  programPlansController.apiGetProgramPlanLogsById
+);
+router.get(
+  '/programPlan/logs/:programPlanId/weekNumber/:weekNumber/workout/:workoutId',
+  programPlansController.apiGetWorkoutLogsById
+);
+router.post(
+  '/programPlan/:programPlanId/weekPlan/:weekId/workoutPlan/:workoutPlanId/exercisePlan/:exercisePlanId',
+  restrictAccessTo('Admin', 'Editor'),
+  programPlansController.apiAddSetLog
+);
+router.patch(
+  '/programPlan/:programPlanId/weekPlan/:weekId/workoutPlan/:workoutPlanId/exercisePlan/:exercisePlanId/setId/:setId',
+  restrictAccessTo('Admin', 'Editor'),
+  programPlansController.apiUpdateSetLog
+);
+router.delete(
+  '/programPlan/:programPlanId/weekPlan/:weekId/workoutPlan/:workoutPlanId/exercisePlan/:exercisePlanId/setId/:setId',
+  restrictAccessTo('Admin', 'Editor'),
+  programPlansController.apiDeleteSetLog
 );
 
 /* PROGRAM */

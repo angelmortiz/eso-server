@@ -9,7 +9,7 @@ import {
   IWorkoutLog,
   IStatusLog,
   IExerciseLog,
-  ISetLog
+  ISetLog,
 } from '../../util/interfaces/activitiesInterfaces';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
@@ -55,6 +55,65 @@ export const apiGetProgramPlanById = catchAsync(
   }
 );
 
+export const apiAddProgramPlan = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { program, assignedTo } = req.body;
+    const assignedBy = res.locals.user.id;
+
+    if (!program || !assignedTo || !assignedBy) {
+      return next(
+        new AppError(
+          `'programId', 'assignedToId', 'assignedBy' are required fields.`,
+          400
+        )
+      );
+    }
+
+    const programWithWorkouts = await ProgramHandler.fetchProgramInfo(program);
+    if (!programWithWorkouts) {
+      return next(new AppError(`No program found with id ${program}.`, 404));
+    }
+
+    let programPlan: IProgramPlan = {
+      program,
+      assignedTo,
+      assignedOn: new Date(),
+      assignedBy,
+    };
+
+    if (program?.workouts || program?.workouts?.length === 0) {
+      return next(
+        new AppError(`No workouts found in program id '${program}'.`, 400)
+      );
+    }
+
+    createWeekPlans(programPlan, programWithWorkouts);
+    createPlanLogs(programPlan, programWithWorkouts);
+
+    await ProgramPlanHandler.save(programPlan);
+    res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
+  }
+);
+
+export const apiUpdateProgramPlan = catchAsync(
+  async (req: Request, res: Response) => {
+    const programPlanId: string = req.params.programPlanId;
+
+    await ProgramPlanHandler.update(programPlanId, req.body);
+    res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
+  }
+);
+
+export const apiDeleteProgramPlan = catchAsync(
+  async (req: Request, res: Response) => {
+    const programPlanId: string = req.params.programPlanId;
+
+    await ProgramPlanHandler.deleteById(programPlanId);
+    res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
+  }
+);
+
+/** LOGS */
 export const apiGetProgramPlanLogsById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const programPlanId: string = req.params.programPlanId;
@@ -110,71 +169,58 @@ export const apiGetWorkoutLogsById = catchAsync(
   }
 );
 
-export const apiAddProgramPlan = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { program, assignedTo } = req.body;
-    const assignedBy = res.locals.user.id;
-
-    if (!program || !assignedTo || !assignedBy) {
-      return next(
-        new AppError(
-          `'programId', 'assignedToId', 'assignedBy' are required fields.`,
-          400
-        )
-      );
-    }
-
-    const programWithWorkouts = await ProgramHandler.fetchProgramInfo(program);
-    if (!programWithWorkouts) {
-      return next(new AppError(`No program found with id ${program}.`, 404));
-    }
-
-    let programPlan: IProgramPlan = {
-      program,
-      assignedTo,
-      assignedOn: new Date(),
-      assignedBy,
-    };
-
-    if (program?.workouts || program?.workouts?.length === 0) {
-      return next(
-        new AppError(`No workouts found in program id '${program}'.`, 400)
-      );
-    }
-
-    createWeekPlans(programPlan, programWithWorkouts);
-    createPlanLogs(programPlan, programWithWorkouts);
-
-    await ProgramPlanHandler.save(programPlan);
-    res.status(RESPONSE_CODE.CREATED).json(RESPONSE.ADDED_SUCCESSFULLY());
-  }
-);
-
-export const apiUpdateProgramPlan = catchAsync(
-  async (req: Request, res: Response) => {
-    const programPlanId: string = req.params.programPlanId;
-
-    await ProgramPlanHandler.update(programPlanId, req.body);
-    res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
-  }
-);
-
 export const apiAddSetLog = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { programPlanId, weekId, workoutPlanId, exercisePlanId } = req.params;
-    const paramVals = {programPlanId, weekId, workoutPlanId, exercisePlanId}
-    
+    const paramVals = { programPlanId, weekId, workoutPlanId, exercisePlanId };
+    req.body._id = new ObjectId();
+
     await ProgramPlanHandler.addSetLog(paramVals, req.body);
-    res.status(RESPONSE_CODE.CREATED).json(RESPONSE.UPDATED_SUCCESSFULLY());
+
+    res
+      .status(RESPONSE_CODE.CREATED)
+      .json(RESPONSE.ADDED_SUCCESSFULLY_ID(req.body._id));
   }
 );
 
-export const apiDeleteProgramPlan = catchAsync(
-  async (req: Request, res: Response) => {
-    const programPlanId: string = req.params.programPlanId;
+export const apiUpdateSetLog = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { programPlanId, weekId, workoutPlanId, exercisePlanId, setId } =
+      req.params;
+    const paramVals = {
+      programPlanId,
+      weekId,
+      workoutPlanId,
+      exercisePlanId,
+      setId,
+    };
+    req.body._id = setId;
 
-    await ProgramPlanHandler.deleteById(programPlanId);
-    res.status(RESPONSE_CODE.ACCEPTED).json(RESPONSE.DELETED_SUCCESSFULLY());
+    await ProgramPlanHandler.updateSetLog(paramVals, req.body);
+
+    res
+      .status(RESPONSE_CODE.CREATED)
+      .json(RESPONSE.UPDATED_SUCCESSFULLY_ID(req.body._id));
+  }
+);
+
+export const apiDeleteSetLog = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { programPlanId, weekId, workoutPlanId, exercisePlanId, setId } =
+      req.params;
+    const paramVals = {
+      programPlanId,
+      weekId,
+      workoutPlanId,
+      exercisePlanId,
+      setId,
+    };
+
+    await ProgramPlanHandler.deleteSetLog(paramVals);
+
+    res
+      .status(RESPONSE_CODE.CREATED)
+      .json(RESPONSE.DELETED_SUCCESSFULLY_ID(paramVals.setId));
   }
 );
 

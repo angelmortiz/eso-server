@@ -5,6 +5,7 @@ import {
 } from '../../util/interfaces/activitiesInterfaces';
 import mongoose from 'mongoose';
 import ProgramPlanSchema from '../../util/database/schemas/activities/programPlanSchema';
+import AppError from '../../util/errors/appError';
 
 const ProgramPlanModel = mongoose.model('ProgramPlan', ProgramPlanSchema);
 
@@ -17,52 +18,6 @@ export default class ProgramPlanHandler {
     return await ProgramPlanModel.updateOne({ _id }, programPlan, {
       runValidators: true,
     });
-  }
-
-  static async addSetLog(
-    params: {
-      programPlanId: string;
-      weekId: string;
-      workoutPlanId: string;
-      exercisePlanId: string;
-    },
-    setInfo: ISetLog
-  ) {
-    return await ProgramPlanModel.updateOne(
-      {
-        _id: params.programPlanId,
-      },
-      {
-        //pushes a new element to the sets array in the path:
-        //logs.weeksLog[].workouts[].exercise[].exercise.sets[]
-        $push: {
-          'logs.weeksLog.$[weekId].workouts.$[workoutId].exercises.$[exerciseId].sets':
-            {
-              ...setInfo,
-              log: {
-                isStarted: true,
-                startedOn: new Date(),
-                isCompleted: true,
-                completedOn: new Date()
-              }
-            },
-        },
-      },
-      {
-        //array filters help identify the right exercise to push the new setLog
-        arrayFilters: [
-          {
-            'weekId._id': new ObjectId(params.weekId),
-          },
-          {
-            'workoutId._id': new ObjectId(params.workoutPlanId),
-          },
-          {
-            'exerciseId._id': new ObjectId(params.exercisePlanId),
-          },
-        ],
-      }
-    );
   }
 
   static async fetchById(id: string | ObjectId) {
@@ -107,6 +62,11 @@ export default class ProgramPlanHandler {
       });
   }
 
+  static async deleteById(id: string | ObjectId) {
+    return await ProgramPlanModel.findByIdAndDelete(id);
+  }
+
+  /** LOGS */
   static async fetchPlanLogsById(id: string | ObjectId) {
     return await this.findProgramPlanLogs(id, 'name', 'name alternativeName');
   }
@@ -132,7 +92,143 @@ export default class ProgramPlanHandler {
       )) as IProgramPlan;
   }
 
-  static async deleteById(id: string | ObjectId) {
-    return await ProgramPlanModel.findByIdAndDelete(id);
+  static async addSetLog(
+    params: {
+      programPlanId: string;
+      weekId: string;
+      workoutPlanId: string;
+      exercisePlanId: string;
+    },
+    setInfo: ISetLog
+  ) {
+    return await ProgramPlanModel.updateOne(
+      {
+        _id: params.programPlanId,
+      },
+      {
+        /**
+         * pushes a new element to the sets array in the path:
+         * logs.weeksLog[].workouts[].exercise[].exercise.sets[]
+         */
+        $push: {
+          'logs.weeksLog.$[weekId].workouts.$[workoutId].exercises.$[exerciseId].sets':
+            {
+              ...setInfo,
+              log: {
+                isStarted: true,
+                startedOn: new Date(),
+                isCompleted: true,
+                completedOn: new Date(),
+              },
+            },
+        },
+      },
+      {
+        //array filters help identify the right exercise to push the new setLog
+        arrayFilters: [
+          {
+            'weekId._id': new ObjectId(params.weekId),
+          },
+          {
+            'workoutId._id': new ObjectId(params.workoutPlanId),
+          },
+          {
+            'exerciseId._id': new ObjectId(params.exercisePlanId),
+          },
+        ],
+      }
+    );
+  }
+
+  static async updateSetLog(
+    params: {
+      programPlanId: string;
+      weekId: string;
+      workoutPlanId: string;
+      exercisePlanId: string;
+      setId: string;
+    },
+    setInfo: ISetLog
+  ) {
+    return await ProgramPlanModel.updateOne(
+      {
+        _id: params.programPlanId,
+      },
+      {
+        /**
+         * updates a set log in the array path:
+         * logs.weeksLog[].workouts[].exercises[].exercise.sets[]
+         */
+        $set: {
+          'logs.weeksLog.$[weekId].workouts.$[workoutId].exercises.$[exerciseId].sets.$[setId]':
+            {
+              ...setInfo,
+              log: {
+                isStarted: true,
+                startedOn: new Date(),
+                isCompleted: true,
+                completedOn: new Date(),
+              },
+            },
+        },
+      },
+      {
+        //array filters help identify the right set to update the log
+        arrayFilters: [
+          {
+            'weekId._id': new ObjectId(params.weekId),
+          },
+          {
+            'workoutId._id': new ObjectId(params.workoutPlanId),
+          },
+          {
+            'exerciseId._id': new ObjectId(params.exercisePlanId),
+          },
+          {
+            'setId._id': new ObjectId(params.setId),
+          },
+        ],
+      }
+    );
+  }
+
+  static async deleteSetLog(params: {
+    programPlanId: string;
+    weekId: string;
+    workoutPlanId: string;
+    exercisePlanId: string;
+    setId: string;
+  }) {
+    return await ProgramPlanModel.updateOne(
+      {
+        _id: params.programPlanId,
+      },
+      {
+        /**
+         * removes a set log in the array path:
+         * logs.weeksLog[].workouts[].exercises[].exercise.sets[]
+         */
+        $pull: {
+          'logs.weeksLog.$[weekId].workouts.$[workoutId].exercises.$[exerciseId].sets':
+            {
+              _id: new ObjectId(params.setId),
+            },
+        },
+      },
+      {
+        //array filters help identify the right set to remove the log
+        arrayFilters: [
+          {
+            'weekId._id': new ObjectId(params.weekId),
+          },
+          {
+            'workoutId._id': new ObjectId(params.workoutPlanId),
+          },
+          {
+            'exerciseId._id': new ObjectId(params.exercisePlanId),
+          }
+        ],
+      }
+    );
   }
 }
