@@ -4,6 +4,7 @@ import { Router } from 'express';
 const router = Router();
 
 //Controllers imports
+import * as programPlanLogsController from '../controllers/activitiesControllers/programPlanLogsController';
 import * as programPlansController from '../controllers/activitiesControllers/programPlanController';
 import * as programsController from '../controllers/activitiesControllers/programsController';
 import * as workoutsController from '../controllers/activitiesControllers/workoutsController';
@@ -48,26 +49,26 @@ router.delete(
 /* PROGRAM PLAN LOGS */
 router.get(
   '/programPlan/logs/:programPlanId',
-  programPlansController.apiGetProgramPlanLogsById
+  programPlanLogsController.apiGetProgramPlanLogsById
 );
 router.get(
   '/programPlan/logs/:programPlanId/weekNumber/:weekNumber/workout/:workoutId',
-  programPlansController.apiGetWorkoutLogsById
+  programPlanLogsController.apiGetWorkoutLogsById
 );
 router.post(
   '/programPlan/:programPlanId/weekPlan/:weekId/workoutPlan/:workoutPlanId/exercisePlan/:exercisePlanId',
   restrictAccessTo('Admin', 'Editor'),
-  programPlansController.apiAddSetLog
+  programPlanLogsController.apiAddSetLog
 );
 router.patch(
   '/programPlan/:programPlanId/weekPlan/:weekId/workoutPlan/:workoutPlanId/exercisePlan/:exercisePlanId/setId/:setId',
   restrictAccessTo('Admin', 'Editor'),
-  programPlansController.apiUpdateSetLog
+  programPlanLogsController.apiUpdateSetLog
 );
 router.delete(
   '/programPlan/:programPlanId/weekPlan/:weekId/workoutPlan/:workoutPlanId/exercisePlan/:exercisePlanId/setId/:setId',
   restrictAccessTo('Admin', 'Editor'),
-  programPlansController.apiDeleteSetLog
+  programPlanLogsController.apiDeleteSetLog
 );
 
 /* PROGRAM */
