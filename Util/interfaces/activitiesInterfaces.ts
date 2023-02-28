@@ -53,7 +53,6 @@ export interface IExerciseLog {
 
 export interface ISetLog {
   _id?: ObjectId;
-  setNumber: number;
   log: IStatusLog;
   weight: number;
   reps: number;

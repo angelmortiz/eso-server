@@ -36,11 +36,6 @@ const StatusLogSchema = new Schema({
 });
 
 const SetLogSchema = new Schema({
-  setNumber: {
-    type: Number,
-    required: true,
-    min: 1,
-  },
   log: {
     type: StatusLogSchema,
     required: true,
