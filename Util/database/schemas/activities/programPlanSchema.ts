@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
 import { WorkoutPlanSchema } from './programSchema';
+import mongoose from 'mongoose';
+import ProgramLogSchema from './programLogSchema';
 const Schema = mongoose.Schema;
 
 const WeekPlanSchema = new Schema({
@@ -31,13 +32,17 @@ export default new Schema(
       required: [true, 'Assignation date is required.'],
       default: Date.now(),
     },
-      assignedBy: {
+    assignedBy: {
       type: Schema.Types.ObjectId,
       required: [true, 'Assigend by user is required.'],
       ref: 'UserAuth',
     },
     weeksPlan: {
       type: [WeekPlanSchema],
+      required: false,
+    },
+    logs: {
+      type: ProgramLogSchema,
       required: false,
     },
   },
