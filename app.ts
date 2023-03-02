@@ -40,7 +40,7 @@ app.use(express.json({limit: '10kb'}));
 //parses the body that comes from the client
 app.use(bodyParser.urlencoded({extended: false})); 
 
-app.use(cors({origin: ['http://localhost:3001', 'http://192.168.4.173:3001', 'http://192.168.4.129:3001'], credentials: true}));
+app.use(cors({origin: [`http://${process.env.CLIENT_ADDRESS}:${process.env.CLIENT_PORT}`], credentials: true}));
 
 //Data sanitization against NoSQL attacks
 app.use(mongoSanitize());
