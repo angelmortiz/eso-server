@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
+import compression from 'compression';
 import bodyParser from 'body-parser'; //parser to read info from client-side
 import rootDir from './util/path';// importing utility to create paths
 import AppError from './util/errors/appError';
@@ -49,6 +50,9 @@ app.use(xss());
 
 //Prevents paramater pollution
 //app.use(hpp());
+
+//improves performance by compression the data output
+app.use(compression());
 
 //uploads public files (css) to client
 app.use(express.static(path.join(rootDir, 'public'))); 

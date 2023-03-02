@@ -255,7 +255,7 @@ export const isAuthenticationValid = catchAsync(
     const token = getTokenFromCookies(cookies);
 
     if (!token) {
-      console.log('No authorization token found.');
+      //console.log('No authorization token found.');
       res
         .status(RESPONSE_CODE.ACCEPTED)
         .json(
@@ -272,7 +272,6 @@ export const isAuthenticationValid = catchAsync(
 
     const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);
     if (!currentUser) {
-      console.log('User deleted.');
       res
         .status(RESPONSE_CODE.ACCEPTED)
         .json(RESPONSE.USER_AUTHENTICATION_RESPONSE(false, 'User deleted.'));
@@ -280,7 +279,6 @@ export const isAuthenticationValid = catchAsync(
     }
 
     if (currentUser.hasChangedPasswordAfterJwtCreation(decodedJwt.iat)) {
-      console.log('Password changed after JWT creation.');
       res
         .status(RESPONSE_CODE.ACCEPTED)
         .json(

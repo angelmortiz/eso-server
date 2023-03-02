@@ -1,6 +1,4 @@
 import mongoose from 'mongoose'; //using schemas and classes to interact with mongodb
-import dotenv from 'dotenv';
-dotenv.config();
 
 export const connectToDb = async () => {
   let dbString = process.env.DATABASE_STRING?.replace('<PASSWORD>', process.env.DATABASE_PASSWORD!)!;
