@@ -5,7 +5,7 @@ const router = Router();
 
 //Controllers imports
 import * as programPlanLogsController from '../controllers/activitiesControllers/programPlanLogsController';
-import * as programPlansController from '../controllers/activitiesControllers/programPlanController';
+import * as programPlansController from '../controllers/activitiesControllers/programPlansController';
 import * as programsController from '../controllers/activitiesControllers/programsController';
 import * as workoutsController from '../controllers/activitiesControllers/workoutsController';
 import * as exercisesController from '../controllers/activitiesControllers/exercisesController';
