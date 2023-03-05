@@ -13,6 +13,7 @@ import apisNutritionRouter from './routes/apisNutritionRouter';
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
 import apisUserAuthRouter from './routes/apisUserAuthRouter';
 import apisUserInfoRouter from './routes/apisUserInfoRouter';
+import apisHomePageRouter from './routes/apisHomePageRouter';
 
 
 import { protectRoute }  from './controllers/userControllers/userAuthController';
@@ -61,6 +62,7 @@ app.use('/api/auth', apisUserAuthRouter);
 app.use('/api/users', protectRoute, apisUserInfoRouter);
 app.use('/api/nutrition', protectRoute, apisNutritionRouter);
 app.use('/api/activities', protectRoute, apisActivitiesRouter);
+app.use('/api', apisHomePageRouter)
 
 //route not found
 app.use('*', (req: Request, res: Response, next: NextFunction) => {

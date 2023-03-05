@@ -11,7 +11,7 @@ process.on('uncaughtException', err => {
 });
 
 //starts the server
-const port = process.env.PORT || 3000;
+const port = process.env.APP_PORT || 8080;
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
   connectToDb();
