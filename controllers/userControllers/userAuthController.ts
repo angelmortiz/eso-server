@@ -10,6 +10,7 @@ import crypto from 'crypto';
 import sendEmail from '../../util/email';
 import UserAuthHandler from '../../models/userModels/userAuthModel';
 import AppError from '../../util/errors/appError';
+import getVaultSecret from '../../util/keyvault/azureKeyVaultConfig';
 
 //TODO: Send confirmation email to check the email provided is valid
 export const signup = catchAsync(
@@ -51,7 +52,7 @@ export const signup = catchAsync(
       password,
       imageLink,
       passwordChangedAt: new Date(),
-      role: 'User'
+      role: 'User',
     };
 
     await UserAuthHandler.save(userInfo);
@@ -75,7 +76,7 @@ export const login = catchAsync(
       return next(new AppError(`Incorrect email or password.`, 401));
     }
 
-    sendResponseWithCookie(
+    await sendResponseWithCookie(
       user._id.toString(),
       RESPONSE_CODE.OK,
       res,
@@ -100,7 +101,10 @@ export const protectRoute = catchAsync(
     }
 
     const jwtVerify = util.promisify(jwt.verify); //converts node.js callback function to promise
-    const decodedJwt = await jwtVerify(token, process.env.JWT_SECRET);
+    const decodedJwt = await jwtVerify(
+      token,
+      process.env.JWT_SECRET || (await getVaultSecret('jwt-secret'))
+    );
 
     const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);
     if (!currentUser) {
@@ -208,7 +212,7 @@ export const resetPassword = catchAsync(
     user.passwordResetExpiresAt = undefined;
     await user.save();
 
-    sendResponseWithCookie(
+    await sendResponseWithCookie(
       user?.id,
       RESPONSE_CODE.OK,
       res,
@@ -239,7 +243,7 @@ export const changePassword = catchAsync(
     user.password = newPassword;
     await user.save();
 
-    sendResponseWithCookie(
+    await sendResponseWithCookie(
       user._id,
       RESPONSE_CODE.ACCEPTED,
       res,
@@ -268,7 +272,10 @@ export const isAuthenticationValid = catchAsync(
     }
 
     const jwtVerify = util.promisify(jwt.verify); //converts node.js callback function to promise
-    const decodedJwt = await jwtVerify(token, process.env.JWT_SECRET);
+    const decodedJwt = await jwtVerify(
+      token,
+      process.env.JWT_SECRET || (await getVaultSecret('jwt-secret'))
+    );
 
     const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);
     if (!currentUser) {
@@ -313,19 +320,23 @@ const getTokenFromCookies = (cookies: string | undefined) => {
   return token;
 };
 
-const getToken = (id: string | ObjectID) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
+const getToken = async (id: string | ObjectID) => {
+  return jwt.sign(
+    { id },
+    process.env.JWT_SECRET || (await getVaultSecret('jwt-secret')),
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    }
+  );
 };
 
-const sendResponseWithCookie = (
+const sendResponseWithCookie = async (
   userId: string,
   statusCode: RESPONSE_CODE,
   res: Response,
   message: string
 ) => {
-  const token = getToken(userId);
+  const token = await getToken(userId);
   const cookieOptions: CookieOptions = {
     expires: new Date(
       Date.now() +

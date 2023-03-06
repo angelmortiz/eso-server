@@ -31,7 +31,7 @@ app.use(helmet());
 //Limits requests from the same IP (prevent brute force attacks)
 const limiter = rateLimit({
     max: 100,
-    windowMs: 60 * 60 * 1000,
+    windowMs: 10 * 60 * 1000,
     message: 'Too many requests made from this IP, please try again in one hour.'
 })
 app.use('/api', limiter); 
@@ -62,7 +62,8 @@ app.use('/api/auth', apisUserAuthRouter);
 app.use('/api/users', protectRoute, apisUserInfoRouter);
 app.use('/api/nutrition', protectRoute, apisNutritionRouter);
 app.use('/api/activities', protectRoute, apisActivitiesRouter);
-app.use('/api', apisHomePageRouter)
+app.use('/api', apisHomePageRouter);
+app.use('/', apisHomePageRouter);
 
 //route not found
 app.use('*', (req: Request, res: Response, next: NextFunction) => {

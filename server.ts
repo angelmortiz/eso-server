@@ -1,6 +1,7 @@
-import { connectToDb } from './util/database/connection';
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({path: `.env.${process.env.NODE_ENV}`});
+
+import { connectToDb } from './util/database/connection';
 import app from './app';
 
 //handling uncaught exceptions
@@ -11,7 +12,7 @@ process.on('uncaughtException', err => {
 });
 
 //starts the server
-const port = process.env.APP_PORT || 8080;
+const port = process.env.SERVER_PORT || 8080;
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
   connectToDb();
