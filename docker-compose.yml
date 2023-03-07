@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  server:
+    container_name: eso-server
+    env_file:
+      - .env.production
+    build:
+      dockerfile: Dockerfile
+    image: acreso.azurecr.io/esoptima-server:v01
+    ports:
+      - 8080:8080

@@ -1,19 +1,14 @@
-FROM node:18.14.2-alpine3.17
+# FROM node:18.14.2-alpine3.17
+FROM node:lts-alpine
 
 WORKDIR /usr/src/app
-COPY ["package*.json", "./"]
+COPY package*.json ./
 
 #this sets 'root' as the owner of all node_modules files to prevent deployment on Azure App Service
 RUN npm install && \
     find /usr/src/app/node_modules/ ! -user root | xargs chown root:root
 
 COPY . .
-
-ENV NODE_ENV=production
-ENV PROJECT_PATH=/usr/src/app
-ENV SERVER_PORT=8080
-ENV CLIENT_ADDRESS=tusaludoptima.com
-ENV CLIENT_PORT=3000
 
 EXPOSE 8080
 

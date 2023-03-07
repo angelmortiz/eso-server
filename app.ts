@@ -40,9 +40,13 @@ app.use(express.json({ limit: '10kb' }));
 //parses the body that comes from the client
 app.use(bodyParser.urlencoded({ extended: false }));
 
+/**  FOR TESTING PURPOSES [DO NOT DELETE] */
+// const clientAddress = `http://localhost:${process.env.CLIENT_PORT}`;
+/** */
+
 const clientAddress =
   process.env.NODE_ENV === 'development'
-    ? `http://${process.env.CLIENT_ADDRESS}:${process.env.CLIENT_PORT}`
+    ? `http://localhost:${process.env.CLIENT_PORT}`
     : `https://${process.env.CLIENT_ADDRESS}`;
 app.use(cors({ origin: [clientAddress], credentials: true }));
 
