@@ -10,8 +10,8 @@ export const connectToDb = async () => {
     dbString = process.env.DATABASE_STRING?.replace('<PASSWORD>', process.env.DATABASE_PASSWORD!)!;
   } else {
     const [secretDbString, secretDbPassword] = await Promise.all([
-      getVaultSecret('mongodb-connectionstring'),
-      getVaultSecret('mongodb-password'),
+      getVaultSecret('azure-mongodb-prod-connstring'),
+      getVaultSecret('azure-mongodb-prod-password'),
     ]);
 
     dbString = secretDbString?.replace('<PASSWORD>', secretDbPassword!)!;
