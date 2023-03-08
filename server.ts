@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
-dotenv.config({path: `.env.${process.env.NODE_ENV}`});
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 import { connectToDb } from './util/database/connection';
 import app from './app';
 
 //handling uncaught exceptions
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err) => {
   //IMPROVE: Log the rejections into a file
   console.error(`An uncaught exception occurred. Info: `, err);
   process.exit(1);
@@ -19,12 +19,12 @@ const server = app.listen(port, () => {
 });
 
 //handling unhandled errors
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   //IMPROVE: Log the rejections into a file
   console.error(`An unhandled rejection occurred. Info: `, err);
-  
+
   //waits for all the processes to complete before shutting down the server
   server.close(() => {
     process.exit(1);
-  })
+  });
 });
