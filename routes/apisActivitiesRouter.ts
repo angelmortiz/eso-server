@@ -11,7 +11,7 @@ import * as workoutsController from '../controllers/activitiesControllers/workou
 import * as exercisesController from '../controllers/activitiesControllers/exercisesController';
 import * as musclesController from '../controllers/activitiesControllers/musclesController';
 import * as equipmentsController from '../controllers/activitiesControllers/equipmentsController';
-import * as physicalConditionsController from '../controllers/activitiesControllers/physicalConditionsController';
+// import * as physicalConditionsController from '../controllers/activitiesControllers/physicalConditionsController';
 
 /* PROGRAM PLAN */
 router.get(
@@ -122,30 +122,30 @@ router.delete(
 
 /* PHYSICAL CONDITION */
 //APIs
-router.get(
-  '/physicalConditions',
-  physicalConditionsController.apiGetPhysicalConditions
-);
-router.get(
-  '/physicalconditionNames',
-  physicalConditionsController.apiGetPhysicalConditionNames
-);
-router.get(
-  '/physicalcondition/:physicalconditionId',
-  physicalConditionsController.apiGetPhysicalConditionById
-);
-router.post(
-  '/physicalcondition',
-  physicalConditionsController.apiAddPhysicalCondition
-);
-router.put(
-  '/physicalcondition/:physicalconditionId',
-  physicalConditionsController.apiUpdatePhysicalCondition
-);
-router.delete(
-  '/physicalcondition/:physicalconditionId',
-  physicalConditionsController.apiDeletePhysicalCondition
-);
+// router.get(
+//   '/physicalConditions',
+//   physicalConditionsController.apiGetPhysicalConditions
+// );
+// router.get(
+//   '/physicalconditionNames',
+//   physicalConditionsController.apiGetPhysicalConditionNames
+// );
+// router.get(
+//   '/physicalcondition/:physicalconditionId',
+//   physicalConditionsController.apiGetPhysicalConditionById
+// );
+// router.post(
+//   '/physicalcondition',
+//   physicalConditionsController.apiAddPhysicalCondition
+// );
+// router.put(
+//   '/physicalcondition/:physicalconditionId',
+//   physicalConditionsController.apiUpdatePhysicalCondition
+// );
+// router.delete(
+//   '/physicalcondition/:physicalconditionId',
+//   physicalConditionsController.apiDeletePhysicalCondition
+// );
 
 //exports
 export default router;
