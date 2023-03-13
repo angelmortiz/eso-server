@@ -29,12 +29,9 @@ export default class DietHandler implements IDiet {
   }
 
   async update() {
-    return await DietModel.updateOne({ _id: this.id }, this);
+    return await DietModel.updateOne({ _id: this.id }, this, {runValidators: true});
   }
 
-  static async fetchByName(name: string) {
-    return await DietModel.findOne({ name: name });
-  }
 
   static async fetchById(id: string | ObjectId) {
     return await DietModel.findById(id);

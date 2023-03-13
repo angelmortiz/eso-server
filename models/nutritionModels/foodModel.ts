@@ -38,11 +38,7 @@ export default class FoodHandler implements IFood {
   }
 
   async update() {
-    return await FoodModel.updateOne({ _id: this.id }, this);
-  }
-
-  static async fetchByName(name: string) {
-    return await FoodModel.findOne({ name: name });
+    return await FoodModel.updateOne({ _id: this.id }, this, {runValidators: true});
   }
 
   static async fetchById(id: string | ObjectId) {

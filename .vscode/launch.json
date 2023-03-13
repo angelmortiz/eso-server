@@ -12,9 +12,16 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/app.ts",
-            "restart":  true,
+            "restart": true,
             "runtimeExecutable": "nodemon",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Docker Node.js Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node"
         }
     ]
 }
