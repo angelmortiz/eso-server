@@ -44,7 +44,6 @@ const UserAuthSchema = new Schema(
     userInfo: {
       type: Schema.Types.ObjectId,
       required: false,
-      unique: true,
       ref: 'UserInfo',
     },
   },

@@ -9,6 +9,13 @@ import AppError from '../../util/errors/appError';
 export const apiGetUserInfo = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = res.locals.user.id;
+    
+    if (!res.locals?.user?.id) {
+      return next(
+        new AppError(`No user id found in 'res.locals.user'`, 404)
+      );
+    }
+
     const userInfo = await UserAuthHandler.fetchById(userId);
 
     if (!userInfo) {
