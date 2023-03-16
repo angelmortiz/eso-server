@@ -17,7 +17,6 @@ variables:
   tag: '$(Build.BuildId)'
   azureSubscription: 'EsoServerSubscriptionConnection'
   appServiceName: 'api-ensaludoptima'
-  resourceGroupName: 'rg-eso-server'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -40,26 +39,9 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-
-- stage: Deploy
-  displayName: 'Deploy to Azure App Service'
-  dependsOn: BuildAndPush
-  jobs:
-  - deployment: Deploy
-    displayName: 'Deploy Docker Image'
-    pool:
-      vmImage: 'ubuntu-latest'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureRmWebAppDeployment@4
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: '$(azureSubscription)'
-              appType: 'webAppContainer'
-              WebAppName: '$(appServiceName)'
-              ResourceGroupName: '$(resourceGroupName)'
-              DockerNamespace: '$(containerRegistry)'
-              DockerRepository: '$(repository)'
-              DockerImageTag: '$(tag)'
+    - task: AzureWebAppContainer@1
+      displayName: 'Azure Web App on Container Deploy'
+      inputs:
+        azureSubscription: $(azureSubscription)
+        appName: $(appServiceName)
+        imageName: $(containerRegistry)/$(imageRepository):$(tag)
