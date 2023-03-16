@@ -27,22 +27,30 @@ stages:
 - stage: BuildAndPush
   displayName: Build Docker image and push image to ACR
   jobs:
-  - job: BuildAndPusth
+  - job: BuildAndPush
     displayName: Build Docker image and push image to ACR
     pool:
       vmImage: $(vmImageName)
     steps:
     - task: Docker@2
-      displayName: Build and push image to ACR
+      displayName: Build Docker Image
       inputs:
-        command: buildAndPush
-        repository: $(imageName)
+        command: build
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageName)
         tags: |
           $(tag)
         arguments: '--build-arg PROJECT_PATH=$(PROJECT_PATH) --build-arg SERVER_PORT=$(SERVER_PORT) --build-arg CLIENT_ADDRESS=$(CLIENT_ADDRESS) --build-arg CLIENT_PORT=$(CLIENT_PORT) --build-arg JWT_EXPIRES_IN=$(JWT_EXPIRES_IN) --build-arg JWT_COOKIE_EXPIRES_IN=$(JWT_COOKIE_EXPIRES_IN) --build-arg RESET_PASS_COOKIE_EXPIRES_IN=$(RESET_PASS_COOKIE_EXPIRES_IN) --build-arg AZURE_KEY_VAULT_URI=$(AZURE_KEY_VAULT_URI) --build-arg AZURE_TENANT_ID=$(AZURE_TENANT_ID) --build-arg AZURE_CLIENT_ID=$(AZURE_CLIENT_ID) --build-arg AZURE_CLIENT_SECRET=$(AZURE_CLIENT_SECRET) --build-arg EMAIL_HOST=$(EMAIL_HOST) --build-arg EMAIL_PORT=$(EMAIL_PORT) --build-arg MAILTRAP_EMAIL_HOST=$(MAILTRAP_EMAIL_HOST) --build-arg MAILTRAP_EMAIL_PORT=$(MAILTRAP_EMAIL_PORT)'
-          
+    - task: Docker@2
+      displayName: Push image to ACR
+      inputs:
+        command: push
+        repository: $(imageName)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
 - stage: Deploy
   displayName: Deploy image from ACR to Azure Web App
   jobs:
