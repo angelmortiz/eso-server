@@ -49,7 +49,6 @@ stages:
     displayName: 'Deploy Docker Image'
     pool:
       vmImage: 'ubuntu-latest'
-    environment: 'production'
     strategy:
       runOnce:
         deploy:
