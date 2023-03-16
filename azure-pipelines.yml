@@ -1,7 +1,9 @@
-# Docker
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# This pipeline automates the following processes:
+#  1) Build a docker image using the latest commit of the main branch
+#  2) Push the newly created image to Azure Container Registry
+#  3) Deploy the new image to a Azure Web App
 
+# changes to the main branch will trigger this pipeline
 trigger:
 - main
 
@@ -11,11 +13,11 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '048ad0a8-b126-4c21-84a3-f8d522794d55'
-  imageRepository: 'eso-server'
-  containerRegistry: 'acreso.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
   azureSubscription: 'EsoServerSubscriptionConnection'
+  containerRegistry: 'acreso.azurecr.io'
+  imageName: 'eso-server'
+  tag: '$(Build.BuildId)'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   appServiceName: 'api-ensaludoptima'
 
   # Agent VM image name
@@ -23,25 +25,34 @@ variables:
 
 stages:
 - stage: BuildAndPush
-  displayName: Build and push Docker Image
+  displayName: Build Docker image and push image to ACR
   jobs:
-  - job: Build
-    displayName: Build Docker Image
+  - job: BuildAndPusth
+    displayName: Build Docker image and push image to ACR
     pool:
       vmImage: $(vmImageName)
     steps:
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      displayName: Build and push image to ACR
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
+        repository: $(imageName)
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+          
+- stage: Deploy
+  displayName: Deploy image from ACR to Azure Web App
+  jobs:
+  - job: Deploy
+    displayName: Deploy image from ACR to Azure Web App
+    pool:
+      vmImage: $(vmImageName)
+    steps:
     - task: AzureWebAppContainer@1
-      displayName: 'Azure Web App on Container Deploy'
+      displayName: Deploy image to Azure Web App
       inputs:
         azureSubscription: $(azureSubscription)
         appName: $(appServiceName)
-        imageName: $(containerRegistry)/$(imageRepository):$(tag)
+        imageName: $(containerRegistry)/$(imageName):$(tag)
