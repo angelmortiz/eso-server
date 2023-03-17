@@ -41,13 +41,13 @@ app.use(express.json({ limit: '10kb' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 /**  FOR TESTING PURPOSES [DO NOT DELETE] */
-// const clientAddress = `http://localhost:${process.env.CLIENT_PORT}`;
+// const clientAddress = `http://localhost:${process.env.CLIENT_PORT || '8080'}`;
 /** */
 
 const clientAddress =
-  process.env.NODE_ENV === 'development'
-    ? `http://localhost:${process.env.CLIENT_PORT}`
-    : `https://${process.env.CLIENT_ADDRESS}`;
+  process.env.NODE_ENV === 'production'
+    ? `https://${process.env.CLIENT_ADDRESS}`
+    : `http://localhost:${process.env.CLIENT_PORT || '8080'}`;
 app.use(cors({ origin: [clientAddress], credentials: true }));
 
 //Data sanitization against NoSQL attacks

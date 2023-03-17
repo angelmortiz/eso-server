@@ -152,7 +152,11 @@ export const forgotPassword = catchAsync(
     const resetToken = user.createResetToken();
     await user.save(); //saves resetToken and expiresAt after setting the values in schema.
 
-    const resetURL = `${req.protocol}://${process.env.CLIENT_ADDRESS}:${process.env.CLIENT_PORT}/auth/resetPassword?token=${resetToken}`;
+    const clientPort =
+      process.env.NODE_ENV === 'production'
+        ? ''
+        : `:${process.env.CLIENT_PORT || '8080'}`;
+    const resetURL = `${req.protocol}://${process.env.CLIENT_ADDRESS}${clientPort}/auth/resetPassword?token=${resetToken}`;
     const message = `Forgot your password? Submit a request with your new password and confirmation password.\nUse the following url: ${resetURL}\nIf this wasn't you, please ignore this email.`;
 
     try {
@@ -325,7 +329,7 @@ const getToken = async (id: string | ObjectID) => {
     { id },
     process.env.JWT_SECRET || (await getVaultSecret('jwt-secret')),
     {
-      expiresIn: process.env.JWT_EXPIRES_IN,
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d',
     }
   );
 };
@@ -340,7 +344,7 @@ const sendResponseWithCookie = async (
   const cookieOptions: CookieOptions = {
     expires: new Date(
       Date.now() +
-        parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000
+        parseInt(process.env.JWT_COOKIE_EXPIRES_IN || '7') * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
   };
