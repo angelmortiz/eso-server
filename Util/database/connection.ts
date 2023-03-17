@@ -5,6 +5,7 @@ mongoose.set('strictQuery', true);
 export const connectToDb = async () => {
   let dbString: string;
 
+  //TODO: Add error handlinng for Key Vault
   //values were not passed through .env, use cloud vault values
   if (process.env.DATABASE_STRING && process.env.DATABASE_PASSWORD) {
     dbString = process.env.DATABASE_STRING?.replace('<PASSWORD>', process.env.DATABASE_PASSWORD!)!;
