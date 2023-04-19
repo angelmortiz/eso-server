@@ -20,7 +20,7 @@ export default class ProgramHandler {
     // return await ProgramModel.findById(id).populate('workouts.workout', 'name');
     return await ProgramModel.findById(id).populate({
       path: 'workouts.workout',
-      select: 'name exercises',
+      select: 'name variant type target exercises',
       populate: {
         path: 'exercises.exercise',
         select: 'name alternativeName',
