@@ -1,4 +1,4 @@
-import { ObjectID } from 'bson';
+import { ObjectId } from 'bson';
 import { NextFunction, Request, Response } from 'express';
 import { CookieOptions } from '../../util/types/types';
 import { catchAsync } from '../../util/errors/catchAsync';
@@ -324,7 +324,7 @@ const getTokenFromCookies = (cookies: string | undefined) => {
   return token;
 };
 
-const getToken = async (id: string | ObjectID) => {
+const getToken = async (id: string | ObjectId) => {
   return jwt.sign(
     { id },
     process.env.JWT_SECRET || (await getVaultSecret('jwt-secret')),
