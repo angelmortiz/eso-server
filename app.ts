@@ -7,9 +7,9 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import compression from 'compression';
 import bodyParser from 'body-parser'; //parser to read info from client-side
+import passport from 'passport';
 import rootDir from './util/path'; // importing utility to create paths
 import AppError from './util/errors/appError';
-import apisNutritionRouter from './routes/apisNutritionRouter';
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
 import apisUserAuthRouter from './routes/apisUserAuthRouter';
 import apisUserInfoRouter from './routes/apisUserInfoRouter';
@@ -17,6 +17,7 @@ import apisHomePageRouter from './routes/apisHomePageRouter';
 
 import { protectRoute } from './controllers/userControllers/userAuthController';
 import { globalErrorResponse } from './controllers/responseControllers/errorController';
+import passportGoogleStrategy from './util/auth/passport/GoogleStrategy';
 // import hpp from 'hpp';
 
 const app = express(); //initializing express framework
@@ -44,6 +45,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // const clientAddress = `http://localhost:${process.env.CLIENT_PORT || '8080'}`;
 /** */
 
+//Social Media Auth Log Ins
+app.use(passport.initialize());
+passportGoogleStrategy();
+
 const clientAddress =
   process.env.NODE_ENV === 'production'
     ? `https://${process.env.CLIENT_ADDRESS}`
@@ -67,7 +72,6 @@ app.use(express.static(path.join(rootDir, 'public')));
 
 app.use('/api/auth', apisUserAuthRouter);
 app.use('/api/users', protectRoute, apisUserInfoRouter);
-// app.use('/api/nutrition', protectRoute, apisNutritionRouter);
 app.use('/api/activities', protectRoute, apisActivitiesRouter);
 app.use('/api', apisHomePageRouter);
 app.use('/', apisHomePageRouter);

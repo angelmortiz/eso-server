@@ -25,13 +25,15 @@ const UserAuthSchema = new Schema(
       lowercase: true,
       validate: [validator.isEmail, 'Please, enter a valid email'],
     },
-    password: {
-      type: String,
-      required: [true, 'Password field is required'],
-    },
+    password: String,
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpiresAt: Date,
+    profileId: String,
+    strategy: {
+      type: String,
+      required: [true, 'Strategy is required']
+    },
     role: {
       type: String,
       emun: ['User', 'Editor', 'Admin'],
@@ -45,6 +47,8 @@ const UserAuthSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: false,
       ref: 'UserInfo',
+      unique: true,
+      sparse: true
     },
   },
   { collection: 'users.auth' }

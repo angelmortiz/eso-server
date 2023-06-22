@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from 'passport';
 import * as userAuthController from '../controllers/userControllers/userAuthController';
 
 const router = express.Router();
@@ -8,6 +9,15 @@ router.post('/signup', userAuthController.signup);
 
 //Log in
 router.post('/login', userAuthController.login);
+
+//Log in using Google
+router.get('/login/google', userAuthController.loginWithGoogle);
+//Log in using Google Callback
+router.get(
+  '/login/google/callback',
+  passport.authenticate('google', { failureRedirect: '/api/' }),//userAuthController.loginWithGoogleFailureRedirect,
+  userAuthController.loginWithGoogleSuccessRedirect
+);
 
 //Log out
 router.post('/logout', userAuthController.logout);
@@ -19,7 +29,11 @@ router.post('/forgotPassword', userAuthController.forgotPassword);
 router.patch('/resetPassword', userAuthController.resetPassword);
 
 //Change password
-router.post('/changePassword', userAuthController.protectRoute, userAuthController.changePassword);
+router.post(
+  '/changePassword',
+  userAuthController.protectRoute,
+  userAuthController.changePassword
+);
 
 //Check user authentication
 router.post('/isAuthenticationValid', userAuthController.isAuthenticationValid);

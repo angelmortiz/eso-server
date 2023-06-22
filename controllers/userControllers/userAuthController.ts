@@ -2,10 +2,12 @@ import { ObjectId } from 'bson';
 import { NextFunction, Request, Response } from 'express';
 import { CookieOptions } from '../../util/types/types';
 import { catchAsync } from '../../util/errors/catchAsync';
+import { IssueJwt } from '../../util/auth/passport/Jwt';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
 import util from 'util';
 import jwt from 'jsonwebtoken';
+import passport from 'passport';
 import crypto from 'crypto';
 import sendEmail from '../../util/email';
 import UserAuthHandler from '../../models/userModels/userAuthModel';
@@ -52,6 +54,7 @@ export const signup = catchAsync(
       password,
       imageLink,
       passwordChangedAt: new Date(),
+      strategy: 'JWT',
       role: 'User',
     };
 
@@ -81,6 +84,36 @@ export const login = catchAsync(
       RESPONSE_CODE.OK,
       res,
       'User logged in successfully.'
+    );
+  }
+);
+
+export const loginWithGoogle = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('google', { scope: ['email', 'profile'] })(req, res, next);
+  }
+);
+
+export const loginWithGoogleFailureRedirect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Checkpoint: Login Google Failure");
+    passport.authenticate('google', { failureRedirect: '/api/' })(
+      req,
+      res,
+      next
+    );
+  }
+);
+
+export const loginWithGoogleSuccessRedirect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Checkpoint: Login Google Success");
+    // Successful authentication, issue token.
+    await sendResponseWithCookie(
+      'Id-Expected-Here',
+      RESPONSE_CODE.OK,
+      res,
+      'User logged in with Google successfully.'
     );
   }
 );
@@ -324,23 +357,13 @@ const getTokenFromCookies = (cookies: string | undefined) => {
   return token;
 };
 
-const getToken = async (id: string | ObjectId) => {
-  return jwt.sign(
-    { id },
-    process.env.JWT_SECRET || (await getVaultSecret('jwt-secret')),
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-    }
-  );
-};
-
 const sendResponseWithCookie = async (
   userId: string,
   statusCode: RESPONSE_CODE,
   res: Response,
   message: string
 ) => {
-  const token = await getToken(userId);
+  const token = await IssueJwt(userId);
   const cookieOptions: CookieOptions = {
     expires: new Date(
       Date.now() +
