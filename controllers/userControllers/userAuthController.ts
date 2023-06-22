@@ -90,14 +90,7 @@ export const login = catchAsync(
 
 export const loginWithGoogle = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('google', { scope: ['email', 'profile'] })(req, res, next);
-  }
-);
-
-export const loginWithGoogleFailureRedirect = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    console.log("Checkpoint: Login Google Failure");
-    passport.authenticate('google', { failureRedirect: '/api/' })(
+    passport.authenticate('google', { scope: ['email', 'profile'] })(
       req,
       res,
       next
@@ -105,12 +98,28 @@ export const loginWithGoogleFailureRedirect = catchAsync(
   }
 );
 
+export const loginWithGoogleFailureRedirect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('google', (err, user) => {
+      if (err) {
+        return next(
+          new AppError(`An error occurred during authentication.`, 500)
+        );
+      } else if (!user) {
+        return next(new AppError(`Failed to authenticate user`, 401));
+      }
+
+      res.locals.user = user;
+      next();
+    })(req, res, next);
+  }
+);
+
 export const loginWithGoogleSuccessRedirect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log("Checkpoint: Login Google Success");
     // Successful authentication, issue token.
     await sendResponseWithCookie(
-      'Id-Expected-Here',
+      res.locals.user._id,
       RESPONSE_CODE.OK,
       res,
       'User logged in with Google successfully.'

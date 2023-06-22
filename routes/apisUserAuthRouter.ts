@@ -15,7 +15,7 @@ router.get('/login/google', userAuthController.loginWithGoogle);
 //Log in using Google Callback
 router.get(
   '/login/google/callback',
-  passport.authenticate('google', { failureRedirect: '/api/' }),//userAuthController.loginWithGoogleFailureRedirect,
+  userAuthController.loginWithGoogleFailureRedirect,
   userAuthController.loginWithGoogleSuccessRedirect
 );
 

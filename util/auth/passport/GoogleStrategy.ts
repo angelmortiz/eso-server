@@ -18,16 +18,15 @@ const passportGoogleStrategy = () => {
         clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
         callbackURL: `${serverAddress}/api/auth/login/google/callback`,
       },
-      async (
+      (
         //Note: access and refresh tokens not used because the app is not using other Google APIs
         accessToken: string,
         refreshToken: string,
         profile: any,
-        //TODO: Implement done function to perform checks after the Strategy has been completed
         //TODO: Implement a logic to handle situations when the user is using an email that already exists in the db
         done: (error: any, user?: any) => void
       ) => {
-        const userInfo: IUserAuth = {
+        const user: IUserAuth = {
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           fullName: profile.displayName,
@@ -39,11 +38,13 @@ const passportGoogleStrategy = () => {
           imageLink: profile.photos[0].value,
         };
 
-        let user = await UserAuthHandler.findOrCreateFromProvider(
-          profile.id,
-          userInfo
-        );
-        done(null, user);
+        UserAuthHandler.findOrCreateFromProvider(profile.id, user)
+          .then((newUser) => {
+            done(null, newUser);
+          })
+          .catch((err) => {
+            done(err);
+          });
       }
     )
   );
