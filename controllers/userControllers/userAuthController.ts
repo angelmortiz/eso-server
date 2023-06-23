@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { CookieOptions } from '../../util/types/types';
 import { catchAsync } from '../../util/errors/catchAsync';
-import { IssueJwt } from '../../util/auth/passport/Jwt';
+import { IssueJwt } from '../../util/auth/Jwt';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
 import util from 'util';
@@ -12,6 +12,8 @@ import sendEmail from '../../util/email';
 import UserAuthHandler from '../../models/userModels/userAuthModel';
 import AppError from '../../util/errors/appError';
 import getVaultSecret from '../../util/keyvault/azureKeyVaultConfig';
+import config from '../../config';
+import { GetCookieOptions } from '../../util/auth/Cookie';
 
 //TODO: Send confirmation email to check the email provided is valid
 export const signup = catchAsync(
@@ -104,7 +106,10 @@ export const loginWithGoogleFailureRedirect = catchAsync(
         //detects duplicate emails
         if (err.code === 11000 || err.code === 11001) {
           return next(
-            new AppError(`An account with the email address '${err?.keyValue?.email}' already exists`, 401)
+            new AppError(
+              `An account with the email address '${err?.keyValue?.email}' already exists`,
+              401
+            )
           );
         }
 
@@ -125,12 +130,12 @@ export const loginWithGoogleFailureRedirect = catchAsync(
 export const loginWithGoogleSuccessRedirect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // Successful authentication, issue token.
-    await sendResponseWithCookie(
-      res.locals.user._id,
-      RESPONSE_CODE.OK,
-      res,
-      'User logged in with Google successfully.'
-    );
+
+    const token = IssueJwt(res.locals.user._id);
+    const cookieOptions = GetCookieOptions();
+
+    res.cookie('_accessToken', token, cookieOptions);
+    res.redirect(config.clientUrl!);
   }
 );
 
@@ -379,16 +384,8 @@ const sendResponseWithCookie = async (
   res: Response,
   message: string
 ) => {
-  const token = await IssueJwt(userId);
-  const cookieOptions: CookieOptions = {
-    expires: new Date(
-      Date.now() +
-        parseInt(process.env.JWT_COOKIE_EXPIRES_IN || '7') * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-  };
-
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  const token = IssueJwt(userId);
+  const cookieOptions = GetCookieOptions();
 
   res.cookie('_accessToken', token, cookieOptions);
   res
