@@ -1,4 +1,3 @@
-import { ObjectId } from 'bson';
 import { NextFunction, Request, Response } from 'express';
 import { CookieOptions } from '../../util/types/types';
 import { catchAsync } from '../../util/errors/catchAsync';
@@ -102,8 +101,16 @@ export const loginWithGoogleFailureRedirect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('google', (err, user) => {
       if (err) {
+        //detects duplicate emails
+        if (err.code === 11000 || err.code === 11001) {
+          return next(
+            new AppError(`An account with the email address '${err?.keyValue?.email}' already exists`, 401)
+          );
+        }
+
+        //default error
         return next(
-          new AppError(`An error occurred during authentication.`, 500)
+          new AppError(`An error occurred during authentication`, 500)
         );
       } else if (!user) {
         return next(new AppError(`Failed to authenticate user`, 401));

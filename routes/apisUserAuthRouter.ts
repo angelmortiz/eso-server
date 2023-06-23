@@ -7,7 +7,7 @@ const router = express.Router();
 //Sign-Up
 router.post('/signup', userAuthController.signup);
 
-//Log in
+//Log in using local JWT
 router.post('/login', userAuthController.login);
 
 //Log in using Google

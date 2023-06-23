@@ -45,9 +45,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // const clientAddress = `http://localhost:${process.env.CLIENT_PORT || '8080'}`;
 /** */
 
-//Social Media Auth Log Ins
-app.use(passport.initialize());
-passportGoogleStrategy();
+
 
 const clientAddress =
   process.env.NODE_ENV === 'production'
@@ -69,6 +67,10 @@ app.use(compression());
 
 //uploads public files (css) to client
 app.use(express.static(path.join(rootDir, 'public')));
+
+//Social Media Auth Log Ins
+app.use(passport.initialize());
+passportGoogleStrategy();
 
 app.use('/api/auth', apisUserAuthRouter);
 app.use('/api/users', protectRoute, apisUserInfoRouter);

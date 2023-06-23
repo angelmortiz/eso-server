@@ -1,7 +1,7 @@
 import passport from 'passport';
+import UserAuthHandler from '../../../models/userModels/userAuthModel';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { IUserAuth } from '../../interfaces/userInterfaces';
-import UserAuthHandler from '../../../models/userModels/userAuthModel';
 
 const serverAddress =
   process.env.NODE_ENV === 'production'
@@ -23,7 +23,6 @@ const passportGoogleStrategy = () => {
         accessToken: string,
         refreshToken: string,
         profile: any,
-        //TODO: Implement a logic to handle situations when the user is using an email that already exists in the db
         done: (error: any, user?: any) => void
       ) => {
         const user: IUserAuth = {
