@@ -1,10 +1,9 @@
 {
   "name": "eso-server",
   "version": "0.1.0",
-  "description": "Node.js server for En Salud Optima",
+  "description": "Node.js server for En Salud Optima Web App",
   "main": "app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "NODE_ENV=development nodemon server.ts",
     "start:prod:local": "NODE_ENV=production.local ts-node server.ts",
     "start:prod": "NODE_ENV=production ts-node server.ts"

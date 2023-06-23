@@ -1,22 +1,18 @@
 import passport from 'passport';
+import config from '../../../config';
 import UserAuthHandler from '../../../models/userModels/userAuthModel';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { IUserAuth } from '../../interfaces/userInterfaces';
 
-const serverAddress =
-  process.env.NODE_ENV === 'production'
-    ? `https://${process.env.SERVER_ADDRESS}`
-    : `http://localhost:${process.env.SERVER_PORT || '8080'}`;
-
 // Set up Passport to use the Google OAuth strategy
 const passportGoogleStrategy = () => {
-  console.log(`URL: ${serverAddress}/api/auth/login/google/callback`);
+  console.log(`URL: ${config.serverUrl}/api/auth/login/google/callback`);
   passport.use(
     new GoogleStrategy(
       {
         clientID: process.env.GOOGLE_AUTH_CLIENT_ID,
         clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-        callbackURL: `${serverAddress}/api/auth/login/google/callback`,
+        callbackURL: `${config.serverUrl}/api/auth/login/google/callback`,
       },
       (
         //Note: access and refresh tokens not used because the app is not using other Google APIs

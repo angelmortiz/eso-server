@@ -8,6 +8,8 @@ import xss from 'xss-clean';
 import compression from 'compression';
 import bodyParser from 'body-parser'; //parser to read info from client-side
 import passport from 'passport';
+import passportGoogleStrategy from './util/auth/passport/GoogleStrategy';
+import config from './config';
 import rootDir from './util/path'; // importing utility to create paths
 import AppError from './util/errors/appError';
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
@@ -17,7 +19,6 @@ import apisHomePageRouter from './routes/apisHomePageRouter';
 
 import { protectRoute } from './controllers/userControllers/userAuthController';
 import { globalErrorResponse } from './controllers/responseControllers/errorController';
-import passportGoogleStrategy from './util/auth/passport/GoogleStrategy';
 // import hpp from 'hpp';
 
 const app = express(); //initializing express framework
@@ -41,17 +42,7 @@ app.use(express.json({ limit: '10kb' }));
 //parses the body that comes from the client
 app.use(bodyParser.urlencoded({ extended: false }));
 
-/**  FOR TESTING PURPOSES [DO NOT DELETE] */
-// const clientAddress = `http://localhost:${process.env.CLIENT_PORT || '8080'}`;
-/** */
-
-
-
-const clientAddress =
-  process.env.NODE_ENV === 'production'
-    ? `https://${process.env.CLIENT_ADDRESS}`
-    : `http://localhost:${process.env.CLIENT_PORT || '8080'}`;
-app.use(cors({ origin: [clientAddress], credentials: true }));
+app.use(cors({ origin: [config.clientUrl!], credentials: true }));
 
 //Data sanitization against NoSQL attacks
 app.use(mongoSanitize());
