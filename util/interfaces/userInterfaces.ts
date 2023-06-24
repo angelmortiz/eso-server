@@ -4,7 +4,7 @@ export interface IUserAuth {
     firstName: string;
     lastName: string;
     fullName: string;
-    email: string;
+    email?: string;
     password?: string;
     passwordChangedAt: Date;
     role: string;

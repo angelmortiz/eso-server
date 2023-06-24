@@ -139,6 +139,57 @@ export const loginWithGoogleSuccessRedirect = catchAsync(
   }
 );
 
+export const loginWithFacebook = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('facebook')(
+      req,
+      res,
+      next
+    );
+  }
+);
+
+export const loginWithFacebookFailureRedirect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('facebook', (err, user) => {
+      if (err) {
+        //detects duplicate emails
+        if (err.code === 11000 || err.code === 11001) {
+          return next(
+            new AppError(
+              `An account with the email address '${err?.keyValue?.email}' already exists`,
+              401
+            )
+          );
+        }
+
+        console.error(`Error details: ${JSON.stringify(err)}`);
+        //default error
+        return next(
+          new AppError(`An error occurred during authentication`, 500)
+        );
+      } else if (!user) {
+        return next(new AppError(`Failed to authenticate user`, 401));
+      }
+
+      res.locals.user = user;
+      next();
+    })(req, res, next);
+  }
+);
+
+export const loginWithFacebookSuccessRedirect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Successful authentication, issue token.
+
+    const token = IssueJwt(res.locals.user._id);
+    const cookieOptions = GetCookieOptions();
+
+    res.cookie('_accessToken', token, cookieOptions);
+    res.redirect(config.clientUrl!);
+  }
+);
+
 export const logout = (req: Request, res: Response) => {
   res.clearCookie('_accessToken');
   res.status(RESPONSE_CODE.OK).json(RESPONSE.LOGGED_OUT_SUCCESSFULLY());

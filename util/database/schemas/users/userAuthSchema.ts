@@ -20,7 +20,7 @@ const UserAuthSchema = new Schema(
     },
     email: {
       type: String,
-      required: [true, 'Email field is required'],
+      required: false,
       unique: true,
       lowercase: true,
       validate: [validator.isEmail, 'Please, enter a valid email'],

@@ -9,6 +9,7 @@ import compression from 'compression';
 import bodyParser from 'body-parser'; //parser to read info from client-side
 import passport from 'passport';
 import passportGoogleStrategy from './util/auth/passport/GoogleStrategy';
+import passportFacebookStrategy from './util/auth/passport/FacebookStrategy';
 import config from './config';
 import rootDir from './util/path'; // importing utility to create paths
 import AppError from './util/errors/appError';
@@ -62,6 +63,7 @@ app.use(express.static(path.join(rootDir, 'public')));
 //Social Media Auth Log Ins
 app.use(passport.initialize());
 passportGoogleStrategy();
+passportFacebookStrategy();
 
 app.use('/api/auth', apisUserAuthRouter);
 app.use('/api/users', protectRoute, apisUserInfoRouter);

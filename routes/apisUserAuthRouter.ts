@@ -19,6 +19,15 @@ router.get(
   userAuthController.loginWithGoogleSuccessRedirect
 );
 
+//Log in using Facebook
+router.get('/login/facebook', userAuthController.loginWithFacebook);
+//Log in using Facebook Callback
+router.get(
+  '/login/facebook/callback',
+  userAuthController.loginWithFacebookFailureRedirect,
+  userAuthController.loginWithFacebookSuccessRedirect
+);
+
 //Log out
 router.post('/logout', userAuthController.logout);
 

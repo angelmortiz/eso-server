@@ -1,20 +1,23 @@
 import passport from 'passport';
 import config from '../../../config';
 import UserAuthHandler from '../../../models/userModels/userAuthModel';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { IUserAuth } from '../../interfaces/userInterfaces';
 
-// Set up Passport to use the Google OAuth strategy
-const passportGoogleStrategy = () => {
+// Set up Passport to use the Facebook OAuth strategy
+const passportFacebookStrategy = () => {
+  console.log(`URL: ${config.serverUrl}/api/auth/login/facebook/callback`);
   passport.use(
-    new GoogleStrategy(
+    new FacebookStrategy(
       {
-        clientID: process.env.GOOGLE_AUTH_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-        callbackURL: `${config.serverUrl}/api/auth/login/google/callback`,
+        clientID: process.env.FACEBOOK_AUTH_CLIENT_ID,
+        clientSecret: process.env.FACEBOOK_AUTH_CLIENT_SECRET,
+        callbackURL: `${config.serverUrl}/api/auth/login/facebook/callback`,
+        profileFields: ['id', 'name', 'email', 'photos'],
       },
+
       (
-        //Note: access and refresh tokens not used because the app is not using other Google APIs
+        //Note: access and refresh tokens not used because the app is not using other Facebook APIs
         accessToken: string,
         refreshToken: string,
         profile: any,
@@ -23,10 +26,10 @@ const passportGoogleStrategy = () => {
         const user: IUserAuth = {
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
-          fullName: profile.displayName,
-          email: profile.emails[0].value,
+          fullName: `${profile.name.givenName} ${profile.name.familyName}`,
+          email: profile.emails && profile.emails[0].value,
           passwordChangedAt: new Date(),
-          strategy: 'Google',
+          strategy: 'Facebook',
           profileId: profile.id,
           role: 'User',
           imageLink: profile.photos[0].value,
@@ -44,4 +47,4 @@ const passportGoogleStrategy = () => {
   );
 };
 
-export default passportGoogleStrategy;
+export default passportFacebookStrategy;
