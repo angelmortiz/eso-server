@@ -1,22 +1,20 @@
 import mongoose from 'mongoose'; //using schemas and classes to interact with mongodb
-import getVaultSecret from '../keyvault/azureKeyVaultConfig';
+// import getVaultSecret from '../keys/awsKMSConfig';
 mongoose.set('strictQuery', true);
 
 export const connectToDb = async () => {
   let dbString: string;
 
-  //TODO: Change from Azure Key Vault to AWS KMS
+  //TODO: Change logic to AWS KMS
   //values were not passed through .env, use cloud vault values
-  if (process.env.DATABASE_STRING && process.env.DATABASE_PASSWORD) {
-    dbString = process.env.DATABASE_STRING?.replace('<PASSWORD>', process.env.DATABASE_PASSWORD!)!;
-  } else {
-    const [secretDbString, secretDbPassword] = await Promise.all([
-      getVaultSecret('azure-mongodb-prod-connstring'),
-      getVaultSecret('azure-mongodb-prod-password'),
-    ]);
-
-    dbString = secretDbString?.replace('<PASSWORD>', secretDbPassword!)!;
-  }
+  dbString = process.env.DATABASE_STRING?.replace('<PASSWORD>', process.env.DATABASE_PASSWORD!)!;
+  
+  //FIXME: Rewrite logic for AWS
+  // if (process.env.DATABASE_STRING && process.env.DATABASE_PASSWORD) {
+  // } else {
+    
+  //   dbString = secretDbString?.replace('<PASSWORD>', secretDbPassword!)!;
+  // }
 
   try {
     await mongoose.connect(dbString);
