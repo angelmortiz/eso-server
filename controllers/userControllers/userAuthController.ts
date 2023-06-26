@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { CookieOptions } from '../../util/types/types';
 import { catchAsync } from '../../util/errors/catchAsync';
 import { IssueJwt } from '../../util/auth/Jwt';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
@@ -11,7 +10,7 @@ import crypto from 'crypto';
 import sendEmail from '../../util/email';
 import UserAuthHandler from '../../models/userModels/userAuthModel';
 import AppError from '../../util/errors/appError';
-import getVaultSecret from '../../util/keyvault/azureKeyVaultConfig';
+// import getVaultSecret from '../../util/keys/awsKMSConfig';
 import config from '../../config';
 import { GetCookieOptions } from '../../util/auth/Cookie';
 
@@ -208,7 +207,7 @@ export const protectRoute = catchAsync(
     const jwtVerify = util.promisify(jwt.verify); //converts node.js callback function to promise
     const decodedJwt = await jwtVerify(
       token,
-      process.env.JWT_SECRET || (await getVaultSecret('jwt-secret'))
+      process.env.JWT_SECRET //FIXME: Implement AWS|| (await getVaultSecret('jwt-secret'))
     );
 
     const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);
@@ -383,7 +382,7 @@ export const isAuthenticationValid = catchAsync(
     const jwtVerify = util.promisify(jwt.verify); //converts node.js callback function to promise
     const decodedJwt = await jwtVerify(
       token,
-      process.env.JWT_SECRET || (await getVaultSecret('jwt-secret'))
+      process.env.JWT_SECRET //FIXME: Implement AWS|| (await getVaultSecret('jwt-secret'))
     );
 
     const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);

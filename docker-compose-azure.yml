@@ -1,7 +1,0 @@
-version: '3'
-
-services:
-  server:
-    image: acreso.azurecr.io/eso-server:v01
-    ports:
-      - 8080:8080
