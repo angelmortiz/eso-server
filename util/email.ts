@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import getVaultSecret from './keyvault/azureKeyVaultConfig';
+import getVaultSecret from './keys/awsKMSConfig';
 
 const sendEmail = async (options) => {
   // const transporter = nodemailer.createTransport({
