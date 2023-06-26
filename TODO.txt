@@ -3,6 +3,7 @@
 //FUTURE
 //TODO: Add button to remove options from selects
 //TODO: Log errores into a file instead of logging into the console.
+//TODO: Change the api url from "www.api.tusaludoptima.com/api" to "www.api.tusaludoptima.com"
 
 //NICE TO HAVE
 //TODO: Implement a 'Duplicate' button in order to create a new item with similar characteristics

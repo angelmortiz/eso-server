@@ -6,12 +6,22 @@ import mongoose from 'mongoose';
 const UserAuthModel = mongoose.model('UserAuth', UserAuthSchema);
 
 export default class UserAuthHandler {
-  static async save(user: IUserAuth) {
+  static async save(user: IUserAuth): Promise<any> {
     return await new UserAuthModel(user).save();
   }
 
   static async update(_id: string | ObjectId, user: IUserAuth) {
     return await UserAuthModel.updateOne({ _id }, user);
+  }
+
+  static async findOrCreateFromProvider(
+    profileId: string,
+    user: IUserAuth
+  ): Promise<any> {
+    return await UserAuthModel.findOneAndUpdate({ profileId }, user, {
+      new: true,
+      upsert: true,
+    });
   }
 
   static async fetchById(id: string | ObjectId): Promise<any> {

@@ -1,16 +1,19 @@
-import { ObjectID } from 'bson';
 import { NextFunction, Request, Response } from 'express';
 import { CookieOptions } from '../../util/types/types';
 import { catchAsync } from '../../util/errors/catchAsync';
+import { IssueJwt } from '../../util/auth/Jwt';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
 import util from 'util';
 import jwt from 'jsonwebtoken';
+import passport from 'passport';
 import crypto from 'crypto';
 import sendEmail from '../../util/email';
 import UserAuthHandler from '../../models/userModels/userAuthModel';
 import AppError from '../../util/errors/appError';
 import getVaultSecret from '../../util/keyvault/azureKeyVaultConfig';
+import config from '../../config';
+import { GetCookieOptions } from '../../util/auth/Cookie';
 
 //TODO: Send confirmation email to check the email provided is valid
 export const signup = catchAsync(
@@ -52,6 +55,7 @@ export const signup = catchAsync(
       password,
       imageLink,
       passwordChangedAt: new Date(),
+      strategy: 'JWT',
       role: 'User',
     };
 
@@ -82,6 +86,107 @@ export const login = catchAsync(
       res,
       'User logged in successfully.'
     );
+  }
+);
+
+export const loginWithGoogle = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('google', { scope: ['email', 'profile'] })(
+      req,
+      res,
+      next
+    );
+  }
+);
+
+export const loginWithGoogleFailureRedirect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('google', (err, user) => {
+      if (err) {
+        //detects duplicate emails
+        if (err.code === 11000 || err.code === 11001) {
+          return next(
+            new AppError(
+              `An account with the email address '${err?.keyValue?.email}' already exists`,
+              401
+            )
+          );
+        }
+
+        //default error
+        return next(
+          new AppError(`An error occurred during authentication`, 500)
+        );
+      } else if (!user) {
+        return next(new AppError(`Failed to authenticate user`, 401));
+      }
+
+      res.locals.user = user;
+      next();
+    })(req, res, next);
+  }
+);
+
+export const loginWithGoogleSuccessRedirect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Successful authentication, issue token.
+
+    const token = IssueJwt(res.locals.user._id);
+    const cookieOptions = GetCookieOptions();
+
+    res.cookie('_accessToken', token, cookieOptions);
+    res.redirect(config.clientUrl!);
+  }
+);
+
+export const loginWithFacebook = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('facebook')(
+      req,
+      res,
+      next
+    );
+  }
+);
+
+export const loginWithFacebookFailureRedirect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('facebook', (err, user) => {
+      if (err) {
+        //detects duplicate emails
+        if (err.code === 11000 || err.code === 11001) {
+          return next(
+            new AppError(
+              `An account with the email address '${err?.keyValue?.email}' already exists`,
+              401
+            )
+          );
+        }
+
+        console.error(`Error details: ${JSON.stringify(err)}`);
+        //default error
+        return next(
+          new AppError(`An error occurred during authentication`, 500)
+        );
+      } else if (!user) {
+        return next(new AppError(`Failed to authenticate user`, 401));
+      }
+
+      res.locals.user = user;
+      next();
+    })(req, res, next);
+  }
+);
+
+export const loginWithFacebookSuccessRedirect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Successful authentication, issue token.
+
+    const token = IssueJwt(res.locals.user._id);
+    const cookieOptions = GetCookieOptions();
+
+    res.cookie('_accessToken', token, cookieOptions);
+    res.redirect(config.clientUrl!);
   }
 );
 
@@ -324,32 +429,14 @@ const getTokenFromCookies = (cookies: string | undefined) => {
   return token;
 };
 
-const getToken = async (id: string | ObjectID) => {
-  return jwt.sign(
-    { id },
-    process.env.JWT_SECRET || (await getVaultSecret('jwt-secret')),
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-    }
-  );
-};
-
 const sendResponseWithCookie = async (
   userId: string,
   statusCode: RESPONSE_CODE,
   res: Response,
   message: string
 ) => {
-  const token = await getToken(userId);
-  const cookieOptions: CookieOptions = {
-    expires: new Date(
-      Date.now() +
-        parseInt(process.env.JWT_COOKIE_EXPIRES_IN || '7') * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-  };
-
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  const token = IssueJwt(userId);
+  const cookieOptions = GetCookieOptions();
 
   res.cookie('_accessToken', token, cookieOptions);
   res

@@ -7,9 +7,12 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import compression from 'compression';
 import bodyParser from 'body-parser'; //parser to read info from client-side
+import passport from 'passport';
+import passportGoogleStrategy from './util/auth/passport/GoogleStrategy';
+import passportFacebookStrategy from './util/auth/passport/FacebookStrategy';
+import config from './config';
 import rootDir from './util/path'; // importing utility to create paths
 import AppError from './util/errors/appError';
-import apisNutritionRouter from './routes/apisNutritionRouter';
 import apisActivitiesRouter from './routes/apisActivitiesRouter';
 import apisUserAuthRouter from './routes/apisUserAuthRouter';
 import apisUserInfoRouter from './routes/apisUserInfoRouter';
@@ -40,15 +43,7 @@ app.use(express.json({ limit: '10kb' }));
 //parses the body that comes from the client
 app.use(bodyParser.urlencoded({ extended: false }));
 
-/**  FOR TESTING PURPOSES [DO NOT DELETE] */
-// const clientAddress = `http://localhost:${process.env.CLIENT_PORT || '8080'}`;
-/** */
-
-const clientAddress =
-  process.env.NODE_ENV === 'production'
-    ? `https://${process.env.CLIENT_ADDRESS}`
-    : `http://localhost:${process.env.CLIENT_PORT || '8080'}`;
-app.use(cors({ origin: [clientAddress], credentials: true }));
+app.use(cors({ origin: [config.clientUrl!], credentials: true }));
 
 //Data sanitization against NoSQL attacks
 app.use(mongoSanitize());
@@ -65,9 +60,13 @@ app.use(compression());
 //uploads public files (css) to client
 app.use(express.static(path.join(rootDir, 'public')));
 
+//Social Media Auth Log Ins
+app.use(passport.initialize());
+passportGoogleStrategy();
+passportFacebookStrategy();
+
 app.use('/api/auth', apisUserAuthRouter);
 app.use('/api/users', protectRoute, apisUserInfoRouter);
-// app.use('/api/nutrition', protectRoute, apisNutritionRouter);
 app.use('/api/activities', protectRoute, apisActivitiesRouter);
 app.use('/api', apisHomePageRouter);
 app.use('/', apisHomePageRouter);
