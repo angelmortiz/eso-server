@@ -43,6 +43,7 @@ app.use(express.json({ limit: '10kb' }));
 //parses the body that comes from the client
 app.use(bodyParser.urlencoded({ extended: false }));
 
+console.log(`CORS configured to address: '${config.clientUrl}'.`);
 app.use(cors({ origin: [config.clientUrl!], credentials: true }));
 
 //Data sanitization against NoSQL attacks
