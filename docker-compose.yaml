@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  eso-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eso-server-image
+    container_name: eso-server
+    restart: unless-stopped

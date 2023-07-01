@@ -3,6 +3,7 @@ const env = process.env.NODE_ENV || 'development';
 
 const configs: { [key: string]: ConfigInterface } = {
   development: require('./development').default,
+  production_local: require('./production_local').default,
   production: require('./production').default,
 };
 
