@@ -8,6 +8,10 @@ services:
       - .env.production
     image: eso-server-image
     container_name: eso-server
+    # volumes:
+    #   - .:/usr/src/app
+    #   - /usr/src/app/node_modules
+    #   - /usr/src/app/build
     ports:
       - 80:80
-    command: npm run start:prod
+    command: npm run start:prod:local

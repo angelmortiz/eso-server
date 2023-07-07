@@ -9,10 +9,17 @@ const configs: { [key: string]: ConfigInterface } = {
 
 const config = configs[env];
 
-config.clientUrl =
+config.redirectClientUrl =
   env === 'production'
-    ? config.clientAddress
-    : `${config.clientAddress}:${config.clientPort}`;
+    ? config.clientAddresses[0]
+    : `${config.clientAddresses[0]}:${config.clientPort}`;
+
+config.CORSClientUrls =
+  env === 'production'
+    ? config.clientAddresses
+    : config.clientAddresses.map(
+        (address) => `${address}:${config.clientPort}`
+      );
 
 config.serverUrl =
   env === 'production'

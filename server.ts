@@ -16,7 +16,7 @@ process.on('uncaughtException', (err) => {
 const port = config.serverPort || 8080;
 const server = app.listen(port, () => {
   console.log(`Node.js server running on address '${config.serverUrl}'.`);
-  // connectToDb();
+  connectToDb();
 });
 
 //handling unhandled errors

@@ -134,7 +134,7 @@ export const loginWithGoogleSuccessRedirect = catchAsync(
     const cookieOptions = GetCookieOptions();
 
     res.cookie('_accessToken', token, cookieOptions);
-    res.redirect(config.clientUrl!);
+    res.redirect(config.redirectClientUrl!);
   }
 );
 
@@ -185,7 +185,7 @@ export const loginWithFacebookSuccessRedirect = catchAsync(
     const cookieOptions = GetCookieOptions();
 
     res.cookie('_accessToken', token, cookieOptions);
-    res.redirect(config.clientUrl!);
+    res.redirect(config.redirectClientUrl!);
   }
 );
 
