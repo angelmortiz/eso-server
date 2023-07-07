@@ -4,7 +4,7 @@ const prodConfig: ConfigInterface = {
   clientAddress: 'http://localhost',
   clientPort: '3000',
   serverAddress: 'http://localhost',
-  serverPort: '8080',
+  serverPort: '80',
 };
 
 export default prodConfig;
