@@ -1,7 +1,8 @@
 export interface ConfigInterface {
-  clientAddress: string;
+  clientAddresses: string[];
   clientPort: string;
-  clientUrl?: string;
+  redirectClientUrl?: string;
+  CORSClientUrls?: string[];
   serverAddress: string;
   serverPort: string;
   serverUrl?: string;

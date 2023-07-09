@@ -5,10 +5,8 @@
   "main": "app.ts",
   "scripts": {
     "start:dev": "NODE_ENV=development nodemon server.ts",
-    "start:prod:local": "NODE_ENV=production_local ts-node server.ts",
-    "start:prod": "NODE_ENV=production ts-node server.ts",
-    "start:compiled:local": "NODE_ENV=production_local node dist/server.js",
-    "start:compiled:prod": "NODE_ENV=production node dist/server.js",
+    "start:prod:local": "NODE_ENV=production_local node build/server.js",
+    "start:prod": "NODE_ENV=production node build/server.js",
     "build": "tsc"
   },
   "repository": {

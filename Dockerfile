@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.18
+FROM node:lts-alpine
 
 WORKDIR /usr/src/app
 COPY package*.json ./
@@ -10,4 +10,4 @@ COPY . .
 RUN npm run build
 EXPOSE 80
 
-CMD [ "node", "dist/server.js" ]
+CMD [ "node", "build/server.js" ]
