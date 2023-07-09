@@ -1,10 +1,13 @@
-import { ConfigInterface } from "../util/interfaces/configInterfaces";
+import { ConfigInterface } from '../util/interfaces/configInterfaces';
 
 const prodConfig: ConfigInterface = {
-  clientAddress: 'https://www.ensaludoptima.com',
+  clientAddresses: [
+    'https://beta.ensaludoptima.com',
+    'https://www.beta.ensaludoptima.com',
+  ],
   clientPort: '443',
-  serverAddress: 'https://www.api.ensaludoptima.com/api',
-  serverPort: '443'
+  serverAddress: 'http://eso-server-dev.us-east-1.elasticbeanstalk.com/api',
+  serverPort: '80',
 };
 
 export default prodConfig;

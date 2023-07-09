@@ -5,8 +5,9 @@
   "main": "app.ts",
   "scripts": {
     "start:dev": "NODE_ENV=development nodemon server.ts",
-    "start:prod:local": "NODE_ENV=production.local ts-node server.ts",
-    "start:prod": "NODE_ENV=production ts-node server.ts"
+    "start:prod:local": "NODE_ENV=production_local node build/server.js",
+    "start:prod": "NODE_ENV=production node build/server.js",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

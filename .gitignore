@@ -10,6 +10,8 @@
 
 # production
 /build
+/bin
+/dist
 
 # misc
 .DS_Store
@@ -18,6 +20,8 @@
 config.env
 
 *.pem
+
+*.zip
 
 npm-debug.log*
 yarn-debug.log*

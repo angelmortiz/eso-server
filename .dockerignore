@@ -12,6 +12,9 @@
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm
+**/build
+**/bin
+**/dist
 **/charts
 **/docker-compose*
 **/compose*
@@ -23,5 +26,6 @@
 **/values.dev.yaml
 **/.DS_Store
 *.pem
+*.zip
 LICENSE
 README.md
