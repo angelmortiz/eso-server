@@ -9,6 +9,8 @@ export interface IUserAuth {
     passwordChangedAt: Date;
     role: string;
     imageLink?: string;
+    betaUser: boolean;
+    betaRole?: string;
     strategy: string;
     profileId?: string;
 }

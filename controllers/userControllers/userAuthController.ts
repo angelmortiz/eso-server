@@ -56,6 +56,7 @@ export const signup = catchAsync(
       passwordChangedAt: new Date(),
       strategy: 'JWT',
       role: 'User',
+      betaUser: false,
     };
 
     await UserAuthHandler.save(userInfo);
@@ -77,6 +78,10 @@ export const login = catchAsync(
 
     if (!user || !isPasswordCorrect) {
       return next(new AppError(`Incorrect email or password.`, 401));
+    }
+
+    if (config.env == "beta" && !user.betaUser) {
+      return next(new AppError(`Not a beta user.`, 401));
     }
 
     await sendResponseWithCookie(
@@ -130,21 +135,22 @@ export const loginWithGoogleSuccessRedirect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // Successful authentication, issue token.
 
+    if (config.env == 'beta' && !res.locals.user.betaUser) {
+      console.log(`Redirecting not beta-user to '${config.betaUserRegistrationAddress}`);
+      res.redirect(config.betaUserRegistrationAddress!);
+      return;
+    }
+
     const token = IssueJwt(res.locals.user._id);
     const cookieOptions = GetCookieOptions();
 
     res.cookie('_accessToken', token, cookieOptions);
-    res.redirect(config.redirectClientUrl!);
   }
 );
 
 export const loginWithFacebook = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('facebook')(
-      req,
-      res,
-      next
-    );
+    passport.authenticate('facebook')(req, res, next);
   }
 );
 
@@ -180,6 +186,10 @@ export const loginWithFacebookFailureRedirect = catchAsync(
 export const loginWithFacebookSuccessRedirect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // Successful authentication, issue token.
+    if (config.env == 'beta' && !res.locals.user.betaUser) {
+      res.redirect(config.betaUserRegistrationAddress!);
+      return;
+    }
 
     const token = IssueJwt(res.locals.user._id);
     const cookieOptions = GetCookieOptions();
