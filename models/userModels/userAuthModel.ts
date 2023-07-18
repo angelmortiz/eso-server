@@ -27,7 +27,7 @@ export default class UserAuthHandler {
   static async fetchById(id: string | ObjectId): Promise<any> {
     return await UserAuthModel.findById(
       id,
-      'firstName lastName fullName email role imageLink'
+      'firstName lastName fullName email profileId strategy role imageLink'
     ).populate('userInfo');
   }
 

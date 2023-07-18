@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { catchAsync } from '../../util/errors/catchAsync';
-import { IssueJwt } from '../../util/auth/Jwt';
+import { IssueAuthJWT, IssueBetaUserJWT } from '../../util/auth/Jwt';
 import { RESPONSE_CODE } from '../responseControllers/responseCodes';
 import * as RESPONSE from '../responseControllers/responseCodes';
 import util from 'util';
@@ -12,7 +12,13 @@ import UserAuthHandler from '../../models/userModels/userAuthModel';
 import AppError from '../../util/errors/appError';
 // import getVaultSecret from '../../util/keys/awsKMSConfig';
 import config from '../../config';
-import { GetCookieOptions } from '../../util/auth/Cookie';
+import {
+  GetAuthCookieOptions,
+  GetBetaUserCookieOptions,
+  GetJWTFromCookies,
+} from '../../util/auth/Cookie';
+import BetaUserAuthHandler from '../../models/userModels/betaUserAuthModel';
+import { IBetaUserAuth } from '../../util/interfaces/userInterfaces';
 
 //TODO: Send confirmation email to check the email provided is valid
 export const signup = catchAsync(
@@ -56,7 +62,6 @@ export const signup = catchAsync(
       passwordChangedAt: new Date(),
       strategy: 'JWT',
       role: 'User',
-      betaUser: false,
     };
 
     await UserAuthHandler.save(userInfo);
@@ -80,8 +85,16 @@ export const login = catchAsync(
       return next(new AppError(`Incorrect email or password.`, 401));
     }
 
-    if (config.env == "beta" && !user.betaUser) {
-      return next(new AppError(`Not a beta user.`, 401));
+    //FIXME: Consider moving beta logic to its own controller   
+    if (
+      ['beta', 'beta_local'].includes(config.env) &&
+      !user.betaUser
+    ) {
+      const betaToken = IssueBetaUserJWT(user._id);
+      const betaCookieOptions = GetBetaUserCookieOptions();
+      res.cookie('_betaAccessToken', betaToken, betaCookieOptions);
+      res.redirect(config.betaUserRegistrationAddress!);
+      return;
     }
 
     await sendResponseWithCookie(
@@ -135,16 +148,25 @@ export const loginWithGoogleSuccessRedirect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // Successful authentication, issue token.
 
-    if (config.env == 'beta' && !res.locals.user.betaUser) {
-      console.log(`Redirecting not beta-user to '${config.betaUserRegistrationAddress}`);
+    //FIXME: Consider moving beta logic to its own controller   
+    if (
+      ['beta', 'beta_local'].includes(config.env) &&
+      !res.locals.user.betaUser
+    ) {
+      const betaToken = IssueBetaUserJWT(res.locals.user._id);
+      const betaCookieOptions = GetBetaUserCookieOptions();
+      res.cookie('_betaAccessToken', betaToken, betaCookieOptions);
+      console.log(config.betaUserRegistrationAddress);
+      
       res.redirect(config.betaUserRegistrationAddress!);
       return;
     }
 
-    const token = IssueJwt(res.locals.user._id);
-    const cookieOptions = GetCookieOptions();
+    const token = IssueAuthJWT(res.locals.user._id);
+    const cookieOptions = GetAuthCookieOptions();
 
     res.cookie('_accessToken', token, cookieOptions);
+    res.redirect(config.redirectClientUrl!);
   }
 );
 
@@ -186,21 +208,80 @@ export const loginWithFacebookFailureRedirect = catchAsync(
 export const loginWithFacebookSuccessRedirect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // Successful authentication, issue token.
-    if (config.env == 'beta' && !res.locals.user.betaUser) {
+    if (
+      ['beta', 'beta_local'].includes(config.env) &&
+      !res.locals.user.betaUser
+    ) {
       res.redirect(config.betaUserRegistrationAddress!);
       return;
     }
 
-    const token = IssueJwt(res.locals.user._id);
-    const cookieOptions = GetCookieOptions();
+    const token = IssueAuthJWT(res.locals.user._id);
+    const cookieOptions = GetAuthCookieOptions();
 
     res.cookie('_accessToken', token, cookieOptions);
     res.redirect(config.redirectClientUrl!);
   }
 );
 
+export const registerBetaUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { code } = req.body;
+    if (!code) {
+      return next(new AppError(`Beta user code missing.`, 400));
+    }
+
+    const betaAuth: IBetaUserAuth | null = await BetaUserAuthHandler.fetchByCode(code);
+    if (!betaAuth) {
+      return next(new AppError(`Invalid beta code.`, 400));
+    }
+
+    const { cookie: cookies } = req.headers;
+    const token = GetJWTFromCookies(cookies, '_betaAccessToken');
+    if (!token) {
+      return next(new AppError(`No beta token found.`, 401));
+    }
+
+    const jwtVerify = util.promisify(jwt.verify); //converts node.js callback function to promise
+    const decodedJwt = await jwtVerify(
+      token,
+      process.env.JWT_BETA_SECRET //FIXME: Implement AWS|| (await getVaultSecret('jwt-secret'))
+    );
+
+    const currentUser = await UserAuthHandler.fetchById(decodedJwt.id);
+    if (!currentUser) {
+      return next(new AppError(`User not found.`, 404));
+    }
+
+    //FIXME: Check if there is a way to obtain the email from FB Auth
+    betaAuth.strategy = currentUser.strategy;
+    if (betaAuth.strategy == 'Email') {
+      betaAuth.email = currentUser.email;
+    } else if (betaAuth.strategy == 'Google') {
+      betaAuth.email = currentUser.email;
+      betaAuth.profileId = currentUser.profileId;
+    } else if (betaAuth.strategy == 'Facebook') {
+      betaAuth.profileId = currentUser.profileId;
+    }
+    
+    currentUser.betaUser = true;
+    await UserAuthHandler.update(currentUser._id!, currentUser);
+    await BetaUserAuthHandler.update(betaAuth._id!, betaAuth);
+
+    res.clearCookie('_betaAccessToken');
+
+    await sendResponseWithCookie(
+      currentUser._id.toString(),
+      RESPONSE_CODE.OK,
+      res,
+      'User registered successfully.'
+    );
+  }
+);
+
 export const logout = (req: Request, res: Response) => {
   res.clearCookie('_accessToken');
+  res.clearCookie('_betaAccessToken');
   res.status(RESPONSE_CODE.OK).json(RESPONSE.LOGGED_OUT_SUCCESSFULLY());
 };
 
@@ -208,7 +289,7 @@ export const protectRoute = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { cookie: cookies } = req.headers;
 
-    const token = getTokenFromCookies(cookies);
+    const token = GetJWTFromCookies(cookies, '_accessToken');
 
     if (!token) {
       return next(new AppError(`No authorization token found.`, 401));
@@ -374,8 +455,9 @@ export const isAuthenticationValid = catchAsync(
   async (req: Request, res: Response) => {
     const { cookie: cookies } = req.headers;
 
-    const token = getTokenFromCookies(cookies);
-
+    const token = GetJWTFromCookies(cookies, '_accessToken');
+    console.log(token);
+    
     if (!token) {
       //console.log('No authorization token found.');
       res
@@ -426,26 +508,14 @@ export const isAuthenticationValid = catchAsync(
   }
 );
 
-const getTokenFromCookies = (cookies: string | undefined) => {
-  //getting authentication token from cookies
-  let token: string | undefined;
-  const arrCookies = cookies?.split('; ') || [];
-  token =
-    arrCookies.length > 1
-      ? arrCookies.find((c) => c.startsWith('_accessToken='))
-      : arrCookies[0];
-  token = token?.split('=')[1];
-  return token;
-};
-
 const sendResponseWithCookie = async (
   userId: string,
   statusCode: RESPONSE_CODE,
   res: Response,
   message: string
 ) => {
-  const token = IssueJwt(userId);
-  const cookieOptions = GetCookieOptions();
+  const token = IssueAuthJWT(userId);
+  const cookieOptions = GetAuthCookieOptions();
 
   res.cookie('_accessToken', token, cookieOptions);
   res

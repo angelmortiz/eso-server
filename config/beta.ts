@@ -6,7 +6,7 @@ const betaConfig: ConfigInterface = {
     'https://beta.ensaludoptima.com',
     'https://www.beta.ensaludoptima.com',
   ],
-  betaUserRegistrationAddress: '/beta-user-registration',
+  betaUserRegistrationAddress: '/auth/beta-user-registration',
   clientPort: '443',
   serverAddress: 'http://eso-server-dev.us-east-1.elasticbeanstalk.com/api',
   serverPort: '80',

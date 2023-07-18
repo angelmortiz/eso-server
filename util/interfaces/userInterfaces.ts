@@ -9,10 +9,18 @@ export interface IUserAuth {
     passwordChangedAt: Date;
     role: string;
     imageLink?: string;
-    betaUser: boolean;
+    betaUser?: boolean;
     betaRole?: string;
     strategy: string;
     profileId?: string;
+}
+
+export interface IBetaUserAuth {
+    _id?: ObjectId;
+    code: string;
+    email?: string;
+    profileId?: string;
+    strategy?: string;
 }
 
 export interface IUserInfo {

@@ -31,8 +31,7 @@ const passportFacebookStrategy = () => {
           strategy: 'Facebook',
           profileId: profile.id,
           role: 'User',
-          imageLink: profile.photos[0].value,
-          betaUser: false
+          imageLink: profile.photos[0].value
         };
 
         UserAuthHandler.findOrCreateFromProvider(profile.id, user)
