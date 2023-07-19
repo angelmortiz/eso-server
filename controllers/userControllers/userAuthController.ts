@@ -85,15 +85,14 @@ export const login = catchAsync(
       return next(new AppError(`Incorrect email or password.`, 401));
     }
 
-    //FIXME: Consider moving beta logic to its own controller   
-    if (
-      ['beta', 'beta_local'].includes(config.env) &&
-      !user.betaUser
-    ) {
-      const betaToken = IssueBetaUserJWT(user._id);
-      const betaCookieOptions = GetBetaUserCookieOptions();
-      res.cookie('_betaAccessToken', betaToken, betaCookieOptions);
-      res.redirect(config.betaUserRegistrationAddress!);
+    //FIXME: Consider moving beta logic to its own controller
+    if (['beta', 'beta_local'].includes(config.env) && !user.betaUser) {
+      await sendResponseWithBetaCookie(
+        user._id.toString(),
+        RESPONSE_CODE.OK,
+        res,
+        'User requires beta registration to proceed.'
+      );
       return;
     }
 
@@ -148,7 +147,7 @@ export const loginWithGoogleSuccessRedirect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // Successful authentication, issue token.
 
-    //FIXME: Consider moving beta logic to its own controller   
+    //FIXME: Consider moving beta logic to its own controller
     if (
       ['beta', 'beta_local'].includes(config.env) &&
       !res.locals.user.betaUser
@@ -157,7 +156,7 @@ export const loginWithGoogleSuccessRedirect = catchAsync(
       const betaCookieOptions = GetBetaUserCookieOptions();
       res.cookie('_betaAccessToken', betaToken, betaCookieOptions);
       console.log(config.betaUserRegistrationAddress);
-      
+
       res.redirect(config.betaUserRegistrationAddress!);
       return;
     }
@@ -208,10 +207,16 @@ export const loginWithFacebookFailureRedirect = catchAsync(
 export const loginWithFacebookSuccessRedirect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // Successful authentication, issue token.
+    //FIXME: Consider moving beta logic to its own controller
     if (
       ['beta', 'beta_local'].includes(config.env) &&
       !res.locals.user.betaUser
     ) {
+      const betaToken = IssueBetaUserJWT(res.locals.user._id);
+      const betaCookieOptions = GetBetaUserCookieOptions();
+      res.cookie('_betaAccessToken', betaToken, betaCookieOptions);
+      console.log(config.betaUserRegistrationAddress);
+
       res.redirect(config.betaUserRegistrationAddress!);
       return;
     }
@@ -231,7 +236,8 @@ export const registerBetaUser = catchAsync(
       return next(new AppError(`Beta user code missing.`, 400));
     }
 
-    const betaAuth: IBetaUserAuth | null = await BetaUserAuthHandler.fetchByCode(code);
+    const betaAuth: IBetaUserAuth | null =
+      await BetaUserAuthHandler.fetchByCode(code);
     if (!betaAuth) {
       return next(new AppError(`Invalid beta code.`, 400));
     }
@@ -263,7 +269,7 @@ export const registerBetaUser = catchAsync(
     } else if (betaAuth.strategy == 'Facebook') {
       betaAuth.profileId = currentUser.profileId;
     }
-    
+
     currentUser.betaUser = true;
     await UserAuthHandler.update(currentUser._id!, currentUser);
     await BetaUserAuthHandler.update(betaAuth._id!, betaAuth);
@@ -456,8 +462,7 @@ export const isAuthenticationValid = catchAsync(
     const { cookie: cookies } = req.headers;
 
     const token = GetJWTFromCookies(cookies, '_accessToken');
-    console.log(token);
-    
+
     if (!token) {
       //console.log('No authorization token found.');
       res
@@ -518,7 +523,26 @@ const sendResponseWithCookie = async (
   const cookieOptions = GetAuthCookieOptions();
 
   res.cookie('_accessToken', token, cookieOptions);
-  res
-    .status(statusCode)
-    .json(RESPONSE.responseObject(true, 'success', message, { user: userId }));
+  res.status(statusCode).json(
+    RESPONSE.responseObject(true, 'success', message, {
+      user: userId
+    })
+  );
+};
+
+const sendResponseWithBetaCookie = async (
+  userId: string,
+  statusCode: RESPONSE_CODE,
+  res: Response,
+  message: string
+) => {
+  const betaToken = IssueBetaUserJWT(userId);
+  const betaCookieOptions = GetBetaUserCookieOptions();
+  res.cookie('_betaAccessToken', betaToken, betaCookieOptions);
+  res.status(statusCode).json(
+    RESPONSE.responseObject(true, 'success', message, {
+      user: userId,
+      requiresBetaRegistration: true,
+    })
+  );
 };

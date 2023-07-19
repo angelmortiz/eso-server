@@ -18,12 +18,14 @@ const BetaUserAuthSchema = new Schema(
       required: false,
       unique: true,
       lowercase: true,
+      sparse: true,
       validate: [validator.isEmail, 'Please, enter a valid email'],
     },
     profileId: {
       type: String,
       required: false,
       unique: true,
+      sparse: true,
     },
     userAuth: {
       type: Schema.Types.ObjectId,
