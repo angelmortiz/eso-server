@@ -60,7 +60,7 @@ export const signup = catchAsync(
       password,
       imageLink,
       passwordChangedAt: new Date(),
-      strategy: 'JWT',
+      strategy: 'Email',
       role: 'User',
     };
 
