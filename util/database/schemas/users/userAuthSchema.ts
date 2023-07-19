@@ -32,23 +32,33 @@ const UserAuthSchema = new Schema(
     profileId: String,
     strategy: {
       type: String,
-      required: [true, 'Strategy is required']
+      required: [true, 'Strategy is required'],
     },
     role: {
       type: String,
-      emun: ['User', 'Editor', 'Admin'],
+      emun: ['User', 'Trainer', 'Admin'],
       default: 'User',
     },
     imageLink: {
       type: String,
       required: false,
     },
+    betaUser: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    betaRole: {
+      type: String,
+      emun: ['User', 'Trainer', 'Admin'],
+      default: 'User',
+    },
     userInfo: {
       type: Schema.Types.ObjectId,
       required: false,
       ref: 'UserInfo',
       unique: true,
-      sparse: true
+      sparse: true,
     },
   },
   { collection: 'users.auth' }

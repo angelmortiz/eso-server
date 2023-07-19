@@ -1,5 +1,4 @@
 import express from 'express';
-import passport from 'passport';
 import * as userAuthController from '../controllers/userControllers/userAuthController';
 
 const router = express.Router();
@@ -9,6 +8,9 @@ router.post('/signup', userAuthController.signup);
 
 //Log in using local JWT
 router.post('/login', userAuthController.login);
+
+//Register user as a beta user
+router.post('/registerBetaUser', userAuthController.registerBetaUser);
 
 //Log in using Google
 router.get('/login/google', userAuthController.loginWithGoogle);

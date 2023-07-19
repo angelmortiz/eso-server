@@ -1,11 +1,12 @@
 import { ConfigInterface } from '../util/interfaces/configInterfaces';
 
-const prodConfig: ConfigInterface = {
-  env: 'production',
+const betaConfig: ConfigInterface = {
+  env: 'beta_local',
   clientAddresses: ['http://localhost'],
   clientPort: '3000',
+  betaUserRegistrationAddress: '/auth/beta-user-registration',
   serverAddress: 'http://localhost',
   serverPort: '8080',
 };
 
-export default prodConfig;
+export default betaConfig;

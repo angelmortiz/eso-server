@@ -20,6 +20,7 @@ import apisHomePageRouter from './routes/apisHomePageRouter';
 
 import { protectRoute } from './controllers/userControllers/userAuthController';
 import { globalErrorResponse } from './controllers/responseControllers/errorController';
+import { log } from 'console';
 // import hpp from 'hpp';
 
 const app = express(); //initializing express framework
@@ -43,6 +44,8 @@ app.use(express.json({ limit: '10kb' }));
 //parses the body that comes from the client
 app.use(bodyParser.urlencoded({ extended: false }));
 
+console.log(`Environment file: '${process.env.ENV_FILE}'`);
+console.log(`Running on environment: '${config.env}'`);
 console.log(`CORS configured to address: '${config.CORSClientUrls}'.`);
 app.use(cors({ origin: config.CORSClientUrls, credentials: true }));
 
