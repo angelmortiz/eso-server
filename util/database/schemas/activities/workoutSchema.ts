@@ -5,7 +5,7 @@ const ExercisePlanSchema = new Schema({
   exercise: {
     type: Schema.Types.ObjectId,
     required: [true, 'Exercise id is required.'],
-    ref: "Exercise"
+    ref: 'Exercise',
   },
   sets: {
     type: [Number],
@@ -35,46 +35,53 @@ const ExercisePlanSchema = new Schema({
   supersetExercise: {
     type: Schema.Types.ObjectId,
     required: false,
-    ref: "Exercise"
+    ref: 'Exercise',
   },
 });
 
-export default new Schema({
-  name: {
-    type: String,
-    required: [true, 'Workout name is required.'],
+export default new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Workout name is required.'],
+    },
+    description: {
+      type: String,
+      required: false,
+    },
+    variant: {
+      type: String,
+      required: false,
+    },
+    type: {
+      type: String,
+      enum: ['Strength', 'Hypertrophy', 'Endurance'],
+      required: [true, 'Workout type is required.'],
+    },
+    target: {
+      type: String,
+      enum: [
+        'Full Body',
+        'Upper Body',
+        'Lower Body',
+        'Front Muscles',
+        'Back Muscles',
+        'Mixed',
+      ],
+      required: false,
+    },
+    linkToImage: {
+      type: String,
+      required: false,
+    },
+    linkToThumbnail: {
+      type: String,
+      required: false,
+    },
+    exercises: {
+      type: [ExercisePlanSchema],
+      required: false,
+    },
   },
-  description: {
-    type: String,
-    required: false,
-  },
-  variant: {
-    type: String,
-    required: false,
-  },
-  type: {
-    type: String,
-    enum: ['Strength', 'Hypertrophy', 'Endurance'],
-    required: [true, 'Workout type is required.'],
-  },
-  target: {
-    type: String,
-    enum: [
-      'Full Body',
-      'Upper Body',
-      'Lower Body',
-      'Front Muscles',
-      'Back Muscles',
-      'Mixed',
-    ],
-    required: false,
-  },
-  linkToImage: {
-    type: String,
-    required: false
-  },
-  exercises: {
-    type: [ExercisePlanSchema],
-    required: false
-  }
-}, { collection: 'activities.workouts' });
+  { collection: 'activities.workouts' }
+);
