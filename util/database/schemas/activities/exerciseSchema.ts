@@ -61,6 +61,10 @@ export default new Schema(
       type: String,
       required: false,
     },
+    linkToThumbnail: {
+      type: String,
+      required: false,
+    },
   },
   { collection: 'activities.exercises' }
 );

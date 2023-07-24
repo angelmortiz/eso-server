@@ -78,6 +78,7 @@ export interface IProgram {
   sequence: 'Weekly' | 'Cycle';
   duration: number;
   linkToImage?: string;
+  linkToThumbnail?: string;
   workouts?: IWorkoutPlan[];
 }
 
@@ -108,6 +109,7 @@ export interface IWorkout {
     | 'Back Muscles'
     | 'Mixed';
   linkToImage?: string;
+  linkToThumbnail?: string;
   exercises?: IExercisePlan[];
 }
 
@@ -138,6 +140,7 @@ export interface IExercise {
   recommendedForCyclePhases: string[];
   linkToVideo: string;
   linkToImage: string;
+  linkToThumbnail?: string;
 }
 
 export interface IMuscle {
@@ -146,6 +149,7 @@ export interface IMuscle {
   alternativeName: string;
   type: string;
   linkToImage: string;
+  linkToThumbnail?: string;
 }
 
 export interface IEquipment {
@@ -154,6 +158,7 @@ export interface IEquipment {
   alternativeName: string;
   description: string;
   linkToImage: string;
+  linkToThumbnail?: string;
 }
 
 export interface IPhysicalCondition {
