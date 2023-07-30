@@ -12,6 +12,10 @@ export default new Schema(
       type: String,
       required: false,
     },
+    description: {
+      type: String,
+      required: false,
+    },
     type: {
       type: String,
       enum: ['Big', 'Small'],

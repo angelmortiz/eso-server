@@ -147,6 +147,7 @@ export interface IMuscle {
   _id?: ObjectId;
   name: string;
   alternativeName: string;
+  description?: string;
   type: string;
   linkToImage: string;
   linkToThumbnail?: string;
