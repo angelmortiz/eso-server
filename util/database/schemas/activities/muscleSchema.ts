@@ -2,25 +2,33 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 //TODO: Add many-to-many references to other schemas
-export default new Schema({
+export default new Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     alternativeName: {
-        type: String,
-        required: false
+      type: String,
+      required: false,
+    },
+    description: {
+      type: String,
+      required: false,
     },
     type: {
-        type: String,
-        enum: [
-            'Big',
-            'Small'
-        ],
-        required: false
+      type: String,
+      enum: ['Big', 'Small'],
+      required: false,
     },
     linkToImage: {
-        type: String,
-        required: false
-    }
-}, { collection: 'activities.muscles' });
+      type: String,
+      required: false,
+    },
+    linkToThumbnail: {
+      type: String,
+      required: false,
+    },
+  },
+  { collection: 'activities.muscles' }
+);

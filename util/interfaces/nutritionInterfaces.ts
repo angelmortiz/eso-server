@@ -16,6 +16,7 @@ export interface IFood {
     recommendedForCyclePhases: string[] | null;
     compatibleWithDiets: DietIdAndName[] | null;
     linkToImage: string;
+    linkToThumbnail?: string;
 }
 
 export interface IRecipe {
@@ -35,6 +36,7 @@ export interface IRecipe {
     recommendedForCyclePhases: string[] | null;
     compatibleWithDiets: DietIdAndName[] | null;
     linkToImage: string;
+    linkToThumbnail?: string;
     linkToVideo: string;
 }
 

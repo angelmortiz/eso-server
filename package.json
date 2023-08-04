@@ -5,6 +5,8 @@
   "main": "app.ts",
   "scripts": {
     "start:dev": "NODE_ENV=development nodemon server.ts",
+    "start:beta:local": "NODE_ENV=beta_local nodemon server.ts",
+    "start:beta": "NODE_ENV=beta_production node build/server.js",
     "start:prod:local": "NODE_ENV=production_local node build/server.js",
     "start:prod": "NODE_ENV=production node build/server.js",
     "build": "tsc"
