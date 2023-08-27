@@ -7,7 +7,7 @@ const prodConfig: ConfigInterface = {
     'https://www.beta.ensaludoptima.com',
   ],
   clientPort: '443',
-  serverAddress: 'https://beta.ensaludoptima.com/api',
+  serverAddress: 'https://beta.ensaludoptima.com',
   serverPort: '80',
 };
 
