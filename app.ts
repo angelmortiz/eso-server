@@ -20,7 +20,6 @@ import apisHomePageRouter from './routes/apisHomePageRouter';
 
 import { protectRoute } from './controllers/userControllers/userAuthController';
 import { globalErrorResponse } from './controllers/responseControllers/errorController';
-import { log } from 'console';
 // import hpp from 'hpp';
 
 const app = express(); //initializing express framework

@@ -12,6 +12,7 @@ export default new Schema(
       type: String,
       required: false,
     },
+    //FIXME: Add description
     difficulty: {
       type: String,
       required: false,
