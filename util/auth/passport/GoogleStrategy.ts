@@ -6,6 +6,7 @@ import { IUserAuth } from '../../interfaces/userInterfaces';
 
 // Set up Passport to use the Google OAuth strategy
 const passportGoogleStrategy = () => {
+  console.log(`Google callbackURL: ${config.serverUrl}/api/auth/login/google/callback`)
   passport.use(
     new GoogleStrategy(
       {
