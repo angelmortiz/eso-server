@@ -8,7 +8,7 @@ const betaConfig: ConfigInterface = {
   ],
   betaUserRegistrationAddress: '/auth/beta-user-registration',
   clientPort: '443',
-  serverAddress: 'https://beta.ensaludoptima.com',
+  serverAddress: 'https://beta.api.ensaludoptima.com',
   serverPort: '80',
 };
 
