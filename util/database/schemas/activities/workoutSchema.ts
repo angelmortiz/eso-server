@@ -64,8 +64,8 @@ export default new Schema(
         'Full Body',
         'Upper Body',
         'Lower Body',
-        'Front Muscles',
-        'Back Muscles',
+        'Front Muscles', //FIXME: Rename to Anterior Muscles
+        'Back Muscles', //FIXME: Rename to Posterior Muscles
         'Mixed',
       ],
       required: false,
