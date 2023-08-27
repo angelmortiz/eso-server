@@ -6,6 +6,7 @@ import { IUserAuth } from '../../interfaces/userInterfaces';
 
 // Set up Passport to use the Facebook OAuth strategy
 const passportFacebookStrategy = () => {
+  console.log(`Facebook callbackURL: ${config.serverUrl}/api/auth/login/facebook/callback`)
   passport.use(
     new FacebookStrategy(
       {
